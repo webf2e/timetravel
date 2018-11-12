@@ -5,7 +5,7 @@ class Config(object):
             'func': 'sche.schedule:moveChatFile',
             'args': None,
             'trigger': 'interval',
-            'seconds': 60
+            'seconds': 10
         }
     ]
 

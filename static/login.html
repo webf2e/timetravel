@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <style type="text/css">
+        html,body{height:100%}
+    </style>
+</head>
+<body style="background-image: url('/static/img/bk.jpg');background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;">
+    <table id="loctable" border="0" style="width: 100%;height: 100%;">
+        <tr><td colspan="3"></td></tr>
+        <tr>
+            <td width="30%"></td>
+            <td width="40%">
+                <div class="input-group input-group-lg" style="box-shadow: 0 0 55px #fff8ac">
+                  <input id="password" type="password" class="form-control" placeholder="请输入密码后开启">
+                  <div class="input-group-btn">
+                    <button id="tipsBtn" type="button" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="top" title="点我获取提示"><span class="glyphicon glyphicon-question-sign"></span></button>
+                    <button id="goBtn" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="top" title="点击进入"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                  </div>
+                </div>
+                <div id="loginResultDiv" class="alert" role="alert" style="margin-top: 20px;display: none;box-shadow: 0 0 55px #fff8ac">...</div>
+            </td>
+            <td width="30%"></td>
+        </tr>
+        <tr><td colspan="3"></td></tr>
+    </table>
+
+    <div id="tipWindow" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">提示</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+                <b>请回答下面的问题，回答正确即可获取登录密码</b>
+                <div id="question1" class="form-group">
+                    <span></span>
+                    <input type="text" class="form-control questionInput" tabindex="1"/>
+                </div>
+                <hr>
+                <div id="question2" class="form-group">
+                    <span></span>
+                    <input type="text" class="form-control questionInput" tabindex="2"/>
+                </div>
+                <hr>
+                <div id="question3" class="form-group">
+                    <span></span>
+                    <input type="text" class="form-control questionInput" tabindex="3"/>
+                </div>
+                <div id="resultDiv" style="display: none" class="alert" role="alert"></div>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="getPasswordBtn">获取密码</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+    $('[data-toggle="tooltip"]').tooltip();
+    $("#tipsBtn").click(function(){
+        $('#tipWindow').modal('show');
+        if($("#question1 span").html() == ""){
+            getQuestion();
+        }
+    });
+
+    function getQuestion(){
+        $.ajax({
+            url:"/getQuestions",
+            dataType: 'json',
+            type:"POST",
+            success:function(data){
+                $.each(data,function(i,n){
+                    $("#question"+(i+1)+" span").html((i+1)+". "+n.question);
+                    $("#question"+(i+1)+" input").attr("qid",n.id);
+                    $("#question"+(i+1)).attr("qid",n.id);
+                });
+            }
+        });
+    }
+    $("#getPasswordBtn").click(function(){
+        ids = $("#question1 input").attr("qid")+","+$("#question2 input").attr("qid")+","+$("#question3 input").attr("qid");
+        answer=$("#question1 input").val()+","+$("#question2 input").val()+","+$("#question3 input").val();
+        var data = "ids="+ids+"&answer="+answer;
+        var uuid = ""
+        $.ajax({
+            url:"/getAnswer",
+            data:data,
+            dataType: 'json',
+            type:"POST",
+            success:function(data){
+                $("#resultDiv").hide();
+                $("#question1,#question2,#question3").removeClass("has-success");
+                $("#question1,#question2,#question3").removeClass("has-error");
+                $("#resultDiv").removeClass("alert-success");
+                $("#resultDiv").removeClass("alert-warning");
+                $("#resultDiv").removeClass("alert-danger");
+                errorCount = 0;
+                $.each(data,function(i,n){
+                    if(i == "uuid"){
+                        uuid = n;
+                    }else{
+                        if(n == 1){
+                            $("div[qid="+i+"]").addClass("has-success");
+                        }else{
+                            errorCount++;
+                            $("div[qid="+i+"]").addClass("has-error");
+                        }
+                    }
+                });
+                if(errorCount == 0){
+                    $.ajax({
+                        url:"/getPassword",
+                        data:"uuid="+uuid,
+                        dataType: 'json',
+                        type:"POST",
+                        success:function(data){
+                            if(data.password == undefined){
+                                alert("获取密码失败啦，可能是程序问题。请反馈给刘文斌");
+                            }else{
+                                $("#resultDiv").show();
+                                $("#resultDiv").addClass("alert-success");
+                                $("#resultDiv").html("太棒啦，全部答对了，密码是：<code>"+data.password+"</code>。该密码的有效期只有三天哦！");
+                            }
+                        }
+                    });
+                }else if(errorCount == 1){
+                    $("#resultDiv").show();
+                    $("#resultDiv").addClass("alert-warning");
+                    $("#resultDiv").html("好可惜，只有一道题打错了，可以修改答案继续提交哦");
+                }else if(errorCount >= 2){
+                    $("#resultDiv").show();
+                    $("#resultDiv").addClass("alert-danger");
+                    $("#resultDiv").html("Sorry，答案有些问题哦，暂时不能获取密码，可以修改答案继续提交哦");
+                }
+            }
+        });
+    });
+
+    $("#goBtn").click(function(){
+        var password = $("#password").val();
+        $.ajax({
+            url:"/login",
+            data:"password="+password,
+            type:"POST",
+            success:function(data){
+                $("#loginResultDiv").show();
+                $("#loginResultDiv").removeClass("alert-success");
+                $("#loginResultDiv").removeClass("alert-warning");
+                $("#loginResultDiv").removeClass("alert-danger");
+                if("password_error" == data){
+                    $("#loginResultDiv").addClass("alert-danger");
+                    $("#loginResultDiv").html("密码不对哦，可以点击上面的“问号”按钮重新获取密码");
+                }else if("password_overtime" == data){
+                    $("#loginResultDiv").addClass("alert-warning");
+                    $("#loginResultDiv").html("密码过期啦，可以点击上面的“问号”按钮重新获取密码");
+                }else if("success" == data){
+                    $("#loginResultDiv").addClass("alert-success");
+                    $("#loginResultDiv").html("密码正确，3秒后跳转到首页");
+                    setTimeout("jumpToIndex()", 2000);
+                }
+            }
+        });
+    });
+    function jumpToIndex(){
+        location.href="/static/index.html"
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?18aa1da465cbe156fc3e7c413f9b2add";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</html>

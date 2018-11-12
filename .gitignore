@@ -1,0 +1,21 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.eml
+config/*.config
+
+# Mac
+.DS_Store
+
+# Maven
+log/log/
+log/
+static/chatImg/*

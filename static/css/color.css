@@ -1,0 +1,41 @@
+
+/*light pink text color*/
+.couple-name h1, 
+.place h2, 
+.gallery h3, 
+.get-in-touch h3, 
+.form input[type="text"]:focus, 
+.form textarea:focus, 
+.message-body h1, 
+.story h2, 
+.event-box:hover h2, 
+.rightbar h2, 
+.guest-book h4, 
+.event-time ul li a:hover, 
+.guest-book h2, 
+.guest-book textarea:focus, 
+.guest-book input[type="text"]:focus, 
+.contact-form h2, 
+.contact-form h4, 
+.location-map h2, 
+.gallery-pagination ul li a:hover, 
+.navigation ul ul li a:hover, 
+.navigation ul ul li:hover > a{
+	color:#f1a693;
+}
+/*light pink background color*/
+
+.navigation, 
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover,
+.nav-tabs > .active > a:focus{
+	background-color:#f1a693;
+}
+/*light pink border color*/
+
+.form input[type="text"]:focus, 
+.form textarea:focus, 
+.guest-book input[type="text"]:focus, .form textarea:focus, 
+.guest-book textarea:focus{
+	border-color:#f1a693;
+}

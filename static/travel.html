@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>【文斌 & 静静】爱的小窝-我们的旅程</title>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/color.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="css/countdown.css" rel="stylesheet" type="text/css">
+<link href="css/prettyPhoto.css" rel="stylesheet">
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.js"></script>
+<script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="js/lightbox.js"></script>
+<script type="text/javascript" src="js/custom.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+
+</head>
+	<body>
+
+<!--Background Image-->
+<img src="images/bg.jpg" id="background"/>
+<!--Background Image-->
+<!--WRAPPTER START-->
+<div class="wrapepr floral-bg">
+	<!--header start-->
+    <div class="header">
+        <div class="clearfix"></div>
+        <div class="container">
+        <div class="couple-name">
+            <div class="couple-name-holder">
+                <div class="first-name resize">
+                	<h1>刘文斌</h1>
+                </div>
+                <img src="images/heart3.png" style="margin-left: 10px"/>
+                <div class="last-name resize">
+                    <h1>陈晓静</h1>
+                </div>
+            </div>
+        </div>
+        <div class="inner">
+        <div class="getting-merried">
+        	<p>爱的小窝</p>
+        </div>
+        </div>
+      </div>
+      </div>
+      <div class="clearfix"></div>
+    <!--header start-->
+    <div class="content">
+        <div class="inner">
+            <!--navigation start-->
+            <div class="navigation relative">
+            	<span class="border1 resize">
+                	<span class="border2"></span>
+                </span>
+                <ul id="nav">
+                    <li><a href="/static/index.html">首页</a></li>
+                    <li><a href="/static/travel.html">我们的旅程</a></li>
+                    <li><a href="/static/memory.html">我们的回忆</a></li>
+                    <li><a href="/static/gallery.html">我们的精彩</a></li>
+                    <li><a href="/static/privity.html">我们的默契</a></li>
+                </ul>
+            </div>
+            <!--navigation end-->
+            <div class="clearfix"></div>
+            <!--content start-->
+            <!--banners start-->
+            	<div class="banner relative">
+                	<img src="images/banner-img.png" alt="">
+                    <h2>我们的旅程</h2>
+                	<div class="banner-pettern"></div>
+                </div>
+                <div class="clearfix"></div>
+                <!--banners end-->
+                <div class="top-borderline relative">
+                	<div class="top-left-corner"><img src="images/top-left-corner.png" alt=""></div>
+                    <div class="top-right-corner"><img src="images/top-right-corner.png" alt=""></div>
+                </div>
+            <div class="inner padding40px content-borders resize">
+                <div class="events pretty-photos">
+                	<!--LEFT BAR START-->
+                    <div class="leftbar" id="contentDiv">
+
+                    </div>
+                    <!--LEFT BAR END-->
+                    <!--RIGHT BAR START-->
+                    <div class="rightbar">
+                    	<!--location map widget start-->
+                    	<div class="widget map">
+                        	<!--heading start-->
+                        	<div class="heading">
+                            	<h2>地点</h2>
+                                <span class="dot-left"></span>
+                                <span class="dot-right"></span>
+                            </div>
+                            <!--heading start-->
+                            <div id="travelmap" style="border: 1px solid #000;width: 220px;height :220px"></div>
+                        </div>
+                        <!--location map widget end-->
+                        <!--Flickr widget end-->
+                        <div class="widget message-board">
+                        <!--heading start-->
+                        	<div class="heading">
+                            	<h2>时间</h2>
+                                <span class="dot-left"></span>
+                                <span class="dot-right"></span>
+                            </div>
+                            <!--heading start-->
+                        	<ul id="dateul"></ul>
+                        </div>
+                    </div>
+                    <!--RIGHT BAR END-->
+                </div>
+                <div class="register" style="padding:1px 0"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!--content end-->
+        </div>
+     <!--FOOTER START-->
+    <div class="footer relative">
+        <div class="footer-leftside"></div>
+        <div class="followus resize">
+            <p>相爱是一种很完美的感觉，与你相识相知相爱成就了这种完美，我深爱你和感谢你！愿与你携手一生，相恋相伴相守一辈子！</p>
+            <div class="clearfix"></div>
+        </div>
+    <div class="footer-rightside"   ></div>
+    </div>
+    <!--FOOTER START-->
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script>
+    var map = new BMap.Map("travelmap");    // 创建Map实例
+	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+	map.enableScrollWheelZoom(true);
+	function getPoints(){
+	    $.ajax({
+            url:"/getAllPoint",
+            type:"POST",
+            success:function(data){
+                getNew4();
+                var lon = 0;
+                var lat = 0;
+                $.each(data,function(i,n){
+                    lon = n.lon;
+                    lat = n.lat;
+                    var marker = new BMap.Marker(new BMap.Point(n.lon, n.lat));
+                    var label = new BMap.Label(n.travelName,{offset:new BMap.Size(20,-10)});
+                    map.addOverlay(marker);
+                    marker.setLabel(label);
+                    marker.addEventListener("click",getAttr);
+                    function getAttr(){
+                        var p = marker.getPosition();
+                        getContentByLonLat(p.lng,p.lat);
+                    }
+                });
+                map.centerAndZoom(new BMap.Point(lon, lat), 15);
+            }
+        });
+    }
+	function getDates(){
+	    $.ajax({
+                url:"/getTravelTimeGroup",
+                type:"POST",
+                success:function(data){
+                    var html = ""
+                    $.each(data,function(i,n){
+                        html += "<li><a href=\"javascript:;\" onclick='getByDate(\""+n.ym+"\")'><h5>"+n.ym+"</h5></a></li>";
+                    });
+                    $("#dateul").html(html);
+                }
+            });
+    }
+
+    function getNew4(){
+	    $.ajax({
+            url:"/getNew4",
+            type:"POST",
+            success:function(data){
+                var html = ""
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                });
+                $("#contentDiv").html(html);
+            }
+        });
+    }
+
+    function getContentByLonLat(lon, lat){
+        $.ajax({
+            url:"/getByLonLat",
+            dataType: 'json',
+            data:"lon="+lon+"&lat="+lat,
+            type:"POST",
+            success:function(data){
+                var html = ""
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                });
+                $("#contentDiv").html(html);
+            }
+        });
+    }
+    getDates();
+    getNew4();
+    getPoints();
+    function locate(lon,lat){
+        map.centerAndZoom(new BMap.Point(lon, lat), 15);
+    }
+    function getByDate(date){
+        $.ajax({
+            url:"/getByDate",
+            dataType: 'json',
+            data:"date="+date,
+            type:"POST",
+            success:function(data){
+                var html = ""
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                });
+                $("#contentDiv").html(html);
+            }
+        });
+    }
+    function getTravelContent(n){
+        return "<div class=\"event-box relative\">\n" +
+            "\t<div class=\"story-avatar relative\">\n" +
+            "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:150px;height:130px' alt=\"\" src=\""+n.indexImg+"\">\n" +
+            "\t<div class=\"image-tip\">\n" +
+            "\t\t<a href=\"javascript:;\">"+n.travelName+"</a>\n" +
+            "\t</div>\n" +
+            "\t</div>\n" +
+            "\t<div class=\"event-text\">\n" +
+            "\t\t<h2>"+n.travelName+"</h2>\n" +
+            "\t    <p>"+n.content+"</p>\n" +
+            "\t\t<ul>\n" +
+            "\t    \t<li class=\"time\"><p>Time:"+n.travelTime+"</p></li>\n" +
+            "\t    </ul>\n" +
+            "\t</div>               \t\n" +
+            "\t<span class=\"dot-left\"></span>\n" +
+            "\t<span class=\"flower\"><img alt=\"\" src=\"images/flower2.png\"></span>\n" +
+            "\t<span class=\"dot-right\"></span>\n" +
+            "</div>";
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?18aa1da465cbe156fc3e7c413f9b2add";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

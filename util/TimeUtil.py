@@ -23,7 +23,7 @@ def subDay():
     start = datetime.datetime.strptime("2018-10-05 00:00:00", "%Y-%m-%d %H:%M:%S")
     dateDelta = (datetime.datetime.now()-start)
     days = dateDelta.days
-    return "{}".format(days)
+    return days + 1
 
 def dealSeconds(seconds):
     if seconds < 60:

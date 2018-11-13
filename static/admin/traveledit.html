@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>信息修改</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+</head>
+<body>
+    <form id="addInfoTableForm">
+        <table id="addInfoTable" class="table table-bordered" style="width: 100%">
+            <tr>
+                <td colspan="3" align="center"><b>添加信息</b></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">名称</td>
+                <td colspan="2"><input class="form-control travelName" name="travelName" type="text"/></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">类型</td>
+                <td colspan="2"><select class="form-control type" name="type"></select></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">内容</td>
+                <td colspan="2">
+                    <textarea name="content" class="form-control content" rows="5" style="width: 100%"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80px">坐标</td>
+                <td>
+                    <input class="form-control lon" name="lon" type="text" placeholder="经度"/>
+                </td>
+                <td>
+                    <input class="form-control lat" name="lat" type="text" placeholder="纬度"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80px">时间</td>
+                <td colspan="2">
+                    <input class="form-control time" type="text" name="travelTime"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button class="btn btn-primary" id="saveBtn" style="width: 100%">保存信息</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <hr/>
+    <form id="editInfoTableForm">
+        <table id="editInfoTable" class="table table-bordered" style="width: 100%">
+            <tr>
+                <td colspan="3" align="center"><b>编辑信息</b></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">地点</td>
+                <td colspan="2"><select class="form-control name" name="id" onchange="getById()"></select></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">名称</td>
+                <td colspan="2"><input class="form-control travelName" name="travelName" type="text"/></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">类型</td>
+                <td colspan="2"><select class="form-control type" name="type"></select></td>
+            </tr>
+            <tr>
+                <td style="width: 80px">内容</td>
+                <td colspan="2">
+                    <textarea class="form-control content" name="content" rows="5" style="width: 100%"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80px">坐标</td>
+                <td>
+                    <input class="form-control lon" type="text" name="lon" placeholder="经度"/>
+                </td>
+                <td>
+                    <input class="form-control lat" type="text" name="lat" placeholder="纬度"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80px">时间</td>
+                <td colspan="2">
+                    <input class="form-control time" type="text" name="travelTime"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button class="btn btn-primary" id="editBtn" style="width: 100%">修改信息</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <hr/>
+    <table id="editImgTable" class="table table-bordered" style="width: 100%">
+        <tr>
+            <td colspan="3" align="center"><b>编辑首图</b></td>
+        </tr>
+        <tr>
+            <td style="width: 80px">地点</td>
+            <td colspan="2"><select class="form-control name" onchange="getImgById()"></select></td>
+        </tr>
+        <tr>
+            <td style="width: 80px">名称</td>
+            <td colspan="2"><input class="form-control travelName" type="text"/></td>
+        </tr>
+        <tr>
+            <td style="width: 80px">图片</td>
+            <td colspan="2">
+                <form id="uploadTravelIndexImgForm" enctype="multipart/form-data" >
+                    <input class="form-control indexFile" type="file" name="file" value=""/>
+                    <input class="form-control travelId" type="text" name="id"/>
+                </form>
+                <img class="indexImg" src="" style='width:150px;height:130px'/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传首图</button>
+            </td>
+        </tr>
+    </table>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+    $.ajax({
+        url:"/admin/getType",
+        dataType: 'json',
+        type:"POST",
+        success:function(data){
+            var html = "";
+            $.each(data,function(i,n){
+                html += "<option value='"+n.type+"'>"+n.type+"</option>";
+            });
+            $(".type").html(html);
+        }
+    });
+    $.ajax({
+        url:"/admin/getAllTravelNames",
+        dataType: 'json',
+        type:"POST",
+        success:function(data){
+            var html = "<option value='0'>请选择地点</option>";
+            $.each(data,function(i,n){
+                html += "<option value='"+n.id+"'>"+n.travelName+"</option>";
+            });
+            $(".name").html(html);
+        }
+    });
+    function getById(){
+        var id = $("#editInfoTable .name").val();
+        $.ajax({
+            url:"/admin/getTravelInfoById",
+            dataType: 'json',
+            type:"POST",
+            data:"id="+id,
+            success:function(data){
+                data = data[0]
+                $("#editInfoTable .travelName").val(data.travelName);
+                $("#editInfoTable .type option").attr("selected",false);
+                $("#editInfoTable .type option[value='"+data.type+"']").attr("selected",true);
+                $("#editInfoTable .content").val(data.content);
+                $("#editInfoTable .lon").val(data.lon);
+                $("#editInfoTable .lat").val(data.lat);
+                $("#editInfoTable .time").val(data.travelTime);
+            }
+        });
+    }
+    function getImgById(){
+        var id = $("#editImgTable .name").val();
+        $.ajax({
+            url:"/admin/getTravelInfoById",
+            dataType: 'json',
+            type:"POST",
+            data:"id="+id,
+            success:function(data){
+                data = data[0]
+                $("#editImgTable .travelName").val(data.travelName);
+                $("#editImgTable .indexImg").attr("src",data.indexImg);
+                $("#editImgTable .travelId").val(data.id);
+            }
+        });
+    }
+
+    $("#uploadImgBtn").click(function(){
+        $.ajax({
+            url:"/admin/upTravelIndexImg",
+            type: "POST",
+            data: new FormData($('#uploadTravelIndexImgForm')[0]),
+            async: true,
+            cashe: false,
+            contentType:false,
+            processData:false,
+            success:function (returndata) {
+                alert(returndata)
+            },
+        　　 error: function (returndata) {
+                alert("上传失败！")
+            }
+        });
+    });
+
+    $("#saveBtn").click(function(){
+        var data = $("#addInfoTableForm").serialize();
+        $.ajax({
+            url:"/admin/addTravelInfo",
+            type: "POST",
+            data: data,
+            success:function (returndata) {
+                alert(returndata)
+            }
+        });
+        return false;
+    });
+
+    $("#editBtn").click(function(){
+        var data = $("#editInfoTableForm").serialize();
+        alert(data);
+        $.ajax({
+            url:"/admin/editTravelInfo",
+            type: "POST",
+            data: data,
+            success:function (returndata) {
+                alert(returndata)
+            }
+        });
+        return false;
+    });
+</script>
+</html>

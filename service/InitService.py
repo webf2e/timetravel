@@ -14,6 +14,7 @@ def init():
     conf = configparser.ConfigParser()
     conf.read(configFilePath, encoding="UTF-8")
     gloVar.chatDirPath = conf.get('ChatConfig', 'dirPath')
+    gloVar.travelIndexImgPath = conf.get('TravelConfig', 'indexImgPath')
     gloVar.dbHost = conf.get('MysqlConfig', 'host')
     gloVar.dbUser = conf.get('MysqlConfig', 'user')
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')

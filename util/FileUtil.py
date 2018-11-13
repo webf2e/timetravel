@@ -1,5 +1,6 @@
 import os
 import traceback
+from PIL import Image
 
 def renameAndMove(dirPath):
     try:
@@ -26,3 +27,9 @@ def renameAndMove(dirPath):
             os.rename(os.path.join(dirPath, newFileName), os.path.join(dPath, newFileName))
     except Exception as e:
         print("move chat fileError",traceback.format_exc())
+
+
+def resizeImg(file,width,height):
+    img = Image.open(file)
+    img = img.resize((width, height), Image.ANTIALIAS)
+    img.save(file)

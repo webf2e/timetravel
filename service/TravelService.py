@@ -91,3 +91,89 @@ def getByDate(date):
     db.commit()
     db.close()
     return changeToJsonStr(fields, data)
+
+def getTypes():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    cursor.execute("SELECT type FROM travel group by type")
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields, data)
+
+def getAllTravelNames():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    cursor.execute("SELECT id,travelName FROM travel order by travelTime desc")
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields, data)
+
+def getTravelInfoById(id):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM travel where id = {}".format(id))
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields, data)
+
+def updateImgBy(id,imgPath):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "update travel set indexImg='{}' where id={}".format(imgPath,id)
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def insert(travelName,type,content,lon,lat,travelTime):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime) VALUES ('{}','{}','{}',{},{},'{}')"\
+        .format(travelName,type,content,lon,lat,travelTime)
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def updateById(id,travelName,type,content,lon,lat,travelTime):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}' where id={}"\
+        .format(travelName,type,content,lon,lat,travelTime,id)
+    cursor.execute(sql)
+    db.commit()
+    db.close()

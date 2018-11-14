@@ -11,7 +11,9 @@ def getCurrentPassword():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT id,password,useTime FROM password where useTime is not null")
+    sql = "SELECT id,password,useTime FROM password where useTime is not null";
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
     db.close()
@@ -25,7 +27,9 @@ def resetAllPassword():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("update password set useTime = null")
+    sql = "update password set useTime = null"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     db.commit()
     db.close()
 
@@ -51,6 +55,8 @@ def updateRandomPassword():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("update password set useTime = '{}' ORDER BY RAND() LIMIT 1".format(datetime.datetime.now()))
+    sql = "update password set useTime = '{}' ORDER BY RAND() LIMIT 1".format(datetime.datetime.now())
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     db.commit()
     db.close()

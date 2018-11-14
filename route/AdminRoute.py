@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import session,request,Response
+from flask import abort,request,Response
 import os
 from util.Global import gloVar
 import json
@@ -115,3 +115,16 @@ def getChatImageCount():
                 images = os.listdir(os.path.join(gloVar.chatDirPath, year, month, day))
                 imgCountMap["{}-{}-{}".format(year,month,day)] = len(images)
     return Response(json.dumps(imgCountMap, ensure_ascii=False), mimetype='application/json')
+
+
+@adminRoute.before_request
+def print_request_info():
+    urlPath = str(request.path)
+    if(urlPath.find("admin") != -1):
+        agent = str(request.headers.get("User-agent"))
+        print(agent)
+        if(agent.find("MI 8 Explorer Edition") == -1):
+            #abort(400)
+            pass
+
+

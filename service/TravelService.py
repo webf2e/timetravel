@@ -11,7 +11,9 @@ def getAllPoint():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT travelName,lon,lat FROM travel")
+    sql = "SELECT travelName,lon,lat FROM travel"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -26,7 +28,9 @@ def getTravelTimeGroup():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym")
+    sql = "SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -41,7 +45,9 @@ def getNew4():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("select * from travel ORDER BY travelTime DESC limit 4")
+    sql = "select * from travel ORDER BY travelTime DESC limit 4"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -56,7 +62,9 @@ def getByLonLat(lon,lat):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("select * from travel where lon='{}' and lat='{}'".format(lon,lat))
+    sql = "select * from travel where lon='{}' and lat='{}'".format(lon,lat)
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -85,7 +93,9 @@ def getByDate(date):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM travel where DATE_FORMAT(travelTime,'%Y年%m月') = '{}' ORDER BY travelTime desc".format(date))
+    sql = "SELECT * FROM travel where DATE_FORMAT(travelTime,'%Y年%m月') = '{}' ORDER BY travelTime desc".format(date)
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -100,7 +110,9 @@ def getTypes():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT type FROM travel group by type")
+    sql = "SELECT type FROM travel group by type"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -115,7 +127,9 @@ def getAllTravelNames():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT id,travelName FROM travel order by travelTime desc")
+    sql = "SELECT id,travelName FROM travel order by travelTime desc"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -130,7 +144,9 @@ def getTravelInfoById(id):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM travel where id = {}".format(id))
+    sql = "SELECT * FROM travel where id = {}".format(id)
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
     db.commit()
@@ -146,6 +162,7 @@ def updateImgBy(id,imgPath):
     )
     cursor = db.cursor()
     sql = "update travel set indexImg='{}' where id={}".format(imgPath,id)
+    print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -160,6 +177,7 @@ def insert(travelName,type,content,lon,lat,travelTime):
     cursor = db.cursor()
     sql = "insert into travel(travelName,type,content,lon,lat,travelTime) VALUES ('{}','{}','{}',{},{},'{}')"\
         .format(travelName,type,content,lon,lat,travelTime)
+    print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -174,6 +192,7 @@ def updateById(id,travelName,type,content,lon,lat,travelTime):
     cursor = db.cursor()
     sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}' where id={}"\
         .format(travelName,type,content,lon,lat,travelTime,id)
+    print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()

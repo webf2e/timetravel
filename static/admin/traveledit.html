@@ -44,7 +44,7 @@
             </tr>
             <tr>
                 <td colspan="3" align="left">
-                    <div id="travelmap1" style="width: 80%;height: 200px"></div>
+                    <div id="travelmap1" style="width: 100%;height: 300px"></div>
                 </td>
             </tr>
             <tr>
@@ -95,7 +95,7 @@
             </tr>
             <tr>
                 <td colspan="3" align="left">
-                    <div id="travelmap2" style="width: 80%;height: 200px"></div>
+                    <div id="travelmap2" style="width: 100%;height: 300px"></div>
                 </td>
             </tr>
             <tr>
@@ -157,16 +157,34 @@
         map1.clearOverlays();
         var center = map1.getCenter();
         map1.addOverlay(new BMap.Marker(new BMap.Point(center.lng, center.lat)));
-        $("#addInfoTableForm .lon").val(center.lng);
-        $("#addInfoTableForm .lat").val(center.lat);
+        $("#addInfoTable .lon").val(center.lng);
+        $("#addInfoTable .lat").val(center.lat);
     });
 
 	map2.addEventListener("dragend", function(){
         map2.clearOverlays();
         var center = map2.getCenter();
         map2.addOverlay(new BMap.Marker(new BMap.Point(center.lng, center.lat)));
-        $("#addInfoTableForm .lon").val(center.lng);
-        $("#addInfoTableForm .lat").val(center.lat);
+        $("#editInfoTable .lon").val(center.lng);
+        $("#editInfoTable .lat").val(center.lat);
+    });
+
+	map1.addEventListener("click", function(e){
+        map1.clearOverlays();
+        var center = e.point;
+        map1.addOverlay(new BMap.Marker(new BMap.Point(center.lng, center.lat)));
+        $("#addInfoTable .lon").val(center.lng);
+        $("#addInfoTable .lat").val(center.lat);
+        map1.panTo(new BMap.Point(center.lng, center.lat))
+    });
+
+	map2.addEventListener("click", function(e){
+        map2.clearOverlays();
+        var center = e.point;
+        map2.addOverlay(new BMap.Marker(new BMap.Point(center.lng, center.lat)));
+        $("#editInfoTable .lon").val(center.lng);
+        $("#editInfoTable .lat").val(center.lat);
+        map2.panTo(new BMap.Point(center.lng, center.lat))
     });
     $.ajax({
         url:"/admin/getType",
@@ -262,7 +280,6 @@
 
     $("#editBtn").click(function(){
         var data = $("#editInfoTableForm").serialize();
-        alert(data);
         $.ajax({
             url:"/admin/editTravelInfo",
             type: "POST",
@@ -273,5 +290,12 @@
         });
         return false;
     });
+    var date = new Date();
+    var year = date.getYear() + 1900;
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes()
+    $(".time").val(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
 </script>
 </html>

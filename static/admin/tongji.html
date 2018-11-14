@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>统计</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+</head>
+<body>
+    <div class="btn-group" role="group" aria-label="...">
+      <a type="button" class="btn btn-default" href="/static/admin/index.html">首页</a>
+      <a type="button" class="btn btn-default" href="/static/admin/chatimg.html">聊天管理</a>
+      <a type="button" class="btn btn-default" href="/static/admin/traveledit.html">旅游管理</a>
+      <a type="button" class="btn btn-default" href="/static/admin/tongji.html">数据统计</a>
+    </div>
+    <hr>
+    <div id="chatImgCountLine" style="width: 100%;height:300px;"></div>
+    <hr/>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/echarts.common.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:"/admin/getChatImageCount",
+        dataType: 'json',
+        type:"POST",
+        success:function(data){
+            var totalImgCount = 0;
+            timeArr = new Array();
+            dataArr = new Array();
+            $.each(data,function(i,n){
+                totalImgCount += n;
+                timeArr.push(i);
+                dataArr.push(n);
+            });
+            drawLine("chatImgCountLine","聊天截图数量("+totalImgCount+")",timeArr,dataArr)
+        }
+    });
+
+    function drawLine(id,title,timeArr,dataArr){
+        var option = {
+            title: {
+                text: title
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['GPS','BDS','GLONASS','GALILEO']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: { //可视化的工具箱
+                show: true,
+                feature: {
+                    dataView: { //数据视图
+                        show: true
+                    },
+                    restore: { //重置
+                        show: true
+                    },
+                    dataZoom: { //数据缩放视图
+                        show: true
+                    },
+                    saveAsImage: {//保存图片
+                        show: true
+                    },
+                    magicType: {//动态类型切换
+                        type: ['bar', 'line']
+                    }
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: timeArr
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'数量',
+                    type:'line',
+                    data:dataArr
+                }
+
+            ]
+        };
+        echarts.init(document.getElementById(id)).setOption(option);
+    }
+</script>
+</html>

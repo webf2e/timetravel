@@ -5,12 +5,14 @@
     <title>旅游信息修改</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+
 </head>
 <body>
     <div class="btn-group" role="group" aria-label="...">
       <a type="button" class="btn btn-default" href="/static/admin/index.html">首页</a>
       <a type="button" class="btn btn-default" href="/static/admin/chatimg.html">聊天管理</a>
       <a type="button" class="btn btn-default" href="/static/admin/traveledit.html">旅游管理</a>
+      <a type="button" class="btn btn-default" href="/static/admin/tongji.html">数据统计</a>
     </div>
     <form id="addInfoTableForm">
         <table id="addInfoTable" class="table table-bordered" style="width: 100%">
@@ -38,6 +40,11 @@
                 </td>
                 <td>
                     <input class="form-control lat" name="lat" type="text" placeholder="纬度"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" align="left">
+                    <div id="travelmap1" style="width: 80%;height: 200px"></div>
                 </td>
             </tr>
             <tr>
@@ -87,6 +94,11 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="3" align="left">
+                    <div id="travelmap2" style="width: 80%;height: 200px"></div>
+                </td>
+            </tr>
+            <tr>
                 <td style="width: 80px">时间</td>
                 <td colspan="2">
                     <input class="form-control time" type="text" name="travelTime"/>
@@ -131,7 +143,31 @@
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
 <script>
+    var map1 = new BMap.Map("travelmap1");    // 创建Map实例
+	map1.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+	map1.enableScrollWheelZoom(true);
+	map1.addControl(new BMap.NavigationControl());
+	var map2 = new BMap.Map("travelmap2");    // 创建Map实例
+	map2.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+	map2.enableScrollWheelZoom(true);
+	map2.addControl(new BMap.NavigationControl());
+	map1.addEventListener("dragend", function(){
+        map1.clearOverlays();
+        var center = map1.getCenter();
+        map1.addOverlay(new BMap.Marker(new BMap.Point(center.lng, center.lat)));
+        $("#addInfoTableForm .lon").val(center.lng);
+        $("#addInfoTableForm .lat").val(center.lat);
+    });
+
+	map2.addEventListener("dragend", function(){
+        map2.clearOverlays();
+        var center = map2.getCenter();
+        map2.addOverlay(new BMap.Marker(new BMap.Point(center.lng, center.lat)));
+        $("#addInfoTableForm .lon").val(center.lng);
+        $("#addInfoTableForm .lat").val(center.lat);
+    });
     $.ajax({
         url:"/admin/getType",
         dataType: 'json',
@@ -172,6 +208,8 @@
                 $("#editInfoTable .lon").val(data.lon);
                 $("#editInfoTable .lat").val(data.lat);
                 $("#editInfoTable .time").val(data.travelTime);
+                map2.centerAndZoom(new BMap.Point(data.lon, data.lat), 15);
+                map2.addOverlay(new BMap.Marker(new BMap.Point(data.lon, data.lat)));
             }
         });
     }

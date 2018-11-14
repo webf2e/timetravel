@@ -99,3 +99,19 @@ def editTravelInfo():
     travelTime = request.form.get("travelTime")
     TravelService.updateById(id,travelName,type,content,lon,lat,travelTime)
     return "修改成功"
+
+@adminRoute.route('/admin/getChatImageCount',methods=["POST"])
+def getChatImageCount():
+    imgCountMap = {}
+    years = os.listdir(gloVar.chatDirPath)
+    years.sort()
+    for year in years:
+        months = os.listdir(os.path.join(gloVar.chatDirPath, year))
+        months.sort()
+        for month in months:
+            days = os.listdir(os.path.join(gloVar.chatDirPath, year, month))
+            days.sort()
+            for day in days:
+                images = os.listdir(os.path.join(gloVar.chatDirPath, year, month, day))
+                imgCountMap["{}-{}-{}".format(year,month,day)] = len(images)
+    return Response(json.dumps(imgCountMap, ensure_ascii=False), mimetype='application/json')

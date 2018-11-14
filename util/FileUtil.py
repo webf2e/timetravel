@@ -1,6 +1,7 @@
 import os
 import traceback
 from PIL import Image
+import pytesseract
 
 def renameAndMove(dirPath):
     try:
@@ -33,3 +34,7 @@ def resizeImg(file,width,height):
     img = Image.open(file)
     img = img.resize((width, height), Image.ANTIALIAS)
     img.save(file)
+
+def getText(filePath):
+    text=pytesseract.image_to_string(Image.open(filePath),lang='chi_sim')
+    print(text)

@@ -11,7 +11,7 @@ def getAllPoint():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT travelName,lon,lat FROM travel"
+    sql = "SELECT travelName,lon,lat FROM travel ORDER BY travelName DESC"
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()

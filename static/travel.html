@@ -211,7 +211,7 @@
     getNew4();
     getPoints();
     function locate(lon,lat){
-        map.centerAndZoom(new BMap.Point(lon, lat), 15);
+        map.panTo(new BMap.Point(lon, lat), 15);
     }
     function getByDate(date){
         $.ajax({
@@ -221,10 +221,19 @@
             type:"POST",
             success:function(data){
                 var html = ""
+                var lon = 0;
+                var lat = 0;
                 $.each(data,function(i,n){
+                    if(lon == 0){
+                        lon = n.lon;
+                    }
+                    if(lat == 0){
+                        lat = n.lat;
+                    }
                     html += getTravelContent(n);
                 });
                 $("#contentDiv").html(html);
+                map.panTo(new BMap.Point(lon, lat));
             }
         });
     }
@@ -237,7 +246,7 @@
             "\t</div>\n" +
             "\t</div>\n" +
             "\t<div class=\"event-text\">\n" +
-            "\t\t<h2>"+n.travelName+"</h2>\n" +
+            "\t\t<h2>["+n.type+"] "+n.travelName+"</h2>\n" +
             "\t    <p>"+n.content+"</p>\n" +
             "\t\t<ul>\n" +
             "\t    \t<li class=\"time\"><p>Time:"+n.travelTime+"</p></li>\n" +

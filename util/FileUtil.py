@@ -2,6 +2,7 @@ import os
 import traceback
 from PIL import Image
 import pytesseract
+from util.Global import gloVar
 
 def renameAndMove(dirPath):
     try:
@@ -38,3 +39,26 @@ def resizeImg(file,width,height):
 def getText(filePath):
     text=pytesseract.image_to_string(Image.open(filePath),lang='chi_sim')
     print(text)
+
+def getGalleryImgByMonth(datas):
+    month2Img = {}
+    for data in datas:
+        month = data[1]
+        id = data[0]
+        if month in month2Img:
+            list = month2Img[month]
+        else:
+            list = []
+        list = list + getGalleryImgPathById(id)
+        month2Img[month] = list
+    return month2Img
+
+def getGalleryImgPathById(id):
+    filePath = []
+    dirPath = os.path.join(gloVar.galleryImgPath,str(id))
+    if(not os.path.exists(dirPath)):
+        return filePath
+    files = os.listdir()
+    for file in files:
+        filePath.append(os.path.join("/static/gallery",str(id),file))
+    return filePath

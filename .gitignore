@@ -19,3 +19,4 @@ config/*.config
 log/log/
 log/
 static/chatImg/*
+static/gallery/*

@@ -1,8 +1,9 @@
-from service import PasswordService
+from service import PasswordService,TravelService
 from util.Global import gloVar
 import datetime
 import configparser
 import os
+from util import FileUtil
 
 def init():
     print("doInit")
@@ -15,6 +16,7 @@ def init():
     conf.read(configFilePath, encoding="UTF-8")
     gloVar.chatDirPath = conf.get('ChatConfig', 'dirPath')
     gloVar.travelIndexImgPath = conf.get('TravelConfig', 'indexImgPath')
+    gloVar.galleryImgPath = conf.get('GalleryConfig', 'galleryImgPath')
     gloVar.dbHost = conf.get('MysqlConfig', 'host')
     gloVar.dbUser = conf.get('MysqlConfig', 'user')
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')
@@ -27,3 +29,6 @@ def init():
     else:
         gloVar.password = pwd[0][1]
         gloVar.passwordTime = pwd[0][2]
+    #初始化日期对应的文件名
+    idTimes = TravelService.getIdTimeLast3Month()
+    print(FileUtil.getGalleryImgByMonth(idTimes))

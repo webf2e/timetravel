@@ -7,3 +7,4 @@ class gloVar():
     passwordTime = 0
     chatDirPath = ""
     travelIndexImgPath = ""
+    galleryImgPath = ""

@@ -28,26 +28,52 @@
         </div>
       </div>
     </nav>
-    <form id="uploadForm" enctype="multipart/form-data" >
-        <div>
-            选择日期：
-            <input class="form-control" type="text" name="date" value="" placeholder="日期">
-            <hr/>
-            图片一：
-            <input class="form-control" type="file" name="file0" value="">
-            <hr/>
-            图片二：
-            <input class="form-control" type="file" name="file1" value="">
-            <hr/>
-            <input style="width:100%" class="btn btn-primary" type="button" value="上传" id="upFileBtn">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              添加信息
+            </a>
+          </h4>
         </div>
-    </form>
-    <hr/>
-    <input id="showImageDate" class="form-control" type="text" name="date" value="" placeholder="日期">
-    <input id="showDir" style="width:100%" class="btn btn-primary" type="button" value="展示图片">
-    <hr/>
-    <div id="images" style="width: 100%">
-
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <form id="uploadForm" enctype="multipart/form-data" >
+                <div>
+                    选择日期：
+                    <input class="form-control" type="text" name="date" value="" placeholder="日期">
+                    <hr/>
+                    图片一：
+                    <input class="form-control" type="file" name="file0" value="">
+                    <hr/>
+                    图片二：
+                    <input class="form-control" type="file" name="file1" value="">
+                    <hr/>
+                    <input style="width:100%" class="btn btn-primary" type="button" value="上传" id="upFileBtn">
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              编辑信息
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <input id="showImageDate" class="form-control" type="text" name="date" value="" placeholder="日期">
+            <input id="showDir" style="width:100%" class="btn btn-primary" type="button" value="展示图片">
+            <hr/>
+            <div id="images" style="width: 100%">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>

@@ -29,134 +29,162 @@
         </div>
       </div>
     </nav>
-    <form id="addInfoTableForm">
-        <table id="addInfoTable" class="table table-bordered" style="width: 100%">
-            <tr>
-                <td colspan="3" align="center"><b>添加信息</b></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">名称</td>
-                <td colspan="2"><input class="form-control travelName" name="travelName" type="text"/></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">类型</td>
-                <td colspan="2"><select class="form-control type" name="type"></select></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">内容</td>
-                <td colspan="2">
-                    <textarea name="content" class="form-control content" rows="5" style="width: 100%"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 80px">坐标</td>
-                <td>
-                    <input class="form-control lon" name="lon" type="text" placeholder="经度"/>
-                </td>
-                <td>
-                    <input class="form-control lat" name="lat" type="text" placeholder="纬度"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" align="left">
-                    <div id="travelmap1" style="width: 100%;height: 300px"></div>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 80px">时间</td>
-                <td colspan="2">
-                    <input class="form-control time" type="text" name="travelTime"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <button class="btn btn-primary" id="saveBtn" style="width: 100%">保存信息</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-    <hr/>
-    <hr/>
-    <form id="editInfoTableForm">
-        <table id="editInfoTable" class="table table-bordered" style="width: 100%">
-            <tr>
-                <td colspan="3" align="center"><b>编辑信息</b></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">地点</td>
-                <td colspan="2"><select class="form-control name" name="id" onchange="getById()"></select></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">名称</td>
-                <td colspan="2"><input class="form-control travelName" name="travelName" type="text"/></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">类型</td>
-                <td colspan="2"><select class="form-control type" name="type"></select></td>
-            </tr>
-            <tr>
-                <td style="width: 80px">内容</td>
-                <td colspan="2">
-                    <textarea class="form-control content" name="content" rows="5" style="width: 100%"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 80px">坐标</td>
-                <td>
-                    <input class="form-control lon" type="text" name="lon" placeholder="经度"/>
-                </td>
-                <td>
-                    <input class="form-control lat" type="text" name="lat" placeholder="纬度"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" align="left">
-                    <div id="travelmap2" style="width: 100%;height: 300px"></div>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 80px">时间</td>
-                <td colspan="2">
-                    <input class="form-control time" type="text" name="travelTime"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <button class="btn btn-primary" id="editBtn" style="width: 100%">修改信息</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-    <hr/>
-    <hr/>
-    <table id="editImgTable" class="table table-bordered" style="width: 100%">
-        <tr>
-            <td colspan="3" align="center"><b>编辑首图</b></td>
-        </tr>
-        <tr>
-            <td style="width: 80px">地点</td>
-            <td colspan="2"><select class="form-control name" onchange="getImgById()"></select></td>
-        </tr>
-        <tr>
-            <td style="width: 80px">名称</td>
-            <td colspan="2"><input class="form-control travelName" type="text"/></td>
-        </tr>
-        <tr>
-            <td style="width: 80px">图片</td>
-            <td colspan="2">
-                <form id="uploadTravelIndexImgForm" enctype="multipart/form-data" >
-                    <input class="form-control indexFile" type="file" name="file" value=""/>
-                    <input class="form-control travelId" type="text" name="id"/>
-                </form>
-                <img class="indexImg" src="" style='width:150px;height:130px'/>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传首图</button>
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              添加信息
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <form id="addInfoTableForm">
+                <table id="addInfoTable" class="table table-bordered" style="width: 100%">
+                    <tr>
+                        <td style="width: 80px">名称</td>
+                        <td colspan="2"><input class="form-control travelName" name="travelName" type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">类型</td>
+                        <td colspan="2"><select class="form-control type" name="type"></select></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">内容</td>
+                        <td colspan="2">
+                            <textarea name="content" class="form-control content" rows="5" style="width: 100%"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">坐标</td>
+                        <td>
+                            <input class="form-control lon" name="lon" type="text" placeholder="经度"/>
+                        </td>
+                        <td>
+                            <input class="form-control lat" name="lat" type="text" placeholder="纬度"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="left">
+                            <div id="travelmap1" style="width: 100%;height: 300px"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">时间</td>
+                        <td colspan="2">
+                            <input class="form-control time" type="text" name="travelTime"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn btn-primary" id="saveBtn" style="width: 100%">保存信息</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              编辑信息
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <form id="editInfoTableForm">
+                <table id="editInfoTable" class="table table-bordered" style="width: 100%">
+                    <tr>
+                        <td style="width: 80px">地点</td>
+                        <td colspan="2"><select class="form-control name" name="id" onchange="getById()"></select></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">名称</td>
+                        <td colspan="2"><input class="form-control travelName" name="travelName" type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">类型</td>
+                        <td colspan="2"><select class="form-control type" name="type"></select></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">内容</td>
+                        <td colspan="2">
+                            <textarea class="form-control content" name="content" rows="5" style="width: 100%"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">坐标</td>
+                        <td>
+                            <input class="form-control lon" type="text" name="lon" placeholder="经度"/>
+                        </td>
+                        <td>
+                            <input class="form-control lat" type="text" name="lat" placeholder="纬度"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="left">
+                            <div id="travelmap2" style="width: 100%;height: 300px"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">时间</td>
+                        <td colspan="2">
+                            <input class="form-control time" type="text" name="travelTime"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn btn-primary" id="editBtn" style="width: 100%">修改信息</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              编辑首图
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            <table id="editImgTable" class="table table-bordered" style="width: 100%">
+                <tr>
+                    <td style="width: 80px">地点</td>
+                    <td colspan="2"><select class="form-control name" onchange="getImgById()"></select></td>
+                </tr>
+                <tr>
+                    <td style="width: 80px">名称</td>
+                    <td colspan="2"><input class="form-control travelName" type="text"/></td>
+                </tr>
+                <tr>
+                    <td style="width: 80px">图片</td>
+                    <td colspan="2">
+                        <form id="uploadTravelIndexImgForm" enctype="multipart/form-data" >
+                            <input class="form-control indexFile" type="file" name="file" value=""/>
+                            <input class="form-control travelId" type="text" name="id"/>
+                        </form>
+                        <img class="indexImg" src="" style='width:150px;height:130px'/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传首图</button>
+                    </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>

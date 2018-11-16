@@ -8,3 +8,4 @@ class gloVar():
     chatDirPath = ""
     travelIndexImgPath = ""
     galleryImgPath = ""
+    monthImgMap = {}

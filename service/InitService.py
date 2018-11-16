@@ -30,5 +30,4 @@ def init():
         gloVar.password = pwd[0][1]
         gloVar.passwordTime = pwd[0][2]
     #初始化日期对应的文件名
-    idTimes = TravelService.getIdTimeLast3Month()
-    print(FileUtil.getGalleryImgByMonth(idTimes))
+    gloVar.monthImgMap = FileUtil.getGalleryImgByMonth(TravelService.getIdTimeLast3Month())

@@ -46,6 +46,7 @@ def getGalleryImgByMonth(datas):
         month = data[1]
         id = data[0]
         if month in month2Img:
+
             list = month2Img[month]
         else:
             list = []
@@ -58,7 +59,8 @@ def getGalleryImgPathById(id):
     dirPath = os.path.join(gloVar.galleryImgPath,str(id))
     if(not os.path.exists(dirPath)):
         return filePath
-    files = os.listdir()
+    files = os.listdir(dirPath)
+    files.sort()
     for file in files:
         filePath.append(os.path.join("/static/gallery",str(id),file))
     return filePath

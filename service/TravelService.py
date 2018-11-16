@@ -1,7 +1,8 @@
 from util.Global import gloVar
 import json
-import datetime
+import os
 import mysql.connector
+from util.Global import gloVar
 
 def getAllPoint():
     db = mysql.connector.connect(
@@ -80,6 +81,9 @@ def changeToJsonStr(fields,data):
         result = {}
         for i in range(0, len(column_list)):
             result[column_list[i]] = str(row[i])
+            if(column_list[i] == "id"):
+                result["hasImg"] = str(isShowImgText(row[0]))
+
         finalResult += str(json.dumps(result, ensure_ascii=False)) + ","
 
     finalResult = finalResult[0:-1] + "]"
@@ -153,6 +157,22 @@ def getTravelInfoById(id):
     db.close()
     return changeToJsonStr(fields, data)
 
+def getTravelNameById(id):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT travelName FROM travel where id = {}".format(id)
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data[0][0]
+
 def updateImgBy(id,imgPath):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
@@ -205,10 +225,18 @@ def getIdTimeLast3Month():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select id,DATE_FORMAT(travelTime,'%Y年%m月') as ym from travel where DATE_FORMAT(travelTime,'%Y年%m月') in (select ym from (SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym ORDER BY ym desc limit 3) ymt) order by id DESC"
+    sql = "select id,DATE_FORMAT(travelTime,'%Y%m') as ym from travel where DATE_FORMAT(travelTime,'%Y年%m月') in (select ym from (SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym ORDER BY ym desc limit 3) ymt) order by id DESC"
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
     db.close()
     return data
+
+def isShowImgText(id):
+    filePath = os.path.join(gloVar.galleryImgPath,str(id))
+    if not os.path.exists(filePath):
+        return 0
+    if len(os.listdir(filePath)) == 0:
+        return 0
+    return 1

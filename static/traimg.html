@@ -81,9 +81,7 @@
             <div class="inner padding14px content-borders resize">
                <div class="bs-docs-example">
             <ul class="nav nav-tabs" id="myTab">
-              <li id="date1" class="active"><a data-toggle="tab" href="#"></a></li>
-              <li id="date2" class=""><a data-toggle="tab" href="#"></a></li>
-              <li id="date3" class=""><a data-toggle="tab" href="#"></a></li>
+              <li style="float: none" class="active"><a id="title" data-toggle="tab" href="#"></a></li>
             </ul>
             <div class="tab-content padding26px" id="myTabContent">
               <div id="video" class="tab-pane fade active in">
@@ -139,7 +137,7 @@
                             </div>
                         </li>
                     </ul>
-                </section> 
+                </section>
                </div>
               </div>
             </div>
@@ -167,79 +165,28 @@
     <div class="clearfix"></div>
 </div>
 <script>
-    var currentMonth = "";
-    var date = new Date();
-    var year = date.getYear() + 1900;
-    var month = date.getMonth() + 1;
-    var requestData1 = "";
-    var requestData2 = "";
-    var requestData3 = "";
-    var date1 = "";
-    var date2 = "";
-    var date3 = "";
-    if(month < 10){
-        requestData1 = year + "0" + month;
-        date1 = year + "年0" + month + "月";
-    }else{
-        requestData1 = year + "" + month;
-        date1 = year + "年" + month + "月";
+    var id = location.href.split("=")[1];
+    if(id.indexOf("#") != -1){
+        id = id.split("#")[0];
     }
-    month = month - 1;
-    if(month <= 0){
-        month = 12 - month;
-        year = year - 1;
-    }
-    if(month < 10){
-        requestData2 = year + "0" + month;
-        date2 = year + "年0" + month + "月";
-    }else{
-        requestData2 = year + "" + month;
-        date2 = year + "年" + month + "月";
-    }
-
-    month = month - 1;
-    if(month <= 0){
-        month = 12 - month;
-        year = year - 1;
-    }
-    if(month < 10){
-        requestData3 = year + "0" + month;
-        date3 = year + "年0" + month + "月";
-    }else{
-        requestData3 = year + "" + month;
-        date3 = year + "年" + month + "月";
-    }
-    $("#date1").attr("requestData",requestData1);
-    $("#date1 a").html(date1);
-
-    $("#date2").attr("requestData",requestData2);
-    $("#date2 a").html(date2);
-
-    $("#date3").attr("requestData",requestData3);
-    $("#date3 a").html(date3);
-
-    $("#myTab li").click(function(){
-        getImgByMonthAndPage($(this).attr("requestData"),1);
-    });
-
-    getImgByMonthAndPage(requestData1,1);
-    function getImgByMonthAndPage(month,page){
+    getImgByIdAndPage(id,1);
+    function getImgByIdAndPage(id,page){
         $.ajax({
-            url:"/getImageByMonthPage",
+            url:"/getImageByIdPage",
             dataType: 'json',
             type:"POST",
-            data:"month="+month+"&page="+page,
+            data:"id="+id+"&page="+page,
             success:function(data){
                 var totalImgCount = data.totalImgCount;
                 var totalPageNum = data.totalPageNum;
                 var currentPageNum = data.currentPageNum;
                 $("#totalPage").html("<b>有"+totalImgCount+"张照片，共"+totalPageNum + "页，当前是第"+currentPageNum+"页</b>");
                 var pages = mathPages(currentPageNum,totalPageNum);
-                var html = "<li onclick=\"getImgByMonthAndPage('"+month+"',"+(currentPageNum - 1)+")\"><a href=\"javascript:;\">上一页</a></li>"
+                var html = "<li onclick=\"getImgByIdAndPage('"+id+"',"+(currentPageNum - 1)+")\"><a href=\"javascript:;\">上一页</a></li>"
                 for(var i = 0;i < pages.length;i++){
-                    html += "<li onclick=\"getImgByMonthAndPage('"+month+"',"+pages[i]+")\"><a href=\"javascript:;\">"+pages[i]+"</a></li>";
+                    html += "<li onclick=\"getImgByIdAndPage('"+id+"',"+pages[i]+")\"><a href=\"javascript:;\">"+pages[i]+"</a></li>";
                 }
-                html += "<li onclick=\"getImgByMonthAndPage('"+month+"',"+(currentPageNum + 1)+")\"><a href=\"javascript:;\">下一页</a></li>";
+                html += "<li onclick=\"getImgByIdAndPage('"+id+"',"+(currentPageNum + 1)+")\"><a href=\"javascript:;\">下一页</a></li>";
                 $("#pages").html(html);
                 $("#pages li:contains("+currentPageNum+")").html("<a href=\"javascript:;\"><font color='#f1a693'><b>"+currentPageNum+"</b></font></a>");
 
@@ -253,6 +200,7 @@
                         $(n).find("img").attr("src",data.imgList[i]);
                     }
                 })
+                $("#title").html(data.travelName);
             }
         });
     }

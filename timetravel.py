@@ -5,6 +5,7 @@ from route.IndexRoute import indexRoute
 from route.MemoryRoute import memoryRoute
 from route.TravelRoute import travelRoute
 from route.AdminRoute import adminRoute
+from route.GalleryRoute import galleryRoute
 from service import InitService
 from datetime import timedelta
 from flask_apscheduler import APScheduler
@@ -18,6 +19,7 @@ app.register_blueprint(indexRoute)
 app.register_blueprint(memoryRoute)
 app.register_blueprint(travelRoute)
 app.register_blueprint(adminRoute)
+app.register_blueprint(galleryRoute)
 
 @app.route('/')
 def login():

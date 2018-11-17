@@ -71,5 +71,3 @@ def compressImg(path):
         if file.startswith("gallery-") and file.endswith(".jpg"):
             im = Image.open(os.path.join(path,file))
             im.save("/home/liuwenbin/Desktop/"+file, 'JPEG', quality=40)
-
-compressImg("../static/images")

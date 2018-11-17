@@ -64,3 +64,12 @@ def getGalleryImgPathById(id):
     for file in files:
         filePath.append(os.path.join("/static/gallery",str(id),file))
     return filePath
+
+def compressImg(path):
+    files = os.listdir(path)
+    for file in files:
+        if file.startswith("gallery-") and file.endswith(".jpg"):
+            im = Image.open(os.path.join(path,file))
+            im.save("/home/liuwenbin/Desktop/"+file, 'JPEG', quality=40)
+
+compressImg("../static/images")

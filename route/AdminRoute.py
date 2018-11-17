@@ -124,7 +124,6 @@ def print_request_info():
         agent = str(request.headers.get("User-agent"))
         print(agent)
         if(agent.find("MI 8 Explorer Edition") == -1):
+            #todo 去掉下面的注释
             #abort(400)
             pass
-
-

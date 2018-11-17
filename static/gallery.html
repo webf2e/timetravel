@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>【文斌 & 静静】爱的小窝-我们的精彩</title>
 <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
-<link href="css/style.css" rel="stylesheet" type="text/css">
-<link href="css/color.css" rel="stylesheet" type="text/css">
-<link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
-<link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-<link href="css/countdown.css" rel="stylesheet" type="text/css">
-<link href="css/prettyPhoto.css" rel="stylesheet">
-<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
-<script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
-<script type="text/javascript" src="js/lightbox.js"></script>
-<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<link href="/static/css/style.css" rel="stylesheet" type="text/css">
+<link href="/static/css/color.css" rel="stylesheet" type="text/css">
+<link href="/static/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="/static/css/countdown.css" rel="stylesheet" type="text/css">
+<link href="/static/css/prettyPhoto.css" rel="stylesheet">
+<script type="text/javascript" src="/static/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="/static/js/lightbox.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 </head>
 	<body>
 
 <!--Background Image-->
-<img src="images/bg.jpg" id="background"/>
+<img src="/static/images/bg.jpg" id="background"/>
 <!--Background Image-->
 <!--WRAPPTER START-->
 <div class="wrapepr floral-bg">
@@ -33,7 +33,7 @@
                 <div class="first-name resize">
                 	<h1>刘文斌</h1>
                 </div>
-                <img src="images/heart3.png" style="margin-left: 10px"/>
+                <img src="/static/images/heart3.png" style="margin-left: 10px"/>
                 <div class="last-name resize">
                     <h1>陈晓静</h1>
                 </div>
@@ -68,15 +68,15 @@
             <!--content start-->
             <!--banners start-->
             	<div class="banner relative">
-                	<img src="images/banner-img.png" alt="">
+                	<img src="/static/images/banner-img.png" alt="">
                     <h2>我们的精彩</h2>
                 	<div class="banner-pettern"></div>
                 </div>
                 <div class="clearfix"></div>
                 <!--banners end-->
                 <div class="top-borderline relative">
-                	<div class="top-left-corner"><img src="images/top-left-corner.png" alt=""></div>
-                    <div class="top-right-corner"><img src="images/top-right-corner.png" alt=""></div>
+                	<div class="top-left-corner"><img src="/static/images/top-left-corner.png" alt=""></div>
+                    <div class="top-right-corner"><img src="/static/images/top-right-corner.png" alt=""></div>
                 </div>
             <div class="inner padding14px content-borders resize">
                <div class="bs-docs-example">
@@ -89,6 +89,7 @@
               <div id="video" class="tab-pane fade active in">
                 <div class="gallery-page">
                	<section id="gal-container1">
+                    <div id="errorMsg"></div>
                     <ul class="cs_gal_2_column pretty-photos clearfix">
                         <li>
                             <div class="gallery_img relative">
@@ -145,7 +146,7 @@
             </div>
           </div>
                <div class="gallery-pagination">
-                   <ul id="pages"></ul>
+                    <ul id="pages"></ul>
                </div>
 
                 <div class="register" style="padding:4px 0;text-align: center" id="totalPage"></div>
@@ -230,6 +231,16 @@
             type:"POST",
             data:"month="+month+"&page="+page,
             success:function(data){
+                $("#errorMsg").html("");
+                if(data.totalImgCount == undefined){
+                    $("#errorMsg").html("该月暂无照片，等待完善哦");
+                    $("#gal-container1 li").hide();
+                    $("#gal-container1 a").attr("href","");
+                    $("#gal-container1 img").attr("src","");
+                    $("#totalPage").html("");
+                    $("#pages").html("");
+                    return false;
+                }
                 var totalImgCount = data.totalImgCount;
                 var totalPageNum = data.totalPageNum;
                 var currentPageNum = data.currentPageNum;
@@ -252,7 +263,8 @@
                         $(n).find("a").attr("href",data.imgList[i]);
                         $(n).find("img").attr("src",data.imgList[i]);
                     }
-                })
+                });
+                $("#pages").css("margin-left",($(".gallery-pagination").width()-$("#pages").width())/2);
             }
         });
     }

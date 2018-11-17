@@ -15,7 +15,7 @@
 	outline:none;
 }
 body{
-	background-image:url(../images/b2g.jpg);
+	background-image:url(/static/images/bg.jpg);
 	background-repeat:no-repeat;
 	background-position:top center;
 	background-attachment:fixed;
@@ -29,7 +29,7 @@ body{
 	background-color:#fff
 }
 .floral-bg{
-	background-image:url(../images/floral-bg.png);
+	background-image:url(/static/images/floral-bg.png);
 	background-position:center 260px;
 	background-repeat:no-repeat;
 }
@@ -89,7 +89,7 @@ h5{
 	width:100%;
 }
 .header-line{
-	background-image:url(../images/header-line.png);
+	background-image:url(/static/images/header-line.png);
 	height:21px;
 	border-bottom:solid 1px #fff;
 	-moz-box-shadow:    0px 0px 14px -6px #000;
@@ -139,7 +139,7 @@ h5{
 	display:table-cell;
 	float:left;
 	width:96px;
-	background-image:url(../images/dots.png);
+	background-image:url(/static/images/dots.png);
 	background-repeat:no-repeat;
 	background-position:center center;
 }
@@ -163,7 +163,7 @@ h5{
 	float:left;
 	width:100%;
 	padding:20px 0px;
-	background-image:url(../images/getting-merried-bg.png), url(../images/getting-merried-bg2.png);
+	background-image:url(/static/images/getting-merried-bg.png), url(/static/images/getting-merried-bg2.png);
 	background-position:left center, right center;
 	background-repeat:no-repeat, no-repeat;
 	text-align:center;
@@ -209,7 +209,7 @@ h5{
 	width:104.6%;
 	margin:0px 0px 0px -21px;
 	position:relative;
-	background-image:url(../images/navigation-shade.png), url(../images/navigation-shade2.png);
+	background-image:url(/static/images/navigation-shade.png), url(/static/images/navigation-shade2.png);
 	background-repeat:no-repeat, no-repeat;
 	background-position:left, right;
 }
@@ -217,7 +217,7 @@ h5{
 	position:absolute;
 	left:-20px;
 	bottom:-16px;
-	background-image:url(../images/left-side2.png);
+	background-image:url(/static/images/left-side2.png);
 	background-repeat:no-repeat;
 	width:41px;
 	height:53px;
@@ -226,7 +226,7 @@ h5{
 	position:absolute;
 	right:-20px;
 	bottom:-16px;
-	background-image:url(../images/right-side2.png);
+	background-image:url(/static/images/right-side2.png);
 	background-repeat:no-repeat;
 	width:41px;
 	height:53px;
@@ -248,7 +248,7 @@ h5{
 	margin:-3px 0px 0px 0px;
 	padding:0px 0px;
 	position:relative;
-	background-image:url(../images/nav-dots.png);
+	background-image:url(/static/images/nav-dots.png);
 	background-repeat:no-repeat;
 	background-position:left center;
 	-webkit-border-radius: 2px;
@@ -289,7 +289,7 @@ h5{
 	border-color:transparent;
 }
 .navigation ul li a:hover{
-	background-image:url(../images/transparent.png);
+	background-image:url(/static/images/transparent.png);
 	transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
@@ -301,7 +301,7 @@ h5{
 	display:block;
 }
 .navigation ul li:hover > a{
-	background-image:url(../images/transparent.png);
+	background-image:url(/static/images/transparent.png);
 	text-decoration:none;
 }
 .navigation ul ul li:hover > a{
@@ -310,10 +310,10 @@ h5{
 }
 .navigation ul ul li:first-child{
 	margin:0px;
-	background-image:url(../images/dropdown-bg.png);
+	background-image:url(/static/images/dropdown-bg.png);
 }
 .navigation ul ul{
-	background-image:url(../images/dropdown-bg.png);
+	background-image:url(/static/images/dropdown-bg.png);
 	min-width:180px;
 	position:absolute;
 	left:0px;
@@ -330,7 +330,7 @@ h5{
 	border-top:none;
 	background:none;
 	margin:0px;
-	background-image:url(../images/divider.png);
+	background-image:url(/static/images/divider.png);
 	background-repeat:no-repeat;
 	background-position:top;
 }
@@ -419,7 +419,7 @@ h5{
 	overflow:hidden;
 }
 .leave-message{
-	background-image:url(../images/pettern.png);
+	background-image:url(/static/images/pettern.png);
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
@@ -442,7 +442,7 @@ h5{
 }
 	
 .banner-pettern{
-	background-image:url(../images/banner-pettern.png);
+	background-image:url(/static/images/banner-pettern.png);
 	height:100%;
 	width:100%;
 	position:absolute;
@@ -491,7 +491,7 @@ h5{
 	float:left;
 	width:100%;
 	background-color:#FFF;
-	background-image:url(../images/footer-border.png);
+	background-image:url(/static/images/footer-border.png);
 	background-repeat:repeat-x;
 	background-position:bottom;
 	
@@ -532,7 +532,7 @@ h5{
 	left:auto;
 }
 .content-borders{
-	background-image:url(../images/inner-border.png), url(../images/inner-border.png);
+	background-image:url(/static/images/inner-border.png), url(/static/images/inner-border.png);
 	background-repeat:repeat-y, repeat-y;
 	background-position:10px 0px, 886px 0;
 }
@@ -570,7 +570,7 @@ h5{
 	position:absolute;
 	left:-5px;
 	top:-3px;
-	background-image:url(../images/dot1.png);
+	background-image:url(/static/images/dot1.png);
 }
 .dot-right{
 	width:5px;
@@ -578,7 +578,7 @@ h5{
 	position:absolute;
 	right:-5px;
 	top:-3px;
-	background-image:url(../images/dot2.png);
+	background-image:url(/static/images/dot2.png);
 }
 .place h2 small{
 	font-size:20px
@@ -586,7 +586,7 @@ h5{
 .love-message{
 	float:left;
 	width:100%;
-	background-image:url(../images/love-message-bg.png);
+	background-image:url(/static/images/love-message-bg.png);
 	background-position:bottom;
 	background-repeat:no-repeat;
 	padding:0 0 55px;
@@ -607,7 +607,7 @@ h5{
 	padding:0px 30px;
 }
 .love-box-shadow, .love-box-shadow2{
-	background-image:url(../images/love-message-shadow.png);
+	background-image:url(/static/images/love-message-shadow.png);
 	position:absolute;
 	width:36px;
 	height:100%;
@@ -622,7 +622,7 @@ h5{
 	-webkit-transition: all 0.4s ease-in-out;
 }
 .love-box-shadow2{
-	background-image:url(../images/love-message-shadow2.png);
+	background-image:url(/static/images/love-message-shadow2.png);
 	right:auto;
 	top:0px;
 	left:0px;
@@ -639,14 +639,14 @@ h5{
 	color:#97d0c9;
 }
 .center-border{
-	background-image:url(../images/line2.png);
+	background-image:url(/static/images/line2.png);
 	background-repeat:repeat-y;
 	background-position:right;
 }
 .img-container{
 	float:left;
 	width:100%;
-	background-image:url(../images/img-flowers.png);
+	background-image:url(/static/images/img-flowers.png);
 	background-repeat:no-repeat;
 	background-position:center center;
 }
@@ -706,7 +706,7 @@ h5{
 .love-heart{
 	height:46px;
 	width:46px;
-	background-image:url(../images/heart2.png);
+	background-image:url(/static/images/heart2.png);
 	background-repeat:no-repeat;
 	-webkit-border-radius: 100px;
 	-moz-border-radius: 100px;
@@ -752,7 +752,7 @@ h5{
 	float:left;
 	width:100%;
 	margin:20px 0px;
-	background-image:url(../images/single-line.png);
+	background-image:url(/static/images/single-line.png);
 	background-repeat:repeat-x;
 	background-position:0px 9px;
 }
@@ -853,7 +853,7 @@ h5{
 	-webkit-transition: all 0.4s ease-in-out;
 }
 .flower2{
-	background-image:url(../images/flower4.png), url(../images/transparent2.png) ;
+	background-image:url(/static/images/flower4.png), url(/static/images/transparent2.png) ;
 	background-repeat:no-repeat, repeat;
 	background-position:center center;
 	height:100%;
@@ -872,7 +872,7 @@ h5{
 	float:left;
 	width:290px;
 	padding:0px 20px 0px 0px;
-	background-image:url(../images/info-border.png);
+	background-image:url(/static/images/info-border.png);
 	background-position:right center;
 	background-repeat:no-repeat;
 }
@@ -936,7 +936,7 @@ form{
 	float:left;
 	width:100%;
 	padding:25px 0px;
-	background-image:url(../images/line3.png), url(../images/line3.png);
+	background-image:url(/static/images/line3.png), url(/static/images/line3.png);
 	background-position:bottom, top;
 	background-repeat:repeat-x, repeat-x;
 }
@@ -984,7 +984,7 @@ form{
 	margin:0px 15px 0px 0px;
 }
 .quote{
-	background-image:url(../images/quots.png);
+	background-image:url(/static/images/quots.png);
 	background-repeat:no-repeat;
 	background-position:left 3px;
 	padding:0 0 8px 50px;
@@ -1006,7 +1006,7 @@ form{
 	color:#97d0c9
 }
 .img-pettern{
-	background-image:url(../images/pettern.png);
+	background-image:url(/static/images/pettern.png);
 	height:100%;
 	width:100%;
 	position:absolute;
@@ -1019,7 +1019,7 @@ form{
 .tweets{
 	float:left;
 	width:100%;
-	background-image:url(../images/quots.png), url(../images/quots2.png);
+	background-image:url(/static/images/quots.png), url(/static/images/quots2.png);
 	background-repeat:no-repeat, no-repeat;
 	background-position:50px 70px, 740px 70px;
 	text-align:center;
@@ -1051,7 +1051,7 @@ form{
 	float:left;
 	width:555px;
 	padding:0px 20px 0px 0px;
-	background-image:url(../images/line2.png);
+	background-image:url(/static/images/line2.png);
 	background-position: top right;
 	background-repeat:repeat-y;
 }
@@ -1065,7 +1065,7 @@ form{
 	-moz-box-shadow: 31px -7px 9px -34px #CCCCCC inset;
    -webkit-box-shadow: 31px -7px 9px -34px #CCCCCC inset;
    box-shadow: 31px -7px 9px -34px #CCCCCC inset;
-   background-image:url(../images/line2.png);
+   background-image:url(/static/images/line2.png);
 	background-position: top left;
 	background-repeat:repeat-y;
 	margin:0px 0px 0px -1px
@@ -1087,7 +1087,7 @@ form{
 	float:left;
 	width:100%;
 	margin:0px;
-	background-image:url(../images/line4.png);
+	background-image:url(/static/images/line4.png);
 	background-position:top;
 	background-repeat:repeat-x;
 	padding:8px 0;
@@ -1100,7 +1100,7 @@ form{
 	font-size:14px;
 	font-weight:bold;
 	padding:0px 0px 0px 20px;
-	background-image:url(../images/event-bullet.png);
+	background-image:url(/static/images/event-bullet.png);
 	background-position:left;
 	background-repeat:no-repeat;
 	color:#6f6f6f;
@@ -1111,7 +1111,7 @@ form{
 .event-time ul li a small{
 	font-size:12px;
 	padding:0px 0px 0px 15px;
-	background-image:url(../images/slash.png);
+	background-image:url(/static/images/slash.png);
 	background-repeat:no-repeat;
 	background-position:left;
 }
@@ -1170,7 +1170,7 @@ form{
 .message-board ul li{
 	margin:0px 0px 0px 0px;
 	padding:15px 0px;
-	background-image:url(../images/line3.png);
+	background-image:url(/static/images/line3.png);
 	background-position:top;
 	background-repeat:repeat-x;
 }
@@ -1237,7 +1237,7 @@ form{
 	color:#97d0c9
 }
 .event-box h2:after{
-	content:url(../images/leaf.png);
+	content:url(/static/images/leaf.png);
 	margin:0 0 0 10px;
 	transition: all 0.4s ease-in-out;
 	-moz-transition: all 0.4s ease-in-out;
@@ -1278,16 +1278,16 @@ form{
 	background-position:left center;
 }
 .time{
-	background-image:url(../images/time.png);
+	background-image:url(/static/images/time.png);
 }
 .location{
-	background-image:url(../images/location.png);
+	background-image:url(/static/images/location.png);
 }
 .phone{
-	background-image:url(../images/phone.png);
+	background-image:url(/static/images/phone.png);
 }
 .image-tip{
-	background-image:url(../images/tip.png);
+	background-image:url(/static/images/tip.png);
 	background-repeat:repeat-x;
 	background-position:bottom;
 	height:33px;
@@ -1325,7 +1325,7 @@ form{
 	-o-transition: all 0.4s ease-in-out;
 	-webkit-transition: all 0.4s ease-in-out;
 	bottom:-49px;
-	background-image:url(../images/tip2.png);
+	background-image:url(/static/images/tip2.png);
 	padding:10px 0 0
 	
 }
@@ -1355,7 +1355,7 @@ form{
 	filter: alpha(opacity=100);
 }
 .zoomer{
-	background-image:url(../images/zoomer.png);
+	background-image:url(/static/images/zoomer.png);
 	background-repeat:no-repeat;
 	background-position:center;
 	height:35px;
@@ -1483,7 +1483,7 @@ form{
 .select span{
 	float:left;
 	width:100%;
-	background-image:url(../images/line3.png);
+	background-image:url(/static/images/line3.png);
 	background-repeat:repeat-x;
 	background-position:top;
 	padding:12px 0px;
@@ -1499,7 +1499,7 @@ form{
 	font-size:12px;
 	margin:0px 0px 0px 15px;
 	padding:0px 0px 0px 20px;
-	background-image:url(../images/slash.png);
+	background-image:url(/static/images/slash.png);
 	background-repeat:no-repeat;
 	background-position:left;
 	font-weight:500;
@@ -1549,7 +1549,7 @@ form{
 .gallery-pagination{
 	float:left;
 	width:100%;
-	background-image:url(../images/line3.png), url(../images/flower3.png), url(../images/flower3.png);
+	background-image:url(/static/images/line3.png), url(/static/images/flower3.png), url(/static/images/flower3.png);
 	background-repeat:repeat-x, no-repeat, no-repeat;
 	background-position:0px 16px, left 26px, right 26px;
 	padding:10px 0px 0px 0px;
@@ -1615,16 +1615,16 @@ form{
 	background-repeat:no-repeat;
 }
 .contact-us .home{
-	background-image:url(../images/home.png);
+	background-image:url(/static/images/home.png);
 }
 .contact-us .phone{
-	background-image:url(../images/phone2.png);
+	background-image:url(/static/images/phone2.png);
 }
 .contact-us .mobile{
-	background-image:url(../images/mobile.png);
+	background-image:url(/static/images/mobile.png);
 }
 .contact-us .mail{
-	background-image:url(../images/mail.png);
+	background-image:url(/static/images/mail.png);
 }
 
 .contact-us .tip{
@@ -1651,7 +1651,7 @@ form{
 	right:-5px;
 }
 .contact-form{
-	background-image:url(../images/letter-border1.png), url(../images/letter-border2.png), url(../images/letter-border1.png), url(../images/letter-border2.png);
+	background-image:url(/static/images/letter-border1.png), url(/static/images/letter-border2.png), url(/static/images/letter-border1.png), url(/static/images/letter-border2.png);
 	background-repeat:repeat-x, repeat-y, repeat-x, repeat-y;
 	background-position:bottom center, left center, top center, right center;
 	float:left;
@@ -1716,7 +1716,7 @@ form{
 	width:900px;
 }
 .footer-leftside{
-	background-image:url(../images/left-corner.png);
+	background-image:url(/static/images/left-corner.png);
 	width:53px;
 	height:59px;
 	background-repeat:no-repeat;
@@ -1726,7 +1726,7 @@ form{
 	top:0px;
 }
 .footer-rightside{
-	background-image:url(../images/right-corner.png);
+	background-image:url(/static/images/right-corner.png);
 	width:53px;
 	height:59px;
 	background-repeat:no-repeat;
@@ -1740,7 +1740,7 @@ form{
 	padding:7px 19px 20px;
 	width:90%;
 	background-color:#fff;
-	background-image:url(../images/footer-border.png);
+	background-image:url(/static/images/footer-border.png);
 	background-repeat:repeat-x;
 	background-position:0px 45px;
 }
@@ -1748,7 +1748,7 @@ form{
 	font-family: 'Oswald', sans-serif;
 	font-size:12px;
 	padding:0px 0px 0px 25px;
-	background-image:url(../images/heart.png);
+	background-image:url(/static/images/heart.png);
 	background-repeat:no-repeat;
 	background-position:left 3px;
 	float:left;
@@ -1824,7 +1824,7 @@ form{
 .message-body{
 	width:100%;
 	background-color:#FFF;
-	background-image:url(../images/inner-border.png), url(../images/inner-border.png);
+	background-image:url(/static/images/inner-border.png), url(/static/images/inner-border.png);
 	background-repeat:repeat-y, repeat-y;
 	background-position:10px 0px, 546px 0;
 	padding:0px 70px;
@@ -1862,13 +1862,13 @@ form{
 	padding:46px 20px 13px;
 	width:76%;
 	background-color:#fff;
-	background-image:url(../images/footer-border.png);
+	background-image:url(/static/images/footer-border.png);
 	background-repeat:repeat-x;
 	background-position:0px 45px;
 	
 }
 .header-leftside{
-	background-image:url(../images/left-corner3.png);
+	background-image:url(/static/images/left-corner3.png);
 	width:53px;
 	height:59px;
 	background-repeat:no-repeat;
@@ -1878,7 +1878,7 @@ form{
 	top:0px;
 }
 .header-rightside{
-	background-image:url(../images/right-corner3.png);
+	background-image:url(/static/images/right-corner3.png);
 	width:53px;
 	height:59px;
 	background-repeat:no-repeat;
@@ -1892,7 +1892,7 @@ form{
 	padding:46px 20px 13px;
 	width:76%;
 	background-color:#fff;
-	background-image:url(../images/footer-border.png);
+	background-image:url(/static/images/footer-border.png);
 	background-repeat:repeat-x;
 	background-position:0px 10px;
 	

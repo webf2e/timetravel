@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>【文斌 & 静静】爱的小窝-我们的回忆</title>
+<title>【文斌 & 静静】爱的小窝-我们的旅程</title>
 <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
 <link href="/static/css/style.css" rel="stylesheet" type="text/css">
 <link href="/static/css/color.css" rel="stylesheet" type="text/css">
@@ -11,15 +11,17 @@
 <link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="/static/css/countdown.css" rel="stylesheet" type="text/css">
 <link href="/static/css/prettyPhoto.css" rel="stylesheet">
-<link href="/static/css/calendar.css" rel="stylesheet">
 <script type="text/javascript" src="/static/js/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.js"></script>
 <script type="text/javascript" src="/static/js/jquery.countdown.js"></script>
 <script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="/static/js/lightbox.js"></script>
 <script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="/static/js/calendar.js"></script>
-<script id="lbs" type="text/javascript" src="/static/js/lightbox.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+
 </head>
 	<body>
 
@@ -73,7 +75,7 @@
             <!--banners start-->
             	<div class="banner relative">
                 	<img src="/static/images/banner-img.png" alt="">
-                    <h2>我们的回忆</h2>
+                    <h2>我们的旅程</h2>
                 	<div class="banner-pettern"></div>
                 </div>
                 <div class="clearfix"></div>
@@ -83,34 +85,8 @@
                     <div class="top-right-corner"><img src="/static/images/top-right-corner.png" alt=""></div>
                 </div>
             <div class="inner padding40px content-borders resize">
-                <div class="events pretty-photos">
-                	<!--LEFT BAR START-->
-                    <div class="leftbar">
-                    	<!--event box start-->
-                        <h2 id="chatTitle">聊天记录</h2>
-                        <div id="images" class="event-box relative">
-
-                        </div>
-                        <!--event box start-->
-
-                    </div>
-                    <!--LEFT BAR END-->
-                    <!--RIGHT BAR START-->
-                    <div class="rightbar">
-                    	<!--location map widget start-->
-                    	<div class="widget map">
-                        	<!--heading start-->
-                        	<div class="heading">
-                            	<h2>时间</h2>
-                                <span class="dot-left"></span>
-                                <span class="dot-right"></span>
-                            </div>
-                            <!--heading start-->
-                            <div id="ca"></div>
-                        </div>
-                    </div>
-                    <!--RIGHT BAR END-->
-                </div>
+                <a href="/static/travel.html" class="btn btn-default" style="margin-right: 0px">返回</a>
+                <div id="bigMap" style="width: 100%;height:600px"></div>
                 <div class="register" style="padding:1px 0"></div>
                 <div class="clearfix"></div>
             </div>
@@ -123,69 +99,74 @@
             <p>相爱是一种很完美的感觉，与你相识相知相爱成就了这种完美，我深爱你和感谢你！愿与你携手一生，相恋相伴相守一辈子！</p>
             <div class="clearfix"></div>
         </div>
-    <div class="footer-rightside"   ></div>
+    <div class="footer-rightside"></div>
     </div>
     <!--FOOTER START-->
     </div>
     <div class="clearfix"></div>
 </div>
 <script>
-    $('#ca').calendar({
-        width: 240,
-        height: 240,
-        onSelected: function (view, date, data) {
-            var month = date.getMonth()+1;
-            if(month < 10){
-                month = "0" + month;
-            }
-            var day = date.getDate();
-            if(day < 10){
-                day = "0" + day;
-            }
-            var dateStr = (1900 + date.getYear())+"-"+month+"-"+day;
-            getImagePathByDate(dateStr);
-        }
+    var icon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 42), {
+       anchor: new BMap.Size(12, 23)
     });
-    $("#ca ul").css("margin","0");
-    $("#ca ol").css("margin","0");
-    function getImagePathByDate(date){
-        $.ajax({
-            url:"/getImagePath",
-            dataType: 'json',
-            data:"date="+date,
+    var map = new BMap.Map("bigMap");    // 创建Map实例
+	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+	map.enableScrollWheelZoom(true);
+	map.addControl(new BMap.NavigationControl());
+	getPoints();
+	var geoc = new BMap.Geocoder();
+	function getPoints(){
+	    $.ajax({
+            url:"/getAllPoint",
             type:"POST",
             success:function(data){
-                $("#chatTitle").html(date + " 聊天记录");
-                if(null == data){
-                    $("#images").html("暂无聊天记录");
-                }else{
-                    var imageHtml = ""
-                    $.each(data,function(i,n){
-                        imageHtml += "<div class=\"story-avatar relative\" style='background-color:#fff'>";
-                        imageHtml += "<img style='width:252px;height:524px' alt=\"\" src=\""+n+"\">";
-                        imageHtml += "<a href=\""+n+"\" rel=\"prettyPhoto[gallery0]\"><div class=\"img-pettern\"></div></a>";
-                        imageHtml += "</div>";
+                var lon = 0;
+                var lat = 0;
+                var markers = [];
+                $.each(data,function(i,n){
+                    lon = n.lon;
+                    lat = n.lat;
+                    var marker = new BMap.Marker(new BMap.Point(n.lon, n.lat),{icon:icon});
+                    marker.setTitle(n.travelName);
+                    //聚合使用
+                    markers.push(marker);
+                    map.addOverlay(marker);
+                    marker.addEventListener("click",function(){
+                        var p = marker.getPosition();
+                        var location = "";
+                        geoc.getLocation(p, function(rs){
+                            var addComp = rs.addressComponents;
+                            location = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+                            $.ajax({
+                                url:"/getByLonLat",
+                                dataType: 'json',
+                                data:"lon="+p.lng+"&lat="+p.lat,
+                                type:"POST",
+                                success:function(data){
+                                    data = data[0];
+                                    var html = "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>["+data.type+"] "+data.travelName+"</h4>" +
+                                    "<img style='float:right;margin:4px' id='imgDemo' src='"+data.indexImg+"' width='139' height='104' title='"+data.travelName+"'/>" +
+                                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'><b>时间："+data.travelTime+"</b></p>" +
+                                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'><b>地点："+location+"</b></p>" +
+                                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+data.content+"</p>" +
+                                    "</div>";
+                                    var infoWindow = new BMap.InfoWindow(html,{width:500,offset:new BMap.Size(0, -10)});
+                                    marker.openInfoWindow(infoWindow);
+                                   //图片加载完毕重绘infowindow
+                                   document.getElementById('imgDemo').onload = function (){
+                                       infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+                                   }
+                                }
+                            });
+                        });
                     });
-                    $("#images").html(imageHtml);
-                    $("#lbs").remove();
-                    var script = document.createElement("script");
-                    script.src = "/static/js/lightbox.js";
-                    script.id = "lbs";
-                    document.body.appendChild(script);
-                }
+                });
+                //聚合
+                //new BMapLib.MarkerClusterer(map, {markers:markers});
+                map.centerAndZoom(new BMap.Point(lon, lat), 15);
             }
         });
     }
-    function init(){
-        $.ajax({
-            url:"/getLastChatDate",
-            type:"POST",
-            success:function(data){
-                getImagePathByDate(data);
-            }
-        });
-    }
-    init();
 </script>
 <script>
 var _hmt = _hmt || [];

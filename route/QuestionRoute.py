@@ -26,7 +26,7 @@ def getAnswer():
             QuestionService.updateCorrectQuestion(a[0])
         else:
             result[a[0]] = 0
-            print("【回答错误】{} -> {}".format(a[3], answer[index]))
+            print("【回答错误】{} -> {}".format(a[2], answer[index]))
             QuestionService.updateErrorQuestion(a[0])
     result["uuid"] = str(uuid.uuid4())
     session["uuid"]=result["uuid"]

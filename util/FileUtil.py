@@ -40,19 +40,11 @@ def getText(filePath):
     text=pytesseract.image_to_string(Image.open(filePath),lang='chi_sim')
     print(text)
 
-def getGalleryImgByMonth(datas):
-    month2Img = {}
-    for data in datas:
-        month = data[1]
-        id = data[0]
-        if month in month2Img:
-
-            list = month2Img[month]
-        else:
-            list = []
+def getGalleryImgByMonth(ids):
+    list = []
+    for id in ids:
         list = list + getGalleryImgPathById(id)
-        month2Img[month] = list
-    return month2Img
+    return list
 
 def getGalleryImgPathById(id):
     filePath = []

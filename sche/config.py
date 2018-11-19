@@ -6,13 +6,6 @@ class Config(object):
             'args': None,
             'trigger': 'interval',
             'seconds': 10
-        },
-        {
-            'id': 'reloadgalleryJob',
-            'func': 'sche.schedule:reloadGallery',
-            'args': None,
-            'trigger': 'interval',
-            'seconds': 60
         }
     ]
 

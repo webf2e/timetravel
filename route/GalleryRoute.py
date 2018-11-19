@@ -5,6 +5,7 @@ from util.Global import gloVar
 import json
 import os
 from service import TravelService
+from util import FileUtil
 
 galleryRoute = Blueprint('galleryRoute', __name__)
 
@@ -47,9 +48,14 @@ def getImageByMonthPage():
     resultMap = {}
     month = request.form.get("month")
     page = int(request.form.get("page"))
-    if not month in gloVar.monthImgMap:
+    dbIds = TravelService.getIdsByMonth(month)
+    if len(dbIds) == 0:
         return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
-    imgs = gloVar.monthImgMap[month]
+    ids = []
+    for dbId in dbIds:
+        ids.append(dbId[0])
+    imgs = FileUtil.getGalleryImgByMonth(ids)
+    print(imgs)
     imgLength = len(imgs)
     if imgLength == 0:
         return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')

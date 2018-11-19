@@ -34,6 +34,7 @@ InitService.init()
 app.config['JSON_AS_ASCII'] = False
 app.config['SECRET_KEY'] = 'lovejing'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+app.config['MAX_CONTENT_LENGTH'] = 50*1024*1024
 scheduler = APScheduler()
 app.config.from_object(Config())
 scheduler.init_app(app)

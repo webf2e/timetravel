@@ -1,9 +1,6 @@
-from service import PasswordService,TravelService
 from util.Global import gloVar
-import datetime
 import configparser
 import os
-from util import FileUtil
 
 def init():
     print("doInit")
@@ -21,13 +18,3 @@ def init():
     gloVar.dbUser = conf.get('MysqlConfig', 'user')
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')
     gloVar.dbName = conf.get('MysqlConfig', 'db')
-    #从数据库加载密码
-    pwd = PasswordService.getCurrentPassword()
-    if(len(pwd) == 0):
-        gloVar.password = ""
-        gloVar.passwordTime = datetime.datetime.now()
-    else:
-        gloVar.password = pwd[0][1]
-        gloVar.passwordTime = pwd[0][2]
-    #初始化日期对应的文件名
-    gloVar.monthImgMap = FileUtil.getGalleryImgByMonth(TravelService.getIdTimeLast3Month())

@@ -217,7 +217,7 @@ def updateById(id,travelName,type,content,lon,lat,travelTime):
     db.commit()
     db.close()
 
-def getIdTimeLast3Month():
+def getIdsByMonth(month):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -225,7 +225,7 @@ def getIdTimeLast3Month():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select id,DATE_FORMAT(travelTime,'%Y%m') as ym from travel where DATE_FORMAT(travelTime,'%Y年%m月') in (select ym from (SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym ORDER BY ym desc limit 3) ymt) order by id DESC"
+    sql = "select id from travel where DATE_FORMAT(travelTime,'%Y%m')='{}' order by id DESC".format(month)
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()

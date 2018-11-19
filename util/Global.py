@@ -3,8 +3,6 @@ class gloVar():
     dbName = ""
     dbPwd = ""
     dbUser = ""
-    password = ""
-    passwordTime = 0
     chatDirPath = ""
     travelIndexImgPath = ""
     galleryImgPath = ""

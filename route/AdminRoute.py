@@ -116,6 +116,16 @@ def getChatImageCount():
                 imgCountMap["{}-{}-{}".format(year,month,day)] = len(images)
     return Response(json.dumps(imgCountMap, ensure_ascii=False), mimetype='application/json')
 
+@adminRoute.route('/admin/upGalleryImg',methods=["POST"])
+def upGalleryImg():
+    id = str(request.form.get("id"))
+    gallery = request.files["file"]
+    filePath = os.path.join(gloVar.galleryImgPath, id)
+    if not os.path.exists(filePath):
+        os.makedirs(filePath)
+    imgPath = os.path.join(filePath, gallery.filename)
+    gallery.save(imgPath)
+    return "文件上传成功"
 
 @adminRoute.before_request
 def print_request_info():

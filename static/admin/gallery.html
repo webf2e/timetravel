@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画廊信息修改</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+
+</head>
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">后台管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/static/admin/index.html">首页</a></li>
+            <li><a href="/static/admin/chatimg.html">聊天管理</a></li>
+            <li><a href="/static/admin/traveledit.html">旅游管理</a></li>
+            <li><a href="/static/admin/gallery.html">画廊管理</a></li>
+            <li><a href="/static/admin/tongji.html">数据统计</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              上传画廊
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            <table id="editImgTable" class="table table-bordered" style="width: 100%">
+                <tr>
+                    <td style="width: 80px">地点</td>
+                    <td colspan="2"><select class="form-control name" onchange="getImgById()"></select></td>
+                </tr>
+                <tr>
+                    <td style="width: 80px">名称</td>
+                    <td colspan="2"><input class="form-control travelName" type="text"/></td>
+                </tr>
+                <tr>
+                    <td style="width: 80px">图片</td>
+                    <td colspan="2">
+                        <form id="uploadGalleryImgForm" enctype="multipart/form-data" >
+                            <input class="form-control travelId" type="text" name="id"/>
+                            <input class="form-control" type="file" name="file" value=""/>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传首图</button>
+                    </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script>
+    $.ajax({
+        url:"/admin/getAllTravelNames",
+        dataType: 'json',
+        type:"POST",
+        success:function(data){
+            var html = "<option value='0'>请选择地点</option>";
+            $.each(data,function(i,n){
+                html += "<option value='"+n.id+"'>"+n.travelName+"</option>";
+            });
+            $(".name").html(html);
+        }
+    });
+    function getImgById(){
+        var id = $("#editImgTable .name").val();
+        $.ajax({
+            url:"/admin/getTravelInfoById",
+            dataType: 'json',
+            type:"POST",
+            data:"id="+id,
+            success:function(data){
+                data = data[0]
+                $("#editImgTable .travelName").val(data.travelName);
+                $("#editImgTable .travelId").val(data.id);
+            }
+        });
+    }
+
+    $("#uploadImgBtn").click(function(){
+        $.ajax({
+            url:"/admin/upGalleryImg",
+            type: "POST",
+            data: new FormData($('#uploadGalleryImgForm')[0]),
+            async: true,
+            cashe: false,
+            contentType:false,
+            processData:false,
+            success:function (returndata) {
+                alert(returndata)
+            },
+        　　 error: function (returndata) {
+                alert("上传失败！"+returndata)
+            }
+        });
+    });
+</script>
+</html>

@@ -113,7 +113,7 @@
                 $.each(data,function(i,n){
                     count ++;
                     html += n + "<br>";
-                    html += "<img src = '"+n+"' width='80%'/><hr>"
+                    html += "<img ondblclick=\"deleteImg('"+n+"')\" src = '"+n+"' width='80%'/><hr>"
                 });
                 if(0 == count){
                     $("#images").html("暂无图片");
@@ -127,5 +127,9 @@
             }
         });
     });
+
+    function deleteImg(path){
+        alert(path);
+    }
 </script>
 </html>

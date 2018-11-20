@@ -60,3 +60,8 @@ def getGalleryImgPathById(id):
 def compressImg(path):
     im = Image.open(path)
     im.save(path, 'JPEG', quality=80)
+
+def rotateImg(path):
+    im = Image.open(path)
+    out = im.transpose(Image.ROTATE_90)
+    out.save(path)

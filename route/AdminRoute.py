@@ -125,7 +125,52 @@ def upGalleryImg():
         os.makedirs(filePath)
     imgPath = os.path.join(filePath, gallery.filename)
     gallery.save(imgPath)
-    return "文件上传成功"
+    return os.path.join("/static/gallery",id,gallery.filename)
+
+@adminRoute.route('/admin/deleteChatImg',methods=["POST"])
+def deleteChatImg():
+    path = str(request.form.get("path"))
+    path = os.path.join(gloVar.chatDirPath,path.replace("/static/chatImg/",""))
+    os.remove(path)
+    return "删除成功"
+
+@adminRoute.route('/admin/rotateImg',methods=["POST"])
+def rotateImg():
+    path = str(request.form.get("path"))
+    absPath = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
+    print(absPath)
+    print(path)
+    FileUtil.rotateImg(absPath)
+    return path
+
+@adminRoute.route('/admin/getGalleryByIdAndPage',methods=["POST"])
+def getGalleryByIdAndPage():
+    id = str(request.form.get("id"))
+    page = int(request.form.get("page"))
+    dirPath = os.path.join(gloVar.galleryImgPath,id)
+    if(not os.path.exists(dirPath)):
+        return Response("{}", mimetype='application/json')
+    imgs = os.listdir(dirPath)
+    imgCount = len(imgs)
+    if(imgCount == 0):
+        return Response("{}", mimetype='application/json')
+    if page < 1:
+        page = imgCount
+    if page > imgCount:
+        page = 1
+    img = imgs[page - 1]
+    result = {}
+    result["path"] = os.path.join("/static/gallery/",id,img)
+    result["pageNum"] = page
+    result["totalCount"] = imgCount
+    return Response(json.dumps(result, ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/deleteGalleryImg',methods=["POST"])
+def deleteGalleryImg():
+    path = str(request.form.get("path"))
+    path = os.path.join(gloVar.galleryImgPath,path.replace("/static/gallery/",""))
+    os.remove(path)
+    return "删除成功"
 
 @adminRoute.before_request
 def print_request_info():

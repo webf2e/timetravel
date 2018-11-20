@@ -61,7 +61,7 @@
         <div class="panel-heading" role="tab" id="headingTwo">
           <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              编辑信息
+               查看图片
             </a>
           </h4>
         </div>
@@ -129,7 +129,17 @@
     });
 
     function deleteImg(path){
-        alert(path);
+        $.ajax({
+            url:"/admin/deleteChatImg",
+            type: "POST",
+            data: "path=" + path,
+            success:function (data) {
+                alert(data)
+            },
+        　　 error: function (returndata) {
+                alert("删除图片失败")
+            }
+        });
     }
 </script>
 </html>

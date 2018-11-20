@@ -60,8 +60,49 @@
                     </td>
                 </tr>
                 <tr>
+                    <td colspan="3"><img id="galleryImg" style="width:100%" ondblclick="rotateImg()"/></td>
+                </tr>
+                <tr>
                     <td colspan="3">
-                        <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传首图</button>
+                        <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传图片</button>
+                    </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              编辑图片
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <table id="showImgTable" class="table table-bordered" style="width: 100%">
+                <tr>
+                    <td style="width: 80px">地点</td>
+                    <td colspan="2"><select id="travelSelect" class="form-control name" onchange="getGalleryImg()"></select></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><img id="showGalleryImg" style="width:100%"/></td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                        <div class="btn-group btn-group-lg" role="group">
+                            <button id="prePageBtn" type="button" class="btn btn-default">上一张</button>
+                            <button id="nextPageBtn" type="button" class="btn btn-default">下一张</button>
+                            <button id="rotateImgBtn" type="button" class="btn btn-warning">旋转</button>
+                            <button id="deleteImgBtn" type="button" class="btn btn-danger">删除</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                        <span id="currentPage"></span> / <span id="totalPage"></span>
                     </td>
                 </tr>
             </table>
@@ -111,10 +152,96 @@
             contentType:false,
             processData:false,
             success:function (returndata) {
-                alert(returndata)
+                alert("上传成功")
+                $("#galleryImg").attr("src",returndata+"?t="+Math.random());
             },
         　　 error: function (returndata) {
-                alert("上传失败！"+returndata)
+                alert("上传失败！")
+            }
+        });
+    });
+
+    function rotateImg(){
+        var path = $("#galleryImg").attr("src");
+        if("" == path){
+            alert("获取不到图片路径");
+            return false;
+        }
+        path = path.split("?")[0];
+        $.ajax({
+            url:"/admin/rotateImg",
+            type: "POST",
+            data: "path="+path,
+            success:function (returndata) {
+                $("#galleryImg").attr("src",returndata+"?t="+Math.random());
+            },
+        　　 error: function (returndata) {
+                alert("旋转失败！")
+            }
+        });
+    }
+    function getGalleryImg(){
+        var id = $("#travelSelect").val();
+        getGalleryImgById(id,1);
+    }
+    function getGalleryImgById(id,pageNum){
+        $.ajax({
+            url:"/admin/getGalleryByIdAndPage",
+            type: "POST",
+            data: "page="+pageNum+"&id="+id,
+            success:function (data) {
+                if(data.path == undefined){
+                    alert("gallery无图片");
+                    return false;
+                }
+                $("#showGalleryImg").attr("src",data.path+"?t="+Math.random());
+                $("#currentPage").html(data.pageNum);
+                $("#totalPage").html(data.totalCount);
+            },
+        　　 error: function (returndata) {
+                alert("获取失败！")
+            }
+        });
+    }
+
+    $("#prePageBtn").click(function(){
+        var id = $("#travelSelect").val();
+        getGalleryImgById(id,$("#currentPage").html() - 1)
+    });
+    $("#nextPageBtn").click(function(){
+        var id = $("#travelSelect").val();
+        getGalleryImgById(id,$("#currentPage").html() + 1)
+    });
+    $("#rotateImgBtn").click(function(){
+        var path = $("#showGalleryImg").attr("src");
+        path = path.split("?")[0];
+        $.ajax({
+            url:"/admin/rotateImg",
+            type: "POST",
+            data: "path="+path,
+            success:function (returndata) {
+                $("#showGalleryImg").attr("src",returndata+"?t="+Math.random());
+            },
+        　　 error: function (returndata) {
+                alert("旋转失败！")
+            }
+        });
+    });
+    $("#deleteImgBtn").click(function(){
+        var path = $("#showGalleryImg").attr("src");
+        path = path.split("?")[0];
+        $.ajax({
+            url:"/admin/deleteGalleryImg",
+            type: "POST",
+            data: "path="+path,
+            success:function (returndata) {
+                $("#showGalleryImg").attr("src","");
+                alert("删除成功");
+                var id = $("#travelSelect").val();
+                getGalleryImgById(id,$("#currentPage").html())
+            },
+        　　 error: function (returndata) {
+                alert("旋转失败！")
             }
         });
     });

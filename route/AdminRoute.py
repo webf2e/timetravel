@@ -86,6 +86,7 @@ def addTravelInfo():
     lat = request.form.get("lat")
     travelTime = request.form.get("travelTime")
     TravelService.insert(travelName,type,content,lon,lat,travelTime)
+    TravelService.updateMostDirection()
     return "添加成功"
 
 @adminRoute.route('/admin/editTravelInfo',methods=["POST"])
@@ -98,6 +99,7 @@ def editTravelInfo():
     lat = request.form.get("lat")
     travelTime = request.form.get("travelTime")
     TravelService.updateById(id,travelName,type,content,lon,lat,travelTime)
+    TravelService.updateMostDirection()
     return "修改成功"
 
 @adminRoute.route('/admin/getChatImageCount',methods=["POST"])

@@ -81,7 +81,7 @@ def changeToJsonStr(fields,data):
         result = {}
         for i in range(0, len(column_list)):
             result[column_list[i]] = str(row[i])
-            if(column_list[i] == "id"):
+            if column_list[i] == "id":
                 result["hasImg"] = str(isShowImgText(row[0]))
 
         finalResult += str(json.dumps(result, ensure_ascii=False)) + ","
@@ -182,6 +182,36 @@ def updateImgBy(id,imgPath):
     )
     cursor = db.cursor()
     sql = "update travel set indexImg='{}' where id={}".format(imgPath,id)
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def updateMostDirection():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "update travel set direction=null"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+
+    sql = "update travel set direction='最东边的点' where lon = (select maxLon from (select max(lon) as maxLon from travel) tr);"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+
+    sql = "update travel set direction='最西边的点' where lon = (select minLon from (select min(lon) as minLon from travel) tr);"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+
+    sql = "update travel set direction='最北边的点' where lat = (select maxLat from (select max(lat) as maxLat from travel) tr);"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+
+    sql = "update travel set direction='最南边的点' where lat = (select minLat from (select min(lat) as minLat from travel) tr);"
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

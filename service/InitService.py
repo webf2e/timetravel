@@ -1,6 +1,7 @@
 from util.Global import gloVar
 import configparser
 import os
+from service import TravelService
 
 def init():
     print("doInit")
@@ -18,3 +19,4 @@ def init():
     gloVar.dbUser = conf.get('MysqlConfig', 'user')
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')
     gloVar.dbName = conf.get('MysqlConfig', 'db')
+    TravelService.updateMostDirection()

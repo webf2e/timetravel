@@ -85,7 +85,8 @@ def addTravelInfo():
     lon = request.form.get("lon")
     lat = request.form.get("lat")
     travelTime = request.form.get("travelTime")
-    TravelService.insert(travelName,type,content,lon,lat,travelTime)
+    keyword = request.form.get("keyword")
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword)
     TravelService.updateMostDirection()
     return "添加成功"
 
@@ -98,7 +99,8 @@ def editTravelInfo():
     lon = request.form.get("lon")
     lat = request.form.get("lat")
     travelTime = request.form.get("travelTime")
-    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime)
+    keyword = request.form.get("keyword")
+    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword)
     TravelService.updateMostDirection()
     return "修改成功"
 

@@ -238,6 +238,23 @@
         });
     }
     function getTravelContent(n){
+        var tag = "<ul>"
+        var keyword = n.keyword;
+        if(keyword != ""){
+            if(keyword.indexOf(",") != -1){
+                var ks = keyword.split(",")
+                for(var i = 0;i < ks.length;i++){
+                    tag += "<li><code>"+ks[i]+"</code></li>";
+                }
+            }else{
+                tag += "<li><code>"+keyword+"</code></li>";
+            }
+        }
+        var direction = n.direction;
+        if(direction != ""){
+            tag += "<li><code>"+direction+"</code></li>";
+        }
+        tag += "</ul>";
         return "<div class=\"event-box relative\">\n" +
             "\t<div class=\"story-avatar relative\">\n" +
             "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:150px;height:130px' alt=\"\" src=\""+n.indexImg+"\">\n" +
@@ -251,7 +268,7 @@
             "\t\t<ul>\n" +
             "\t    \t<li class=\"time\"><p>Time:"+n.travelTime+"</p></li>\n" +
             (n.hasImg == "1"?"\t    \t<li><a target='_blank' href='/static/traimg.html?i="+n.id+"'>查看图片</a></li>\n":"") +
-            "\t    </ul>\n" +
+            "\t    </ul>\n" + tag +
             "\t</div>               \t\n" +
             "\t<span class=\"dot-left\"></span>\n" +
             "\t<span class=\"flower\"><img alt=\"\" src=\"/static/images/flower2.png\"></span>\n" +

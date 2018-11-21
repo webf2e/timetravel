@@ -195,7 +195,7 @@ def updateMostDirection():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "update travel set direction=null"
+    sql = "update travel set direction=''"
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
 
@@ -217,7 +217,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime):
+def insert(travelName,type,content,lon,lat,travelTime,keyword):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -225,14 +225,14 @@ def insert(travelName,type,content,lon,lat,travelTime):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime) VALUES ('{}','{}','{}',{},{},'{}')"\
-        .format(travelName,type,content,lon,lat,travelTime)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction) VALUES ('{}','{}','{}',{},{},'{}','{}','')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword)
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
 
-def updateById(id,travelName,type,content,lon,lat,travelTime):
+def updateById(id,travelName,type,content,lon,lat,travelTime,keyword):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -240,8 +240,8 @@ def updateById(id,travelName,type,content,lon,lat,travelTime):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}' where id={}"\
-        .format(travelName,type,content,lon,lat,travelTime,id)
+    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='' where id={}"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,id)
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

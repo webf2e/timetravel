@@ -58,6 +58,10 @@
                         </td>
                     </tr>
                     <tr>
+                        <td style="width: 80px">关键</td>
+                        <td colspan="2"><input class="form-control keyword" name="keyword" type="text"/></td>
+                    </tr>
+                    <tr>
                         <td style="width: 80px">坐标</td>
                         <td>
                             <input class="form-control lon" name="lon" type="text" placeholder="经度"/>
@@ -116,6 +120,10 @@
                         <td colspan="2">
                             <textarea class="form-control content" name="content" rows="5" style="width: 100%"></textarea>
                         </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">关键</td>
+                        <td colspan="2"><input class="form-control keyword" name="keyword" type="text"/></td>
                     </tr>
                     <tr>
                         <td style="width: 80px">坐标</td>
@@ -269,6 +277,7 @@
                 $("#editInfoTable .type option").attr("selected",false);
                 $("#editInfoTable .type option[value='"+data.type+"']").attr("selected",true);
                 $("#editInfoTable .content").val(data.content);
+                $("#editInfoTable .keyword").val(data.keyword);
                 $("#editInfoTable .lon").val(data.lon);
                 $("#editInfoTable .lat").val(data.lat);
                 $("#editInfoTable .time").val(data.travelTime);

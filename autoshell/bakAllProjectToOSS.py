@@ -1,6 +1,7 @@
 import os, tarfile, datetime
 import oss2,sys,shutil
 
+now = datetime.datetime.now()
 #项目所在的路径
 projectPath = "/home/liuwenbin/PycharmProjects/"
 #projectPath = "/root/python_proj/"
@@ -56,7 +57,7 @@ for p,d in bakFileMap.items():
     print("文件{}拷贝到{}".format(p, dst))
     shutil.copyfile(p,dst)
 
-tarFileName = "{}-{}.tar".format(projectName,datetime.datetime.now())
+tarFileName = "{}-{}.tar".format(projectName,now)
 print("包名：{}".format(tarFileName))
 absTarFileName = os.path.join(tarPath,tarFileName)
 print("开始打包")

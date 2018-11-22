@@ -173,6 +173,22 @@ def getTravelNameById(id):
     db.close()
     return data[0][0]
 
+def getContent():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT content FROM travel"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data
+
 def updateImgBy(id,imgPath):
     db = mysql.connector.connect(
         host=gloVar.dbHost,

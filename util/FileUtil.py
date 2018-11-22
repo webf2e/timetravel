@@ -3,6 +3,9 @@ import traceback
 from PIL import Image
 import pytesseract
 from util.Global import gloVar
+import jieba
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 def renameAndMove(dirPath):
     try:
@@ -65,3 +68,12 @@ def rotateImg(path):
     im = Image.open(path)
     out = im.transpose(Image.ROTATE_90)
     out.save(path)
+
+def makeCloudWord(w,imgPath):
+    cut = jieba.cut(w)
+    words = ' '.join(cut)
+    wordcloud = WordCloud(background_color="white", max_words=2000,scale=20,
+                             max_font_size=120, random_state=42,
+                             font_path=gloVar.wordCloudFontPath).generate(words)
+    plt.imshow(wordcloud)
+    wordcloud.to_file(imgPath)

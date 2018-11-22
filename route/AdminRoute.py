@@ -104,7 +104,7 @@ def editTravelInfo():
     TravelService.updateMostDirection()
     return "修改成功"
 
-@adminRoute.route('/admin/getChatImageCount',methods=["POST"])
+@adminRoute.route('/admin/tongji/getChatImageCount',methods=["POST"])
 def getChatImageCount():
     imgCountMap = {}
     years = os.listdir(gloVar.chatDirPath)
@@ -119,6 +119,33 @@ def getChatImageCount():
                 images = os.listdir(os.path.join(gloVar.chatDirPath, year, month, day))
                 imgCountMap["{}-{}-{}".format(year,month,day)] = len(images)
     return Response(json.dumps(imgCountMap, ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/tongji/getContent',methods=["POST"])
+def getContent():
+    resultMap = {}
+    contents = TravelService.getContent()
+    wordCount = 0
+    w = ""
+    for content in contents:
+        wordCount += len(content[0])
+        w += content[0] + "。"
+    resultMap["wordCount"] = wordCount
+    fileName = "wordcloud.png"
+    FileUtil.makeCloudWord(w,os.path.join(gloVar.staticPath,"images",fileName))
+    resultMap["wordCloudPath"] = os.path.join("/static/images",fileName)
+    return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/tongji/getGalleryCount',methods=["POST"])
+def getGalleryCount():
+    resultMap = {}
+    galleryImgCount = 0
+    gallerys = os.listdir(gloVar.galleryImgPath)
+    resultMap["galleryCount"] = len(gallerys)
+    for galleryDir in gallerys:
+        galleryImgCount += len(os.listdir(os.path.join(gloVar.galleryImgPath,galleryDir)))
+    resultMap["galleryImgCount"] = galleryImgCount
+    return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
+
 
 @adminRoute.route('/admin/upGalleryImg',methods=["POST"])
 def upGalleryImg():

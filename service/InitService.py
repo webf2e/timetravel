@@ -19,4 +19,6 @@ def init():
     gloVar.dbUser = conf.get('MysqlConfig', 'user')
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')
     gloVar.dbName = conf.get('MysqlConfig', 'db')
+    gloVar.wordCloudFontPath = conf.get('wordCloudConfig', 'wordCloudFontPath')
+    gloVar.staticPath = conf.get('staticConfig','staticPath')
     TravelService.updateMostDirection()

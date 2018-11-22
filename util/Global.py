@@ -7,3 +7,5 @@ class gloVar():
     travelIndexImgPath = ""
     galleryImgPath = ""
     monthImgMap = {}
+    wordCloudFontPath = ""
+    staticPath = ""

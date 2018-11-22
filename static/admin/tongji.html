@@ -89,8 +89,8 @@
         type:"POST",
         success:function(data){
            var html = "OSS中的文件：";
-           $.each(data,function(i,n){
-                html+="<div class=\"alert alert-info\" role=\"alert\" style='margin-bottom: 0px'>"+n+"</div>"
+           $.each(data,function(file,size){
+                html+="<div class=\"alert alert-info\" role=\"alert\" style='margin-bottom: 0px'>"+file+" ("+Math.floor(size / 1024 / 1024 * 100) / 100+" MB)</div>"
            });
            $("#OSSFileTongji").html(html);
         }

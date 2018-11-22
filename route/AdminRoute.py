@@ -150,10 +150,9 @@ def getGalleryCount():
 def getOSSFile():
     auth = oss2.Auth('LTAIOWHFyQYc3gQN', 'kkN3gdS3x32g4etD7lpYbNnpYZmlmr')
     bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong-internal.aliyuncs.com', 'timetravelbak')
-    fileInOss = []
+    fileInOss = {}
     for obj in oss2.ObjectIterator(bucket, delimiter='/'):
-        fileInOss.append(obj.key)
-    fileInOss.reverse()
+        fileInOss[obj.key] = bucket.get_object_meta(obj.key).headers['Content-Length']
     return Response(json.dumps(fileInOss, ensure_ascii=False), mimetype='application/json')
 
 @adminRoute.route('/admin/upGalleryImg',methods=["POST"])

@@ -39,6 +39,7 @@
     <hr/>
     <div id="galleryCountTongji" style="width: 100%">
     </div>
+    <hr/>
     <div id="OSSFileTongji" style="width: 100%">
     </div>
 </body>
@@ -87,9 +88,9 @@
         dataType: 'json',
         type:"POST",
         success:function(data){
-           var html = "";
+           var html = "OSS中的文件：";
            $.each(data,function(i,n){
-                html+="<div class=\"alert alert-info\" role=\"alert\">"+n+"</div>"
+                html+="<div class=\"alert alert-info\" role=\"alert\" style='margin-bottom: 0px'>"+n+"</div>"
            });
            $("#OSSFileTongji").html(html);
         }

@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import abort,request,Response
-import os
+import os,oss2
 from util.Global import gloVar
 import json
 from service import TravelService
@@ -146,6 +146,15 @@ def getGalleryCount():
     resultMap["galleryImgCount"] = galleryImgCount
     return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
 
+@adminRoute.route('/admin/tongji/getOSSFile',methods=["POST"])
+def getOSSFile():
+    auth = oss2.Auth('LTAIOWHFyQYc3gQN', 'kkN3gdS3x32g4etD7lpYbNnpYZmlmr')
+    bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong-internal.aliyuncs.com', 'timetravelbak')
+    fileInOss = []
+    for obj in oss2.ObjectIterator(bucket, delimiter='/'):
+        fileInOss.append(obj.key)
+    fileInOss.reverse()
+    return Response(json.dumps(fileInOss, ensure_ascii=False), mimetype='application/json')
 
 @adminRoute.route('/admin/upGalleryImg',methods=["POST"])
 def upGalleryImg():

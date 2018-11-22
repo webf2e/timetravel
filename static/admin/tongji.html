@@ -39,6 +39,8 @@
     <hr/>
     <div id="galleryCountTongji" style="width: 100%">
     </div>
+    <div id="OSSFileTongji" style="width: 100%">
+    </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
@@ -77,6 +79,19 @@
         type:"POST",
         success:function(data){
            $("#galleryCountTongji").html("一共有"+data.galleryCount+"个景点，有"+data.galleryImgCount+"张照片");
+        }
+    });
+
+    $.ajax({
+        url:"/admin/tongji/getOSSFile",
+        dataType: 'json',
+        type:"POST",
+        success:function(data){
+           var html = "";
+           $.each(data,function(i,n){
+                html+="<div class=\"alert alert-info\" role=\"alert\">"+n+"</div>"
+           });
+           $("#OSSFileTongji").html(html);
         }
     });
 

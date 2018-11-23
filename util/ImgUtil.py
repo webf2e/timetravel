@@ -102,8 +102,30 @@ def cut(imgPath,top,left,width,height):
     cropImg = img.crop(region)
     return cropImg
 
+'''
+缩放图片，根据宽高
+imgPath，图片绝对路径
+width，宽
+height，高
+'''
+def resize(imgPath,width,height):
+    img = Image.open(imgPath)
+    img = img.resize((width, height), Image.ANTIALIAS)
+    return img
+
+'''
+缩放图片，根据百分比
+imgPath，图片绝对路径
+percent，百分比
+'''
+def resizeByPercent(imgPath, percent):
+    img = Image.open(imgPath)
+    img = img.resize((int(img.size[0] * percent), int(img.size[1] * percent)), Image.ANTIALIAS)
+    return img
+
 if __name__ == "__main__":
     pic="/home/liuwenbin/Desktop/图片/timg.jpeg"
     # img = dropShadow(pic,shadow=0x444444, offset=(5,5),iterations=2,border=2)
     #blur(pic).save("/home/liuwenbin/Desktop/1.png")
-    cut(pic,0,100,300,300).save("/home/liuwenbin/Desktop/1.png")
+    #cut(pic,0,100,300,300).save("/home/liuwenbin/Desktop/1.png")
+    resize(pic, 100, 100).save("/home/liuwenbin/Desktop/1.png")

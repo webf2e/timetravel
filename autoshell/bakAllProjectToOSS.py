@@ -19,6 +19,8 @@ bakMysqlShell = "/usr/bin/mysqldump -uroot -p1234asdf. timetravel > {}".format(b
 bakFileMap={}
 bakFileMap["/etc/nginx/nginx.conf"] = "nginx"
 bakFileMap["/etc/nginx/conf.d/default.conf"] = "nginx"
+#备份python依赖shell命令
+pipShell = "pip3 list > {}pip_list.txt".format(projectPath)
 
 
 def make_targz(output_filename, source_dir):
@@ -57,6 +59,10 @@ for p,d in bakFileMap.items():
     print("文件{}拷贝到{}".format(p, dst))
     shutil.copyfile(p,dst)
 
+#备份pip list
+print("备份pip list")
+os.system(pipShell)
+
 tarFileName = "{}-{}.tar".format(projectName,now)
 print("包名：{}".format(tarFileName))
 absTarFileName = os.path.join(tarPath,tarFileName)
@@ -88,6 +94,7 @@ print("文件上传完成")
 print("删除文件")
 os.remove(absTarFileName)
 os.remove(bakMysqlFileName)
+os.remove("{}pip_list.txt".format(projectPath))
 for p in bakFileMap.values():
     pp = os.path.join(projectPath,p)
     if os.path.exists(pp):

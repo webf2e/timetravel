@@ -88,6 +88,14 @@ def blur(imgPath):
     im3 = im.filter(ImageFilter.BLUR)
     return im3
 
+'''
+裁剪图片
+imgPath，图片绝对路径
+top，距离顶部距离
+left，距离左侧距离
+width，宽度
+height，高度
+'''
 def cut(imgPath,top,left,width,height):
     img = Image.open(imgPath)
     region = (left, top, left + width, top + height)

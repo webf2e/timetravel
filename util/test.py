@@ -11,7 +11,7 @@ for line in lines:
         continue
     line = line.replace("\t",",")
     vals = line.split(",")
-    t = (int(vals[0])*2,int(vals[1])*2,int(vals[2])*2 + int(vals[0])*2,int(vals[3])*2 + int(vals[1])*2)
+    t = (int(vals[0])*2, int(vals[1])*2, int(vals[2])*2 + int(vals[0])*2, int(vals[3])*2 + int(vals[1])*2)
     print(t)
     img1 = img1.resize((int(vals[2])*2, int(vals[3])*2))
     im.paste(img1, t)

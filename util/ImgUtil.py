@@ -79,7 +79,23 @@ def dropShadow(imgPath, offset=(5,5),
     back = back.resize((originWidth,originHeight),Image.ANTIALIAS)
     return back
 
+'''
+模糊图片
+imgPath，图片绝对路径
+'''
+def blur(imgPath):
+    im = Image.open(imgPath)
+    im3 = im.filter(ImageFilter.BLUR)
+    return im3
+
+def cut(imgPath,top,left,width,height):
+    img = Image.open(imgPath)
+    region = (left, top, left + width, top + height)
+    cropImg = img.crop(region)
+    return cropImg
+
 if __name__ == "__main__":
     pic="/home/liuwenbin/Desktop/图片/timg.jpeg"
-    img = dropShadow(pic,shadow=0x444444, offset=(5,5),iterations=2,border=2)
-    img.save("/home/liuwenbin/Desktop/1.png")
+    # img = dropShadow(pic,shadow=0x444444, offset=(5,5),iterations=2,border=2)
+    #blur(pic).save("/home/liuwenbin/Desktop/1.png")
+    cut(pic,0,100,300,300).save("/home/liuwenbin/Desktop/1.png")

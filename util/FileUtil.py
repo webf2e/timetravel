@@ -77,3 +77,12 @@ def makeCloudWord(w,imgPath):
                              font_path=gloVar.wordCloudFontPath).generate(words)
     plt.imshow(wordcloud)
     wordcloud.to_file(imgPath)
+
+def clearStaticDownloadFiles():
+    filePath = os.path.join(gloVar.staticPath,"download")
+    if not os.path.exists(filePath):
+        os.makedirs(filePath)
+    else:
+        files = os.listdir(filePath)
+        for file in files:
+            os.remove(os.path.join(filePath,file))

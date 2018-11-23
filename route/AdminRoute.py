@@ -155,6 +155,19 @@ def getOSSFile():
         fileInOss[obj.key] = bucket.get_object_meta(obj.key).headers['Content-Length']
     return Response(json.dumps(fileInOss, ensure_ascii=False), mimetype='application/json')
 
+@adminRoute.route('/admin/tongji/downloadOSSFile',methods=["POST"])
+def downloadOSSFile():
+    resultMap = {}
+    fileName = str(request.form.get("fileName"))
+    fileName = fileName.replace("_"," ")
+    FileUtil.clearStaticDownloadFiles()
+    auth = oss2.Auth('LTAIOWHFyQYc3gQN', 'kkN3gdS3x32g4etD7lpYbNnpYZmlmr')
+    bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong-internal.aliyuncs.com', 'timetravelbak')
+    bucket.get_object_to_file(fileName, os.path.join(gloVar.staticPath,"download",fileName.replace(" ","")))
+    resultMap["filePath"] = os.path.join("/static/download",fileName.replace(" ",""))
+    resultMap["fileName"] = fileName
+    return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
+
 @adminRoute.route('/admin/upGalleryImg',methods=["POST"])
 def upGalleryImg():
     id = str(request.form.get("id"))

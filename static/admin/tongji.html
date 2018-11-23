@@ -42,6 +42,9 @@
     <hr/>
     <div id="OSSFileTongji" style="width: 100%">
     </div>
+    <hr/>
+    <div id="OSSFileDownload" style="width: 100%">
+    </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
@@ -90,11 +93,22 @@
         success:function(data){
            var html = "OSS中的文件：";
            $.each(data,function(file,size){
-                html+="<div class=\"alert alert-info\" role=\"alert\" style='margin-bottom: 0px'>"+file+" ("+Math.floor(size / 1024 / 1024 * 100) / 100+" MB)</div>"
+                html+="<div ondblclick=\"downloadOssFile('"+file.replace(' ','_')+"')\" class=\"alert alert-info\" role=\"alert\" style='margin-bottom: 0px'>"+file+" ("+Math.floor(size / 1024 / 1024 * 100) / 100+" MB)</div>"
            });
            $("#OSSFileTongji").html(html);
         }
     });
+
+    function downloadOssFile(fileName){
+        $.ajax({
+            url:"/admin/tongji/downloadOSSFile",
+            data:"fileName="+fileName,
+            type:"POST",
+            success:function(data){
+                $("#OSSFileDownload").html("<a href='"+data.filePath+"' class='btn btn-primary'>下载"+data.fileName+"</a>");
+            }
+        });
+    }
 
     function drawLine(id,title,timeArr,dataArr){
         var option = {

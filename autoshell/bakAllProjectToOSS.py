@@ -3,15 +3,13 @@ import oss2,sys,shutil
 
 now = datetime.datetime.now()
 #项目所在的路径
-projectPath = "/home/liuwenbin/PycharmProjects/"
-#projectPath = "/root/python_proj/"
+projectPath = "/root/python_proj/"
 #项目名称
 projectName = "timetravel"
 #备份文件存放路径
-#tarPath = "/home/liuwenbin/Desktop/"
 tarPath = "/root/"
 #oss保存的最大备份数
-maxBakCount = 2
+maxBakCount = 4
 #备份数据的shell
 bakMysqlFileName = "{}timetravel.dump".format(projectPath)
 bakMysqlShell = "/usr/bin/mysqldump -uroot -p1234asdf. timetravel > {}".format(bakMysqlFileName)
@@ -21,6 +19,7 @@ bakFileMap["/etc/nginx/nginx.conf"] = "nginx"
 bakFileMap["/etc/nginx/conf.d/default.conf"] = "nginx"
 #备份python依赖shell命令
 pipShell = "pip3 list > {}pip_list.txt".format(projectPath)
+staticPath = "/root/python_proj/timetravel/static"
 
 
 def make_targz(output_filename, source_dir):
@@ -46,6 +45,17 @@ def delDir(path):
                 if os.path.exists(c_path):
                     os.remove(c_path)
 
+def clearStaticDownloadFiles():
+    filePath = os.path.join(staticPath, "download")
+    if os.path.exists(filePath):
+        files = os.listdir(filePath)
+        for file in files:
+            os.remove(os.path.join(filePath, file))
+
+
+#清理download文件
+print("清理download文件夹")
+clearStaticDownloadFiles()
 #mysql备份数据库
 print("备份mysql数据库")
 os.system(bakMysqlShell)
@@ -67,12 +77,11 @@ tarFileName = "{}-{}.tar".format(projectName,now)
 print("包名：{}".format(tarFileName))
 absTarFileName = os.path.join(tarPath,tarFileName)
 print("开始打包")
-#make_targz(absTarFileName,os.path.join(projectPath))
+make_targz(absTarFileName,os.path.join(projectPath))
 print("打包结束")
 
 auth = oss2.Auth('LTAIOWHFyQYc3gQN', 'kkN3gdS3x32g4etD7lpYbNnpYZmlmr')
-#bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong-internal.aliyuncs.com', 'timetravelbak')
-bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong.aliyuncs.com', 'timetravelbak')
+bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong-internal.aliyuncs.com', 'timetravelbak')
 
 #判断文件
 fileInOss = []

@@ -20,7 +20,15 @@
 <script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
-
+<style>
+    .inner, .container{
+        width: 100% !important;
+    }
+    body {
+        padding-right:0px;
+        padding-left:0px
+    }
+</style>
 </head>
 	<body>
 
@@ -34,15 +42,13 @@
         <div class="clearfix"></div>
         <div class="container">
         <div class="couple-name">
-            <div class="couple-name-holder">
-                <div class="first-name resize">
-                	<h1>刘文斌</h1>
-                </div>
-                <img src="/static/images/heart3.png" style="margin-left: 10px"/>
-                <div class="last-name resize">
-                    <h1>陈晓静</h1>
-                </div>
-            </div>
+            <table style="width:100%">
+                <tr>
+                    <td align="right"><h1 style="font-size: 30px">刘文斌</h1></td>
+                    <td align="center"><h1><img src="/static/images/heart3.png" width="50%"/></h1></td>
+                    <td align="left"><h1 style="font-size: 30px">陈晓静</h1></td>
+                </tr>
+            </table>
         </div>
         <div class="inner">
         <div class="getting-merried">
@@ -83,7 +89,7 @@
                 	<div class="top-left-corner"><img src="/static/images/top-left-corner.png" alt=""></div>
                     <div class="top-right-corner"><img src="/static/images/top-right-corner.png" alt=""></div>
                 </div>
-            <div class="inner padding40px content-borders resize">
+            <div class="inner padding40px resize">
                 <div class="events pretty-photos">
                 	<!--LEFT BAR START-->
                     <div class="leftbar" id="contentDiv">
@@ -258,7 +264,7 @@
         tag += "</ul>";
         return "<div class=\"event-box relative\">\n" +
             "\t<div class=\"story-avatar relative\">\n" +
-            "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:150px;height:130px' alt=\"\" src=\""+n.indexImg+"\">\n" +
+            "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:100%;height:130px' alt=\"\" src=\""+n.indexImg+"\">\n" +
             "\t<div class=\"image-tip\">\n" +
             "\t\t<a href=\"javascript:;\">"+n.travelName+"</a>\n" +
             "\t</div>\n" +

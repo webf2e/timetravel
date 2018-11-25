@@ -19,6 +19,24 @@
 <script type="text/javascript" src="/static/js/lightbox.js"></script>
 <script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<style>
+    .inner, .container{
+        width: 100% !important;
+    }
+    body {
+        padding-right:0px;
+        padding-left:0px
+    }
+    .modal {
+        align: center;
+        left: 0% !important;
+        width: 100% !important;
+    }
+    .message-center2, .message-center{
+        padding: 46px 48px 13px;
+    }
+
+</style>
 
 </head>
 	<body>
@@ -33,15 +51,13 @@
         <div class="clearfix"></div>
         <div class="container">
         <div class="couple-name">
-            <div class="couple-name-holder">
-                <div class="first-name resize">
-                	<h1>刘文斌</h1>
-                </div>
-                <img src="/static/images/heart3.png" style="margin-left: 10px"/>
-                <div class="last-name resize">
-                    <h1>陈晓静</h1>
-                </div>
-            </div>
+            <table style="width:100%">
+                <tr>
+                    <td align="right"><h1 style="font-size: 30px">刘文斌</h1></td>
+                    <td align="center"><h1><img src="/static/images/heart3.png" width="50%"/></h1></td>
+                    <td align="left"><h1 style="font-size: 30px">陈晓静</h1></td>
+                </tr>
+            </table>
         </div>
         <div class="inner">
         <div class="getting-merried">
@@ -70,11 +86,9 @@
             <!--navigation end-->
             <div class="clearfix"></div>
             <!--content start-->
-            <div class="innter padding40px content-borders" style="padding-bottom: 0">
+            <div class="innter padding40px" style="padding-bottom: 0">
             	<!--banners start-->
             	<div class="banner relative">
-                    <h4>我们已经相遇 <b id="meetingDay"></b> 天！</h4>
-                	<div class="left-bg visible-desktop visible-tablet"><img src="/static/images/banner-controlbg1.png" alt=""></div>
                     <div class="left-shadow"><img src="/static/images/banner-corner-left.png" alt=""></div>
                     <div class="right-shadow"><img src="/static/images/banner-corner-right.png" alt=""></div>
                     	<div id="myCarousel" class="carousel slide">
@@ -86,6 +100,7 @@
                         </div>
                     <div class="right-bg visible-desktop visible-tablet"><img src="/static/images/banner-controlbg2.png" alt=""></div>
                 </div>
+                <div style="text-align:center;color:#f1a693;" ><h4>我们已经相遇 <b id="meetingDay"></b> 天！</h4></div>
                 <!--banners end-->
                 <!--place start-->
                 <div class="place relative">
@@ -100,7 +115,7 @@
                     <div class="love-heart"><a href="#myModal" rel="tooltip" data-original-title="爱的宣言" role="button" data-toggle="modal"></a></div>
                 	<div class="love-box resize center-border relative">
                     	<div class="img-container">
-                        	<div class="avatar"><a href="#"><img src="/static/images/avatar.png" alt=""></a></div>
+                        	<div class="avatar"><a href="javascript:;"><img src="/static/images/avatar.png" alt=""></a></div>
                         </div>
                         <div class="clearfix"></div>
                         <h3>刘文斌</h3>
@@ -138,7 +153,7 @@
                     <!--right love box start-->
                 	<div class="love-box resize relative">
                     	<div class="img-container">
-                        	<div class="avatar"><a href="#"><img src="/static/images/avatar2.png" alt=""></a></div>
+                        	<div class="avatar"><a href="javascript:;"><img src="/static/images/avatar2.png" alt=""></a></div>
                         </div>
                         <div class="clearfix"></div>
                         <h3>陈晓静</h3>
@@ -178,16 +193,6 @@
             </div>
             <!--content end-->
         </div>
-     <!--FOOTER START-->
-    <div class="footer relative">
-        <div class="footer-leftside"></div>
-        <div class="followus resize">
-            <p>相爱是一种很完美的感觉，与你相识相知相爱成就了这种完美，我深爱你和感谢你！愿与你携手一生，相恋相伴相守一辈子！</p>
-            <div class="clearfix"></div>
-        </div>
-    <div class="footer-rightside"   ></div>
-    </div>
-    <!--FOOTER START-->
     </div>
     <div class="clearfix"></div>
 </div>

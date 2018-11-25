@@ -2,6 +2,7 @@ from util.Global import gloVar
 import configparser
 import os
 from service import TravelService
+from util import FileUtil
 
 def init():
     print("doInit")

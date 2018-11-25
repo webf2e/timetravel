@@ -6,6 +6,13 @@ class Config(object):
             'args': None,
             'trigger': 'interval',
             'seconds': 10
+        },
+        {
+            'id': 'makeBigHeartJob',
+            'func': 'sche.schedule:makeBigHeartJob',
+            'args': None,
+            'trigger': 'interval',
+            'seconds': 60 * 60 * 2
         }
     ]
 

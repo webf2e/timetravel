@@ -119,6 +119,7 @@ def makeHeartImg():
     configFilePath = os.path.join(os.path.dirname(gloVar.staticPath),"config","heartLocation.config")
     lines = open(configFilePath, "r")
     im = Image.open(os.path.join(gloVar.staticPath, "images", "bkimage.jpg"))
+    #im = Image.new("RGBA",(2040,1785))
     for line in lines:
         line = line.strip()
         if line == "":

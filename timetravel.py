@@ -21,14 +21,30 @@ app.register_blueprint(travelRoute)
 app.register_blueprint(adminRoute)
 app.register_blueprint(galleryRoute)
 
+# var ua = navigator.userAgent;
+# var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+# isIphone =!ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+# isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+# isMobile = isIphone || isAndroid;
 @app.route('/')
 def login():
     isLogin = request.cookies.get('isLogin')
-    print("isLogin:{}".format(isLogin))
+    ua = str(request.headers.get("user-agent"))
+    ipad = ua.find("iPad") != -1
+    isIphone = not ipad and ua.find("iPhone") != -1
+    isAndroid = ua.find("Android") != -1
+    isMobile = isIphone or isAndroid;
+    print("isMobile:{}".format(isMobile))
     if isLogin == None:
-        return app.send_static_file("login.html")
+        if isMobile:
+            return app.send_static_file("mobile/login.html")
+        else:
+            return app.send_static_file("login.html")
     else:
-        return app.send_static_file("index.html")
+        if isMobile:
+            return app.send_static_file("mobile/index.html")
+        else:
+            return app.send_static_file("index.html")
 
 InitService.init()
 app.config['JSON_AS_ASCII'] = False

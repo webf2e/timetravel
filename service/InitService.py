@@ -23,3 +23,4 @@ def init():
     gloVar.wordCloudFontPath = conf.get('wordCloudConfig', 'wordCloudFontPath')
     gloVar.staticPath = conf.get('staticConfig','staticPath')
     TravelService.updateMostDirection()
+    FileUtil.makeHeartImg()

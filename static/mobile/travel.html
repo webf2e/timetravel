@@ -20,6 +20,7 @@
 <script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script type="text/javascript" src="/static/js/scrolltopcontrol.js"></script>
 <style>
     .inner, .container{
         width: 100% !important;
@@ -42,13 +43,15 @@
         <div class="clearfix"></div>
         <div class="container">
         <div class="couple-name">
-            <table style="width:100%">
-                <tr>
-                    <td align="right"><h1 style="font-size: 30px">刘文斌</h1></td>
-                    <td align="center"><h1><img src="/static/images/heart3.png" width="50%"/></h1></td>
-                    <td align="left"><h1 style="font-size: 30px">陈晓静</h1></td>
-                </tr>
-            </table>
+            <div class="couple-name-holder">
+                <div class="first-name resize">
+                	<h1>刘文斌</h1>
+                </div>
+                <img src="/static/images/heart3.png" style="margin-left: 10px"/>
+                <div class="last-name resize">
+                    <h1>陈晓静</h1>
+                </div>
+            </div>
         </div>
         <div class="inner">
         <div class="getting-merried">
@@ -91,13 +94,7 @@
                 </div>
             <div class="inner padding40px resize">
                 <div class="events pretty-photos">
-                	<!--LEFT BAR START-->
-                    <div class="leftbar" id="contentDiv">
-
-                    </div>
-                    <!--LEFT BAR END-->
-                    <!--RIGHT BAR START-->
-                    <div class="rightbar">
+                	<div class="rightbar" style="margin-bottom: 50px">
                     	<!--location map widget start-->
                     	<div class="widget map">
                         	<!--heading start-->
@@ -107,10 +104,13 @@
                                 <span class="dot-right"></span>
                             </div>
                             <!--heading start-->
-                            <div id="travelmap" style="border: 1px solid #000;width: 220px;height :220px"></div>
+                            <div id="travelmap" style="border: 1px solid #000;width: 100%;height :300px"></div>
                         </div>
-                        <!--location map widget end-->
-                        <!--Flickr widget end-->
+                    </div>
+                    <div class="leftbar" id="contentDiv">
+
+                    </div>
+                    <div class="rightbar">
                         <div class="widget message-board">
                         <!--heading start-->
                         	<div class="heading">
@@ -122,23 +122,12 @@
                         	<ul id="dateul"></ul>
                         </div>
                     </div>
-                    <!--RIGHT BAR END-->
                 </div>
                 <div class="register" style="padding:1px 0"></div>
                 <div class="clearfix"></div>
             </div>
             <!--content end-->
         </div>
-     <!--FOOTER START-->
-    <div class="footer relative">
-        <div class="footer-leftside"></div>
-        <div class="followus resize">
-            <p>相爱是一种很完美的感觉，与你相识相知相爱成就了这种完美，我深爱你和感谢你！愿与你携手一生，相恋相伴相守一辈子！</p>
-            <div class="clearfix"></div>
-        </div>
-    <div class="footer-rightside"   ></div>
-    </div>
-    <!--FOOTER START-->
     </div>
     <div class="clearfix"></div>
 </div>
@@ -264,7 +253,7 @@
         tag += "</ul>";
         return "<div class=\"event-box relative\">\n" +
             "\t<div class=\"story-avatar relative\">\n" +
-            "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:100%;height:130px' alt=\"\" src=\""+n.indexImg+"\">\n" +
+            "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:100%;' alt=\"\" src=\""+n.indexImg+"\">\n" +
             "\t<div class=\"image-tip\">\n" +
             "\t\t<a href=\"javascript:;\">"+n.travelName+"</a>\n" +
             "\t</div>\n" +
@@ -274,7 +263,7 @@
             "\t    <p>"+n.content+"</p>\n" +
             "\t\t<ul>\n" +
             "\t    \t<li class=\"time\"><p>Time:"+n.travelTime+"</p></li>\n" +
-            (n.hasImg == "1"?"\t    \t<li><a target='_blank' href='/static/traimg.html?i="+n.id+"'>查看图片</a></li>\n":"") +
+            (n.hasImg == "1"?"\t    \t<li><a href='/static/traimg.html?i="+n.id+"'>查看图片</a></li>\n":"") +
             "\t    </ul>\n" + tag +
             "\t</div>               \t\n" +
             "\t<span class=\"dot-left\"></span>\n" +

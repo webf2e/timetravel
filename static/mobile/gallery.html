@@ -17,6 +17,16 @@
 <script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
 <script type="text/javascript" src="/static/js/lightbox.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/js/scrolltopcontrol.js"></script>
+<style>
+    .inner, .container{
+        width: 100% !important;
+    }
+    body {
+        padding-right:0px;
+        padding-left:0px
+    }
+</style>
 </head>
 	<body>
 
@@ -79,7 +89,7 @@
                 	<div class="top-left-corner"><img src="/static/images/top-left-corner.png" alt=""></div>
                     <div class="top-right-corner"><img src="/static/images/top-right-corner.png" alt=""></div>
                 </div>
-            <div class="inner padding14px content-borders resize">
+            <div class="inner padding14px resize">
                <div class="bs-docs-example">
             <ul class="nav nav-tabs" id="myTab">
               <li id="date1" class="active"><a data-toggle="tab" href="#"></a></li>
@@ -155,16 +165,6 @@
             </div>
             <!--content end-->
         </div>
-     <!--FOOTER START-->
-    <div class="footer relative">
-        <div class="footer-leftside"></div>
-        <div class="followus resize">
-            <p>相爱是一种很完美的感觉，与你相识相知相爱成就了这种完美，我深爱你和感谢你！愿与你携手一生，相恋相伴相守一辈子！</p>
-            <div class="clearfix"></div>
-        </div>
-    <div class="footer-rightside"></div>
-    </div>
-    <!--FOOTER START-->
     </div>
     <div class="clearfix"></div>
 </div>
@@ -247,11 +247,11 @@
                 var currentPageNum = data.currentPageNum;
                 $("#totalPage").html("<b>有"+totalImgCount+"张照片，共"+totalPageNum + "页，当前是第"+currentPageNum+"页</b>");
                 var pages = mathPages(currentPageNum,totalPageNum);
-                var html = "<li onclick=\"getImgByMonthAndPage('"+month+"',"+(currentPageNum - 1)+")\"><a href=\"javascript:;\">上一页</a></li>"
+                var html = "<li onclick=\"getImgByMonthAndPage('"+month+"',"+(currentPageNum - 1)+")\"><a href=\"javascript:;\">&nbsp;上一页&nbsp;</a></li>"
                 for(var i = 0;i < pages.length;i++){
-                    html += "<li onclick=\"getImgByMonthAndPage('"+month+"',"+pages[i]+")\"><a href=\"javascript:;\">"+pages[i]+"</a></li>";
+                    html += "<li onclick=\"getImgByMonthAndPage('"+month+"',"+pages[i]+")\"><a href=\"javascript:;\">&nbsp;"+pages[i]+"&nbsp;</a></li>";
                 }
-                html += "<li onclick=\"getImgByMonthAndPage('"+month+"',"+(currentPageNum + 1)+")\"><a href=\"javascript:;\">下一页</a></li>";
+                html += "<li onclick=\"getImgByMonthAndPage('"+month+"',"+(currentPageNum + 1)+")\"><a href=\"javascript:;\">&nbsp;下一页&nbsp;</a></li>";
                 $("#pages").html(html);
                 $("#pages li:contains("+currentPageNum+")").html("<a href=\"javascript:;\"><font color='#f1a693'><b>"+currentPageNum+"</b></font></a>");
 

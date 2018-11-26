@@ -280,7 +280,7 @@ def getIdsByMonth(month):
     return data
 
 def isShowImgText(id):
-    filePath = os.path.join(gloVar.galleryImgPath,str(id))
+    filePath = os.path.join(gloVar.galleryImgPath, str(id))
     if not os.path.exists(filePath):
         return 0
     if len(os.listdir(filePath)) == 0:

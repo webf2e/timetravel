@@ -2,7 +2,6 @@ from util.Global import gloVar
 import configparser
 import os
 from service import TravelService
-from util import FileUtil
 
 def init():
     print("doInit")
@@ -21,6 +20,6 @@ def init():
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')
     gloVar.dbName = conf.get('MysqlConfig', 'db')
     gloVar.wordCloudFontPath = conf.get('wordCloudConfig', 'wordCloudFontPath')
-    gloVar.staticPath = conf.get('staticConfig','staticPath')
+    gloVar.staticPath = conf.get('staticConfig', 'staticPath')
+    gloVar.systemTongjiPath = conf.get('systemConfig', 'systemTongjiPath')
     TravelService.updateMostDirection()
-    #FileUtil.makeHeartImg()

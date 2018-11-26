@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统统计</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+</head>
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">后台管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/static/admin/index.html">首页</a></li>
+            <li><a href="/static/admin/chatimg.html">聊天管理</a></li>
+            <li><a href="/static/admin/traveledit.html">旅游管理</a></li>
+            <li><a href="/static/admin/gallery.html">画廊管理</a></li>
+            <li><a href="/static/admin/tongji.html">数据统计</a></li>
+            <li><a href="/static/admin/system.html">系统统计</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <table>
+        <tr>
+            <td><input id="startTime" type="text" placeholder="开始时间" class="form-control"/></td>
+            <td><input id="endTime" type="text" placeholder="结束时间" class="form-control"/></td>
+            <td><button id="searchBtn" class="btn btn-primary">查询</button></td>
+        </tr>
+    </table>
+    <hr>
+    <div id="cpuLine" style="width: 100%;height:300px;"></div>
+    <hr/>
+    <div id="memoryLine" style="width: 100%;height:300px;"></div>
+    <hr/>
+    <div id="diskLine" style="width: 100%;height:300px;"></div>
+    <hr/>
+    <div id="eth0Line" style="width: 100%;height:300px;"></div>
+    <hr/>
+    <div id="eth1Line" style="width: 100%;height:300px;"></div>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/echarts.common.min.js"></script>
+<script type="text/javascript">
+    var date = new Date();
+    var year = date.getYear() + 1900;
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+
+    var date1 = new Date(new Date().getTime() - 60 * 60 * 1000);
+    var year1 = date1.getYear() + 1900;
+    var month1 = date1.getMonth() + 1;
+    var day1 = date1.getDate();
+    var hour1 = date1.getHours();
+    $("#startTime").val(year1+"-"+month1+"-"+day1+"-"+hour1);
+    $("#endTime").val(year+"-"+month+"-"+day+"-"+hour);
+
+    $("#searchBtn").click(function(){
+        getCpu($("#startTime").val(), $("#endTime").val());
+        getMemory($("#startTime").val(), $("#endTime").val());
+        getDisk($("#startTime").val(), $("#endTime").val());
+        getEth0($("#startTime").val(), $("#endTime").val());
+        getEth1($("#startTime").val(), $("#endTime").val());
+    });
+
+    getCpu("","");
+    function getCpu(startTime,endTime){
+        $.ajax({
+            url:"/admin/system/cpu",
+            dataType: 'json',
+            type:"POST",
+            data:"startTime="+startTime+"&endTime="+endTime,
+            success:function(data){
+                timeArr = new Array();
+                dataArr = new Array();
+                label = ["CPU"]
+                $.each(data,function(i,n){
+                    timeArr.push(n[0]);
+                    dataArr.push(n[1]);
+                });
+                drawLine("cpuLine","CPU使用率",timeArr,label,dataArr,"CPU")
+            }
+        });
+    }
+
+    getMemory("","");
+    function getMemory(startTime,endTime){
+        $.ajax({
+            url:"/admin/system/memory",
+            dataType: 'json',
+            type:"POST",
+            data:"startTime="+startTime+"&endTime="+endTime,
+            success:function(data){
+                timeArr = new Array();
+                dataArr = new Array();
+                label = ["内存"]
+                $.each(data,function(i,n){
+                    timeArr.push(n[0]);
+                    dataArr.push(n[1]);
+                });
+                drawLine("memoryLine","内存使用率",timeArr,label,dataArr,"内存")
+            }
+        });
+    }
+
+    getDisk("","");
+    function getDisk(startTime,endTime){
+        $.ajax({
+            url:"/admin/system/disk",
+            dataType: 'json',
+            type:"POST",
+            data:"startTime="+startTime+"&endTime="+endTime,
+            success:function(data){
+                timeArr = new Array();
+                dataArr = new Array();
+                label = ["磁盘"]
+                $.each(data,function(i,n){
+                    timeArr.push(n[0]);
+                    dataArr.push(n[1]);
+                });
+                drawLine("diskLine","磁盘使用率",timeArr,label,dataArr,"磁盘")
+            }
+        });
+    }
+
+    getEth0("","");
+    function getEth0(startTime,endTime){
+        $.ajax({
+            url:"/admin/system/net",
+            dataType: 'json',
+            type:"POST",
+            data:"startTime="+startTime+"&endTime="+endTime+"&netId=eth0",
+            success:function(data){
+                timeArr = new Array();
+                dataArr1 = new Array();
+                dataArr2 = new Array();
+                $.each(data,function(i,n){
+                    timeArr.push(n[0]);
+                    dataArr1.push(Math.floor(n[1] * 1 / 1024 / 1024 / 1024 * 100) / 100);
+                    dataArr2.push(Math.floor(n[2] * 1 / 1024 / 1024 / 1024 * 100) / 100);
+                });
+                drawDoubleLine("eth0Line","内网流量",timeArr,dataArr1,dataArr2)
+            }
+        });
+    }
+
+    getEth1("","");
+    function getEth1(startTime,endTime){
+        $.ajax({
+            url:"/admin/system/net",
+            dataType: 'json',
+            type:"POST",
+            data:"startTime="+startTime+"&endTime="+endTime+"&netId=eth1",
+            success:function(data){
+                timeArr = new Array();
+                dataArr1 = new Array();
+                dataArr2 = new Array();
+                $.each(data,function(i,n){
+                    timeArr.push(n[0]);
+                    dataArr1.push(Math.floor(n[1] * 1 / 1024 / 1024 / 1024 * 100) / 100);
+                    dataArr2.push(Math.floor(n[2] * 1 / 1024 / 1024 / 1024 * 100) / 100);
+                });
+                drawDoubleLine("eth1Line","外网流量",timeArr,dataArr1,dataArr2)
+            }
+        });
+    }
+
+    function drawLine(id,title,timeArr,label,dataArr,name){
+        var option = {
+            title: {
+                text: title
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:label
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: { //可视化的工具箱
+                show: true,
+                feature: {
+                    dataView: { //数据视图
+                        show: true
+                    },
+                    restore: { //重置
+                        show: true
+                    },
+                    dataZoom: { //数据缩放视图
+                        show: true
+                    },
+                    saveAsImage: {//保存图片
+                        show: true
+                    },
+                    magicType: {//动态类型切换
+                        type: ['bar', 'line']
+                    }
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: timeArr
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:name,
+                    type:'line',
+                    data:dataArr
+                }
+
+            ]
+        };
+        echarts.init(document.getElementById(id)).setOption(option);
+    }
+
+    function drawDoubleLine(id,title,timeArr,dataArr1,dataArr2){
+        var option = {
+            title: {
+                text: title
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:["接收","发送"]
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: { //可视化的工具箱
+                show: true,
+                feature: {
+                    dataView: { //数据视图
+                        show: true
+                    },
+                    restore: { //重置
+                        show: true
+                    },
+                    dataZoom: { //数据缩放视图
+                        show: true
+                    },
+                    saveAsImage: {//保存图片
+                        show: true
+                    },
+                    magicType: {//动态类型切换
+                        type: ['bar', 'line']
+                    }
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: timeArr
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'接收',
+                    type:'line',
+                    data:dataArr1
+                },
+                {
+                    name:'发送',
+                    type:'line',
+                    data:dataArr2
+                }
+            ]
+        };
+        echarts.init(document.getElementById(id)).setOption(option);
+    }
+</script>
+</html>

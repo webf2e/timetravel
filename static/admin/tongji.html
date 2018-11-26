@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>统计</title>
+    <title>数据统计</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
 </head>
@@ -25,6 +25,7 @@
             <li><a href="/static/admin/traveledit.html">旅游管理</a></li>
             <li><a href="/static/admin/gallery.html">画廊管理</a></li>
             <li><a href="/static/admin/tongji.html">数据统计</a></li>
+            <li><a href="/static/admin/system.html">系统统计</a></li>
           </ul>
         </div>
       </div>
@@ -33,7 +34,9 @@
     <div id="chatImgCountLine" style="width: 100%;height:300px;"></div>
     <hr/>
     <div id="contentTongji" style="width: 100%">
-        <div class="wordCount"></div>
+        <div class="wordCount">
+            <button id="getContentBtn" class="btn btn-primary">获取内容信息</button>
+        </div>
         <img style="width: 100%"/>
     </div>
     <hr/>
@@ -67,15 +70,21 @@
         }
     });
 
-    $.ajax({
-        url:"/admin/tongji/getContent",
-        dataType: 'json',
-        type:"POST",
-        success:function(data){
-           $("#contentTongji .wordCount").html("一共有"+data.wordCount+"字的旅行游记");
-           $("#contentTongji img").attr("src",data.wordCloudPath);
-        }
+    $("#getContentBtn").click(function(){
+        getContent();
     });
+
+    function getContent(){
+        $.ajax({
+            url:"/admin/tongji/getContent",
+            dataType: 'json',
+            type:"POST",
+            success:function(data){
+               $("#contentTongji .wordCount").html("一共有"+data.wordCount+"字的旅行游记");
+               $("#contentTongji img").attr("src",data.wordCloudPath);
+            }
+        });
+    }
 
     $.ajax({
         url:"/admin/tongji/getGalleryCount",

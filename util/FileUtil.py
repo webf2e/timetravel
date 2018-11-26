@@ -53,7 +53,7 @@ def getGalleryImgByMonth(ids):
 
 def getGalleryImgPathById(id):
     filePath = []
-    dirPath = os.path.join(gloVar.galleryImgPath,str(id))
+    dirPath = os.path.join(gloVar.galleryImgPath, str(id))
     if(not os.path.exists(dirPath)):
         return filePath
     files = os.listdir(dirPath)
@@ -74,14 +74,14 @@ def rotateImg(path):
 def makeCloudWord(w,imgPath):
     cut = jieba.cut(w)
     words = ' '.join(cut)
-    wordcloud = WordCloud(background_color="white", max_words=2000,scale=20,
-                             max_font_size=120, random_state=42,
-                             font_path=gloVar.wordCloudFontPath).generate(words)
+    wordcloud = WordCloud(background_color="white", max_words=2000, scale=20,
+                          max_font_size=120, random_state=42,
+                          font_path=gloVar.wordCloudFontPath).generate(words)
     plt.imshow(wordcloud)
     wordcloud.to_file(imgPath)
 
 def clearStaticDownloadFiles():
-    filePath = os.path.join(gloVar.staticPath,"download")
+    filePath = os.path.join(gloVar.staticPath, "download")
     if not os.path.exists(filePath):
         os.makedirs(filePath)
     else:
@@ -98,8 +98,8 @@ def makeHeartImg():
     flag = True
     while flag:
         for travelId in travelIds:
-            img = random.sample(os.listdir(os.path.join(gloVar.galleryImgPath,travelId)),1)
-            img = os.path.join(gloVar.galleryImgPath,travelId,img[0])
+            img = random.sample(os.listdir(os.path.join(gloVar.galleryImgPath, travelId)), 1)
+            img = os.path.join(gloVar.galleryImgPath, travelId, img[0])
             if img not in imgList:
                 imgList.append(img)
                 if len(imgList) == totalImgCount:
@@ -116,7 +116,7 @@ def makeHeartImg():
         list.append(imgPath)
         whMap[percent] = list
     #读取配置文件
-    configFilePath = os.path.join(os.path.dirname(gloVar.staticPath),"config","heartLocation.config")
+    configFilePath = os.path.join(os.path.dirname(gloVar.staticPath), "config", "heartLocation.config")
     lines = open(configFilePath, "r")
     im = Image.open(os.path.join(gloVar.staticPath, "images", "bkimage.jpg"))
     #im = Image.new("RGBA",(2040,1785))
@@ -138,7 +138,7 @@ def makeHeartImg():
             whMap[key] = l
         img = getCorrectImg(imgPath, width, height)
         im.paste(img, mask)
-    im.save(os.path.join(gloVar.staticPath,"images","bigHeart.png"))
+    im.save(os.path.join(gloVar.staticPath, "images", "bigHeart.png"))
     lines.close()
 
 def getCommonImg(whMap,width,height):
@@ -175,3 +175,46 @@ def getCorrectImg(imgPath,width,height):
         width = width + x
     img = img.crop((x,y,width,height))
     return img
+
+def writeSystemTongji(type,hour,data):
+    filePath = os.path.join(gloVar.systemTongjiPath,type)
+    if not os.path.exists(filePath):
+        os.makedirs(filePath)
+    f = open(os.path.join(filePath, "{}-{}.txt".format(type,hour)),"a+")
+    f.write(data + "\n")
+    f.close()
+
+def readSystemTongji(type,fileName):
+    list = []
+    f = open(os.path.join(gloVar.systemTongjiPath, type, fileName),"r+")
+    for line in f:
+        line = line.strip()
+        if line == "":
+            continue
+        list.append(line.split("\t"))
+    f.close()
+    return list
+
+def getSystemTongji(type,startTime,endTime):
+    list = []
+    filePath = os.path.join(gloVar.systemTongjiPath, type)
+    files = os.listdir(filePath)
+    files.sort()
+    isStart = False
+    for file in files:
+        if file.find(startTime) != -1:
+            isStart = True
+        if isStart:
+            list += readSystemTongji(type, file)
+        if file.find(endTime) != -1:
+            isStart = False
+    return list
+
+def removeSystemTongjiFile(maxcount):
+    typePaths = os.listdir(gloVar.systemTongjiPath)
+    for typePath in typePaths:
+        filePath = os.path.join(gloVar.systemTongjiPath, typePath)
+        files = os.listdir(filePath)
+        files.sort()
+        if len(files) > maxcount:
+            os.remove(os.path.join(filePath, files[0]))

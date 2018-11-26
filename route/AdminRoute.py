@@ -5,6 +5,7 @@ from util.Global import gloVar
 import json
 from service import TravelService
 from util import FileUtil
+import datetime
 
 adminRoute = Blueprint('adminRoute', __name__)
 
@@ -12,14 +13,14 @@ adminRoute = Blueprint('adminRoute', __name__)
 def upChatImg():
     #先判断文件夹下有没有文件，如果有就等一下
     for f in os.listdir(gloVar.chatDirPath):
-        if(os.path.isfile(os.path.join(gloVar.chatDirPath,f))):
+        if(os.path.isfile(os.path.join(gloVar.chatDirPath, f))):
             return "稍等一下，暂时有文件没有转移"
     files = str(request.files)
     date = str(request.form.get("date"))
     dates = date.split("_")
     index = 0;
     #先判断文件夹是否存在
-    filePath = os.path.join(gloVar.chatDirPath,dates[0],dates[1],dates[2])
+    filePath = os.path.join(gloVar.chatDirPath, dates[0], dates[1], dates[2])
     if os.path.exists(filePath):
         index = str(max(os.listdir(filePath)))
         index = int(index[index.rfind("_")+1:index.rfind(".")])
@@ -35,7 +36,7 @@ def upChatImg():
         if not fn.lower().endswith("png"):
             continue
         index += 1
-        file.save(os.path.join(gloVar.chatDirPath, "{}_{}.png".format(date,index)))
+        file.save(os.path.join(gloVar.chatDirPath, "{}_{}.png".format(date, index)))
         count += 1
     return '成功上传{}个文件'.format(count)
 
@@ -44,7 +45,7 @@ def upChatImg():
 def showImages():
     date = request.form.get("date")
     dates = date.split("_")
-    filePath = os.path.join(gloVar.chatDirPath,dates[0],dates[1],dates[2])
+    filePath = os.path.join(gloVar.chatDirPath, dates[0], dates[1], dates[2])
     if not os.path.exists(filePath):
         return Response("{}", mimetype='application/json')
 
@@ -131,7 +132,7 @@ def getContent():
         w += content[0] + "。"
     resultMap["wordCount"] = wordCount
     fileName = "wordcloud.png"
-    FileUtil.makeCloudWord(w,os.path.join(gloVar.staticPath,"images",fileName))
+    FileUtil.makeCloudWord(w, os.path.join(gloVar.staticPath, "images", fileName))
     resultMap["wordCloudPath"] = os.path.join("/static/images",fileName)
     return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
 
@@ -142,7 +143,7 @@ def getGalleryCount():
     gallerys = os.listdir(gloVar.galleryImgPath)
     resultMap["galleryCount"] = len(gallerys)
     for galleryDir in gallerys:
-        galleryImgCount += len(os.listdir(os.path.join(gloVar.galleryImgPath,galleryDir)))
+        galleryImgCount += len(os.listdir(os.path.join(gloVar.galleryImgPath, galleryDir)))
     resultMap["galleryImgCount"] = galleryImgCount
     return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
 
@@ -163,7 +164,7 @@ def downloadOSSFile():
     FileUtil.clearStaticDownloadFiles()
     auth = oss2.Auth('LTAIOWHFyQYc3gQN', 'kkN3gdS3x32g4etD7lpYbNnpYZmlmr')
     bucket = oss2.Bucket(auth, 'http://oss-cn-hongkong-internal.aliyuncs.com', 'timetravelbak')
-    bucket.get_object_to_file(fileName, os.path.join(gloVar.staticPath,"download",fileName.replace(" ","")))
+    bucket.get_object_to_file(fileName, os.path.join(gloVar.staticPath, "download", fileName.replace(" ", "")))
     resultMap["filePath"] = os.path.join("/static/download",fileName.replace(" ",""))
     resultMap["fileName"] = fileName
     return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
@@ -182,7 +183,7 @@ def upGalleryImg():
 @adminRoute.route('/admin/deleteChatImg',methods=["POST"])
 def deleteChatImg():
     path = str(request.form.get("path"))
-    path = os.path.join(gloVar.chatDirPath,path.replace("/static/chatImg/",""))
+    path = os.path.join(gloVar.chatDirPath, path.replace("/static/chatImg/", ""))
     os.remove(path)
     return "删除成功"
 
@@ -199,7 +200,7 @@ def rotateImg():
 def getGalleryByIdAndPage():
     id = str(request.form.get("id"))
     page = int(request.form.get("page"))
-    dirPath = os.path.join(gloVar.galleryImgPath,id)
+    dirPath = os.path.join(gloVar.galleryImgPath, id)
     if(not os.path.exists(dirPath)):
         return Response("{}", mimetype='application/json')
     imgs = os.listdir(dirPath)
@@ -220,9 +221,50 @@ def getGalleryByIdAndPage():
 @adminRoute.route('/admin/deleteGalleryImg',methods=["POST"])
 def deleteGalleryImg():
     path = str(request.form.get("path"))
-    path = os.path.join(gloVar.galleryImgPath,path.replace("/static/gallery/",""))
+    path = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
     os.remove(path)
     return "删除成功"
+
+@adminRoute.route('/admin/system/cpu',methods=["POST"])
+def systemCPU():
+    startTime = request.form.get("startTime")
+    endTime = request.form.get("endTime")
+    if startTime == '' or startTime == None:
+        startTime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(hours=1),"%Y-%m-%d-%H")
+    if endTime == '' or endTime == None:
+        endTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d-%H")
+    return Response(json.dumps(FileUtil.getSystemTongji("cpu",startTime,endTime), ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/system/disk',methods=["POST"])
+def systemDisk():
+    startTime = request.form.get("startTime")
+    endTime = request.form.get("endTime")
+    if startTime == '' or startTime == None:
+        startTime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(hours=1), "%Y-%m-%d-%H")
+    if endTime == '' or endTime == None:
+        endTime = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H")
+    return Response(json.dumps(FileUtil.getSystemTongji("disk",startTime,endTime), ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/system/memory',methods=["POST"])
+def systemMemory():
+    startTime = request.form.get("startTime")
+    endTime = request.form.get("endTime")
+    if startTime == '' or startTime == None:
+        startTime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(hours=1), "%Y-%m-%d-%H")
+    if endTime == '' or endTime == None:
+        endTime = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H")
+    return Response(json.dumps(FileUtil.getSystemTongji("memory",startTime,endTime), ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/system/net',methods=["POST"])
+def systemNet():
+    startTime = request.form.get("startTime")
+    endTime = request.form.get("endTime")
+    netId = request.form.get("netId")
+    if startTime == '' or startTime == None:
+        startTime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(hours=1), "%Y-%m-%d-%H")
+    if endTime == '' or endTime == None:
+        endTime = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H")
+    return Response(json.dumps(FileUtil.getSystemTongji("net-{}".format(netId),startTime,endTime), ensure_ascii=False), mimetype='application/json')
 
 @adminRoute.before_request
 def print_request_info():

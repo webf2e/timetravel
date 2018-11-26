@@ -19,7 +19,7 @@ def getImagePath():
     day = int(dates[2])
     if(day < 10):
         day = "0" + str(day)
-    dirPath = os.path.join(str(gloVar.chatDirPath),str(year),str(month),str(day))
+    dirPath = os.path.join(str(gloVar.chatDirPath), str(year), str(month), str(day))
     if not os.path.exists(dirPath):
         return Response({}, mimetype='application/json')
     fileNames = []
@@ -31,6 +31,6 @@ def getImagePath():
 @memoryRoute.route('/getLastChatDate',methods=["POST"])
 def getLastChatDate():
     year = max(os.listdir(str(gloVar.chatDirPath)))
-    month = max(os.listdir(os.path.join(str(gloVar.chatDirPath),year)))
-    day = max(os.listdir(os.path.join(str(gloVar.chatDirPath),year,month)))
+    month = max(os.listdir(os.path.join(str(gloVar.chatDirPath), year)))
+    day = max(os.listdir(os.path.join(str(gloVar.chatDirPath), year, month)))
     return "{}-{}-{}".format(year,month,day)

@@ -9,3 +9,4 @@ class gloVar():
     monthImgMap = {}
     wordCloudFontPath = ""
     staticPath = ""
+    systemTongjiPath = ""

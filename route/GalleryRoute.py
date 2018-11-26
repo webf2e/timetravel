@@ -15,7 +15,7 @@ def getImageByIdPage():
     resultMap = {}
     id = request.form.get("id")
     page = int(request.form.get("page"))
-    filePath = os.path.join(gloVar.galleryImgPath,id)
+    filePath = os.path.join(gloVar.galleryImgPath, id)
     if not os.path.exists(filePath):
         return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
     files = os.listdir(filePath)

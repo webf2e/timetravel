@@ -16,11 +16,9 @@
 <script type="text/javascript" src="/static/js/mobile.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.js"></script>
 <script type="text/javascript" src="/static/js/jquery.countdown.js"></script>
-<script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
 <script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="/static/js/calendar.js"></script>
-<script id="lbs" type="text/javascript" src="/static/js/lightbox.js"></script>
 <script type="text/javascript" src="/static/js/scrolltopcontrol.js"></script>
 <style>
     .inner, .container{
@@ -29,10 +27,6 @@
     body {
         padding-right:0px;
         padding-left:0px
-    }
-    .event-box{
-        padding-top: 10px;
-        padding-bottom: 0px;
     }
 </style>
 </head>
@@ -115,7 +109,7 @@
                     <div class="leftbar">
                     	<!--event box start-->
                         <h2 id="chatTitle">聊天记录</h2>
-                        <div id="images" class="event-box relative">
+                        <div id="images" class="relative">
 
                         </div>
                     </div>
@@ -162,7 +156,6 @@
                     $.each(data,function(i,n){
                         imageHtml += "<div class=\"story-avatar relative\" style='background-color:#fff'>";
                         imageHtml += "<img style='width:100%' alt=\"\" src=\""+n+"\">";
-                        imageHtml += "<a href=\""+n+"\" rel=\"prettyPhoto[gallery0]\"><div class=\"img-pettern\"></div></a>";
                         imageHtml += "</div>";
                     });
                     $("#images").html(imageHtml);

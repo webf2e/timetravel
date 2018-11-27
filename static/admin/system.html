@@ -147,10 +147,10 @@
                 dataArr2 = new Array();
                 $.each(data,function(i,n){
                     timeArr.push(n[0]);
-                    dataArr1.push(Math.floor(n[1] * 1 / 1024 / 1024 / 1024 * 100) / 100);
-                    dataArr2.push(Math.floor(n[2] * 1 / 1024 / 1024 / 1024 * 100) / 100);
+                    dataArr1.push(Math.floor(n[1] * 1 / 1024 * 100) / 100);
+                    dataArr2.push(Math.floor(n[2] * 1 / 1024 * 100) / 100);
                 });
-                drawDoubleLine("eth0Line","内网流量",timeArr,dataArr1,dataArr2)
+                drawDoubleLine("eth0Line","内网流量(kb/s)",timeArr,dataArr1,dataArr2)
             }
         });
     }
@@ -168,10 +168,10 @@
                 dataArr2 = new Array();
                 $.each(data,function(i,n){
                     timeArr.push(n[0]);
-                    dataArr1.push(Math.floor(n[1] * 1 / 1024 / 1024 / 1024 * 100) / 100);
-                    dataArr2.push(Math.floor(n[2] * 1 / 1024 / 1024 / 1024 * 100) / 100);
+                    dataArr1.push(Math.floor(n[1] * 1 / 1024 * 100) / 100);
+                    dataArr2.push(Math.floor(n[2] * 1 / 1024 * 100) / 100);
                 });
-                drawDoubleLine("eth1Line","外网流量",timeArr,dataArr1,dataArr2)
+                drawDoubleLine("eth1Line","外网流量(kb/s)",timeArr,dataArr1,dataArr2)
             }
         });
     }

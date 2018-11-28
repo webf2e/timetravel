@@ -71,7 +71,7 @@ def getChatMessageFromChatImg():
                             isOverLimit = True
                             break
                         result = str(result).replace("'","\"")
-                        ChatService.insert(img,imgPath,result)
+                        ChatService.insert(img, imgPath, result, str(datetime.datetime.now()))
                         time.sleep(5)
         if isOverLimit:
             break

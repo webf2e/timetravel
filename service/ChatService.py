@@ -19,7 +19,7 @@ def getByImgName(imgName):
     db.close()
     return data
 
-def insert(imgName, imgPath, result):
+def insert(imgName, imgPath, result, createTime):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -27,8 +27,8 @@ def insert(imgName, imgPath, result):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into chat(imgName,imgPath,result) VALUES ('{}','{}','{}')"\
-        .format(imgName,imgPath,result)
+    sql = "insert into chat(imgName,imgPath,result,createTime) VALUES ('{}','{}','{}','{}')"\
+        .format(imgName, imgPath, result, createTime)
     print("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

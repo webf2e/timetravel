@@ -1,8 +1,10 @@
-from util import FileUtil
+from util import FileUtil,OcrUtil
 from util.Global import gloVar
+from service import ChatService
 import psutil
 import datetime
 import time
+import os
 
 def moveChatFileJob():
     print("转移聊天记录文件开始")
@@ -39,3 +41,38 @@ def systemTongjiJob():
 
 def removeSystemFileJob():
     FileUtil.removeSystemTongjiFile(240)
+
+def getChatMessageFromChatImg():
+    maxDay = 60
+    isOverLimit = False
+    for i in range(0,maxDay):
+        t = datetime.datetime.now() - datetime.timedelta(days=i)
+        year = t.year
+        month = t.month
+        if (month < 10):
+            month = "0" + str(month)
+        day = t.day
+        if (day < 10):
+            day = "0" + str(day)
+        dirPath = str(os.path.join(str(gloVar.chatDirPath), str(year), str(month), str(day)))
+        if os.path.exists(dirPath) and os.path.isdir(dirPath):
+            imgPath = dirPath.split("static")[1]
+            imgs = os.listdir(dirPath)
+            imgs.sort()
+            for img in imgs:
+                if img.startswith("20"):
+                    absImgPath = os.path.join(dirPath,img)
+                    data = ChatService.getByImgName(img)
+                    if len(data) == 0:
+                        #没有数据，需要添加到mysql，调用百度ocr获取数据
+                        result = OcrUtil.getContent(absImgPath)
+                        if result == "":
+                            print("超过限额，退出")
+                            isOverLimit = True
+                            break
+                        result = str(result).replace("'","\"")
+                        ChatService.insert(img,imgPath,result)
+                        time.sleep(5)
+        if isOverLimit:
+            break
+    print("转化聊天图片成文字结束")

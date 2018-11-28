@@ -24,7 +24,8 @@ def getImagePath():
         return Response({}, mimetype='application/json')
     fileNames = []
     for fileName in os.listdir(dirPath):
-        fileNames.append(os.path.join("/static/chatImg",str(year),str(month),str(day),fileName))
+        if fileName.startswith("20"):
+            fileNames.append(os.path.join("/static/chatImg",str(year),str(month),str(day),fileName))
     fileNames.sort()
     return Response(json.dumps(fileNames, ensure_ascii=False), mimetype='application/json')
 

@@ -27,6 +27,13 @@ class Config(object):
             'args': None,
             'trigger': 'interval',
             'seconds': 10 * 60
+        },
+        {
+            'id': 'getChatMessageFromChatImg',
+            'func': 'sche.schedule:getChatMessageFromChatImg',
+            'args': None,
+            'trigger': 'interval',
+            'seconds': 60 * 60
         }
     ]
 

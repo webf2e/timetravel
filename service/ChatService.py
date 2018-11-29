@@ -82,6 +82,22 @@ def getChatSumTongji():
     db.close()
     return changeToJsonStr(fields, data)
 
+def getChatTimes():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT times FROM chat where times != '' and times is not null"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data
+
 
 def changeToJsonStr(fields,data):
     finalResult = "["

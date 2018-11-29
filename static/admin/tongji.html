@@ -32,6 +32,8 @@
     </nav>
     <hr>
     <div id="chatImgCountLine" style="width: 100%;height:300px;"></div>
+    <hr>
+    <div id="chatTimesLine" style="width: 100%;height:300px;"></div>
     <hr/>
     <div id="contentTongji" style="width: 100%">
         <div class="wordCount">
@@ -67,6 +69,21 @@
                 dataArr.push(n);
             });
             drawLine("chatImgCountLine","聊天截图数量("+totalImgCount+")",timeArr,dataArr)
+        }
+    });
+
+    $.ajax({
+        url:"/admin/tongji/getChatTimes",
+        dataType: 'json',
+        type:"POST",
+        success:function(data){
+            timeArr = new Array();
+            dataArr = new Array();
+            $.each(data,function(i,n){
+                timeArr.push(n.time);
+                dataArr.push(n.count);
+            });
+            drawLine("chatTimesLine","聊天时段统计",timeArr,dataArr)
         }
     });
 

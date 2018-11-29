@@ -3,7 +3,7 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService
+from service import TravelService,ChatService
 from util import FileUtil
 import datetime
 
@@ -120,6 +120,34 @@ def getChatImageCount():
                 images = os.listdir(os.path.join(gloVar.chatDirPath, year, month, day))
                 imgCountMap["{}-{}-{}".format(year,month,day)] = len(images)
     return Response(json.dumps(imgCountMap, ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/tongji/getChatTimes',methods=["POST"])
+def getChatTimes():
+    timeCountMap = {}
+    times = ChatService.getChatTimes()
+    for time in times:
+        if time[0].find(",") != -1:
+            ts = time[0].split(",")
+            for t in ts:
+                if t not in timeCountMap:
+                    timeCountMap[t] = 1
+                else:
+                    timeCountMap[t] = timeCountMap[t] + 1
+        else:
+            if time[0] not in timeCountMap:
+                timeCountMap[time[0]] = 1
+            else:
+                timeCountMap[time[0]] = timeCountMap[time[0]] + 1
+    json = "["
+    list = []
+    for k in timeCountMap.keys():
+        list.append(k)
+    list.sort()
+    for t in list:
+        json += "{\"time\":\""+t+"\",\"count\":"+str(timeCountMap[t])+"},"
+    json = json[:-1] + "]"
+    return Response(json, mimetype='application/json')
+
 
 @adminRoute.route('/admin/tongji/getContent',methods=["POST"])
 def getContent():

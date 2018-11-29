@@ -76,4 +76,6 @@ def getChatMessageFromChatImg():
                         time.sleep(5)
         if isOverLimit:
             break
+    print("开始处理chat表中的数据")
+    ChatService.operateChatMessage()
     print("转化聊天图片成文字结束")

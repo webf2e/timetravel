@@ -3,6 +3,7 @@ from flask import session,request,Response
 import os
 from util.Global import gloVar
 import json
+from service import ChatService
 
 memoryRoute = Blueprint('memoryRoute', __name__)
 
@@ -35,3 +36,7 @@ def getLastChatDate():
     month = max(os.listdir(os.path.join(str(gloVar.chatDirPath), year)))
     day = max(os.listdir(os.path.join(str(gloVar.chatDirPath), year, month)))
     return "{}-{}-{}".format(year,month,day)
+
+@memoryRoute.route('/getChatTongji',methods=["POST"])
+def getChatTongji():
+    return Response(ChatService.getChatSumTongji(), mimetype='application/json')

@@ -65,6 +65,39 @@ def updateById(voiceTime, content, voiceCount, wordLength, times, id):
     db.commit()
     db.close()
 
+def getChatSumTongji():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT sum(voiceTime) as voiceTime, sum(voiceCount) as voiceCount, sum(wordLength) as wordLength FROM chat where isFinish = 1"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields, data)
+
+
+def changeToJsonStr(fields,data):
+    finalResult = "["
+    column_list = []
+    for i in fields:
+        column_list.append(i[0])
+    for row in data:
+        result = {}
+        for i in range(0, len(column_list)):
+            result[column_list[i]] = str(row[i])
+        finalResult += str(json.dumps(result, ensure_ascii=False)) + ","
+
+    finalResult = finalResult[0:-1] + "]"
+    return finalResult
+###########################分割############################
+
 def operateChatMessage():
     datas = getNotFinished()
     print("chat表中有{}数据没有处理".format(len(datas)))

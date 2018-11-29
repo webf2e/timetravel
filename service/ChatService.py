@@ -33,3 +33,21 @@ def insert(imgName, imgPath, result, createTime):
     cursor.execute(sql)
     db.commit()
     db.close()
+
+def getAllData():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT * FROM chat"
+    print("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data
+
+def operater

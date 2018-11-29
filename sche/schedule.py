@@ -43,7 +43,8 @@ def removeSystemFileJob():
     FileUtil.removeSystemTongjiFile(240)
 
 def getChatMessageFromChatImg():
-    maxDay = 60
+    #todo 后期该值需要调小
+    maxDay = 100
     isOverLimit = False
     for i in range(0,maxDay):
         t = datetime.datetime.now() - datetime.timedelta(days=i)

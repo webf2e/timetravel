@@ -18,7 +18,7 @@ def upChatImg():
     files = str(request.files)
     date = str(request.form.get("date"))
     dates = date.split("_")
-    index = 0;
+    index = 0
     #先判断文件夹是否存在
     filePath = os.path.join(gloVar.chatDirPath, dates[0], dates[1], dates[2])
     if os.path.exists(filePath):

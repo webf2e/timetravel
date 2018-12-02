@@ -96,6 +96,14 @@
                     <div class="rightbar" style="margin-bottom: 50px">
                     	<!--location map widget start-->
                     	<div class="widget map">
+                            <div id="chatTongji" style="display: none" class="alert alert-info" role="alert">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rightbar" style="margin-bottom: 50px">
+                    	<!--location map widget start-->
+                    	<div class="widget map">
                         	<!--heading start-->
                         	<div class="heading">
                             	<h2>时间</h2>
@@ -176,6 +184,40 @@
                 getImagePathByDate(data);
             }
         });
+        $.ajax({
+            url:"/getChatTongji",
+            type:"POST",
+            success:function(data){
+                data = data[0];
+                html = "<b>从我们相遇的日子到现在：</b><br/>";
+                html += "我们总语音通话" + data.voiceCount + "次<br/>"
+                html += "总语音聊天时长为："+ operateTime(data.voiceTime * 1)+"</br>";
+                var movieTime = Math.floor((data.voiceTime * 1) / 8949 * 10) / 10;
+                html += "相当于看了"+movieTime+"遍漫威最长电影《复联3》<br><br>";
+                html += "聊天记录总字数为："+data.wordLength+"字<br>";
+                var bookTime = Math.floor((data.wordLength * 1) / 54715 * 10) / 10;
+                html += "相当于"+bookTime+"本《小王子》";
+                $("#chatTongji").html(html);
+            }
+        });
+    }
+    function operateTime(time){
+        var result = "";
+        var day = parseInt(time / 86400);
+        if(0 != day){
+            result += day + "天"
+        }
+        time = time - day * 86400;
+        var hour = parseInt(time / (60 * 60))
+        result += hour + "小时"
+
+        time = time - hour * (60 * 60)
+        var min = parseInt(time / 60)
+        result += min + "分钟"
+
+        time = time - min * 60
+        result += time + "秒"
+        return result
     }
     init();
     $("#gotoTop").click(function(){

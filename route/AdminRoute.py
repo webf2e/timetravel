@@ -74,7 +74,7 @@ def upTravelIndexImg():
     file = request.files["file"]
     filePath = os.path.join(gloVar.travelIndexImgPath, "{}.png".format(id))
     file.save(filePath)
-    FileUtil.resizeImg(filePath, 150, 130)
+    FileUtil.resizeImg(filePath, 300, 260)
     TravelService.updateImgBy(id, os.path.join("/static/travelIndexImg","{}.png".format(id)))
     return "文件上传成功"
 

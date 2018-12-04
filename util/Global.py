@@ -10,3 +10,4 @@ class gloVar():
     wordCloudFontPath = ""
     staticPath = ""
     systemTongjiPath = ""
+    locationPath = ""

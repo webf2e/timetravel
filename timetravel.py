@@ -6,6 +6,7 @@ from route.MemoryRoute import memoryRoute
 from route.TravelRoute import travelRoute
 from route.AdminRoute import adminRoute
 from route.GalleryRoute import galleryRoute
+from route.LocationRoute import locationRoute
 from service import InitService
 from datetime import timedelta
 from flask_apscheduler import APScheduler
@@ -20,6 +21,7 @@ app.register_blueprint(memoryRoute)
 app.register_blueprint(travelRoute)
 app.register_blueprint(adminRoute)
 app.register_blueprint(galleryRoute)
+app.register_blueprint(locationRoute)
 
 # var ua = navigator.userAgent;
 # var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),

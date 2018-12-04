@@ -22,4 +22,5 @@ def init():
     gloVar.wordCloudFontPath = conf.get('wordCloudConfig', 'wordCloudFontPath')
     gloVar.staticPath = conf.get('staticConfig', 'staticPath')
     gloVar.systemTongjiPath = conf.get('systemConfig', 'systemTongjiPath')
+    gloVar.locationPath = conf.get('locationConfig', 'locationPath')
     TravelService.updateMostDirection()

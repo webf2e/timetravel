@@ -218,3 +218,10 @@ def removeSystemTongjiFile(maxcount):
         files.sort()
         if len(files) > maxcount:
             os.remove(os.path.join(filePath, files[0]))
+
+
+def removeLocationFile(maxcount):
+    locationFiles = os.listdir(gloVar.locationPath)
+    locationFiles.sort()
+    if len(locationFiles) > maxcount:
+        os.remove(os.path.join(gloVar.locationPath, locationFiles[0]))

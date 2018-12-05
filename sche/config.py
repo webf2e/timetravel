@@ -23,7 +23,7 @@ class Config(object):
         },
         {
             'id': 'removeSystemFileJob',
-            'func': 'sche.schedule:removeSystemFileJob',
+            'func': 'sche.schedule:removeFileJob',
             'args': None,
             'trigger': 'interval',
             'seconds': 10 * 60

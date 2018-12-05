@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>【文斌 & 静静】爱的小窝-我们的旅程</title>
+<title>【文斌 & 静静】爱的小窝-我在这里</title>
 <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
 <link href="/static/css/style.css" rel="stylesheet" type="text/css">
 <link href="/static/css/color.css" rel="stylesheet" type="text/css">
@@ -22,7 +22,6 @@
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
-<script type="text/javascript" src="/static/js/scrolltopcontrol.js"></script>
 <style>
     .inner, .container{
         width: 100% !important;
@@ -92,13 +91,14 @@
             <!--banners start-->
             	<div class="banner relative">
                 	<img src="/static/images/banner-img.png" alt="" style="max-width: 100%">
-                    <h2>我们的旅程</h2>
+                    <h2>我在这里</h2>
                 	<div class="banner-pettern"></div>
                 </div>
                 <div class="clearfix"></div>
+                <!--banners end-->
             <div class="inner padding40px resize">
-                <a href="/static/travel.html" class="btn btn-default" style="margin-right: 0px;">返回</a>
-                <div id="bigMap" style="width: 100%;height:440px"></div>
+                亲爱的，我在这里：
+                <div id="locationMap" style="width: 100%;height:440px"></div>
                 <div class="register" style="padding:1px 0"></div>
                 <div class="clearfix"></div>
             </div>
@@ -108,66 +108,42 @@
     <div class="clearfix"></div>
 </div>
 <script>
-    var icon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 42), {
+    var icon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 20), {
        anchor: new BMap.Size(12, 23)
     });
-    var map = new BMap.Map("bigMap");    // 创建Map实例
+    var map = new BMap.Map("locationMap");    // 创建Map实例
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
 	map.enableScrollWheelZoom(true);
+	map.addControl(new BMap.NavigationControl());
 	getPoints();
-	var geoc = new BMap.Geocoder();
 	function getPoints(){
 	    $.ajax({
-            url:"/getAllPoint",
+            url:"/getLastLocation",
             type:"POST",
             success:function(data){
-                var lon = 0;
-                var lat = 0;
-                var markers = [];
-                $.each(data,function(i,n){
-                    lon = n.lon;
-                    lat = n.lat;
-                    var marker = new BMap.Marker(new BMap.Point(n.lon, n.lat),{icon:icon});
-                    marker.setTitle(n.travelName);
-                    //聚合使用
-                    markers.push(marker);
-                    map.addOverlay(marker);
-                    marker.addEventListener("click",function(){
-                        var p = marker.getPosition();
-                        var location = "";
-                        geoc.getLocation(p, function(rs){
-                            var addComp = rs.addressComponents;
-                            location = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-                            $.ajax({
-                                url:"/getByLonLat",
-                                dataType: 'json',
-                                data:"lon="+p.lng+"&lat="+p.lat,
-                                type:"POST",
-                                success:function(data){
-                                    data = data[0];
-                                    var html = "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>["+data.type+"] "+data.travelName+"</h4>" +
-                                    "<img style='float:right;margin:4px' id='imgDemo' src='"+data.indexImg+"' width='139' height='104' title='"+data.travelName+"'/>" +
-                                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'><b>时间："+data.travelTime+"</b></p>" +
-                                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'><b>地点："+location+"</b></p>" +
-                                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+data.content+"</p>" +
-                                    "</div>";
-                                    var infoWindow = new BMap.InfoWindow(html,{width:500,offset:new BMap.Size(0, -10)});
-                                    marker.openInfoWindow(infoWindow);
-                                   //图片加载完毕重绘infowindow
-                                   document.getElementById('imgDemo').onload = function (){
-                                       infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
-                                   }
-                                }
-                            });
-                        });
-                    });
+                map.clearOverlays();
+                var lon = data.lon;
+                var lat = data.lat;
+                var addr = data.addr;
+                var desc = data.locationDescribe;
+                var time = data.time;
+                var marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:icon});
+                //聚合使用
+                map.addOverlay(marker);
+                marker.addEventListener("click",function(){
+                    var html = "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+desc+"</h4>" +
+                    "<p style='margin:0;line-height:1.5;font-size:13px;'>位置地点："+addr+"</p>" +
+                    "<p style='margin:0;line-height:1.5;font-size:13px;'>更新时间："+time+"</p>" +
+                    "</div>";
+                    var infoWindow = new BMap.InfoWindow(html,{width:500,offset:new BMap.Size(0, -10)});
+                    marker.openInfoWindow(infoWindow);
                 });
                 //聚合
-                //new BMapLib.MarkerClusterer(map, {markers:markers});
-                map.centerAndZoom(new BMap.Point(lon, lat), 15);
+                map.panTo(new BMap.Point(lon, lat));
             }
         });
     }
+    setInterval(getPoints,10000);
 </script>
 <script>
 var _hmt = _hmt || [];

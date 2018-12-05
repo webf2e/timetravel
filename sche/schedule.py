@@ -39,8 +39,9 @@ def systemTongjiJob():
             sent = psutil.net_io_counters(pernic=True).get(key).bytes_sent - lastData[key][1]
             FileUtil.writeSystemTongji("{}-{}".format("net",key), hour, "{}\t{}\t{}".format(t, recv, sent))
 
-def removeSystemFileJob():
+def removeFileJob():
     FileUtil.removeSystemTongjiFile(240)
+    FileUtil.removeLocationFile(240)
 
 def getChatMessageFromChatImg():
     #todo 后期该值需要调小

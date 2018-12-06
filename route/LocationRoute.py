@@ -9,13 +9,13 @@ locationRoute = Blueprint('locationRoute', __name__)
 @locationRoute.route('/uploatLocationData',methods=["POST"])
 def uploatLocationData():
     data = request.form.get("locData")
-    jsonDatas = json.loads(data)
-    for jsonData in jsonDatas:
-        fileName = jsonData["time"]
-        fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
-        locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
-        locFile.write(str(jsonData)+"\n")
-        locFile.close()
+    jsonData = json.loads(data)
+    fileName = jsonData["time"]
+    fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
+    locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
+    locFile.write(str(jsonData)+"\n")
+    locFile.close()
+    #发送到鹰眼
     return "OK"
 
 @locationRoute.route('/getLastLocation',methods=["POST"])

@@ -97,6 +97,9 @@
                 <div class="clearfix"></div>
                 <!--banners end-->
             <div class="inner padding40px resize">
+                <button id="refreshBtn" class="btn btn-default">刷新位置</button>
+                <button id="autoRefreshBtn" class="btn btn-primary">自动刷新</button>
+                <hr style="margin: 10px 0"/>
                 亲爱的，我在这里：
                 <div id="locationMap" style="width: 100%;height:440px"></div>
                 <div class="register" style="padding:1px 0"></div>
@@ -122,8 +125,8 @@
             type:"POST",
             success:function(data){
                 map.clearOverlays();
-                var lon = data.lon;
-                var lat = data.lat;
+                var lon = data.longitude;
+                var lat = data.latitude;
                 var addr = data.addr;
                 var desc = data.locationDescribe;
                 var time = data.time;
@@ -140,10 +143,28 @@
                 });
                 //聚合
                 map.panTo(new BMap.Point(lon, lat));
-            }
+            },
         });
     }
-    setInterval(getPoints,10000);
+    $("#refreshBtn").click(function(){
+        getPoints();
+    });
+	var t = null;
+	$("#autoRefreshBtn").click(function(){
+        if($("#autoRefreshBtn").attr("class").indexOf("active") == -1){
+            $("#autoRefreshBtn").addClass("active");
+            $("#autoRefreshBtn").html("取消刷新");
+            //当前为自动刷新
+            t = setInterval(getPoints,10000);
+        }else{
+            $("#autoRefreshBtn").removeClass("active");
+            $("#autoRefreshBtn").html("自动刷新");
+            //当前为不自动刷新
+            if(t != null){
+                clearInterval(t)
+            }
+        }
+    });
 </script>
 <script>
 var _hmt = _hmt || [];

@@ -26,14 +26,21 @@ def uploatLocationData():
 
 @locationRoute.route('/getLastLocation',methods=["POST"])
 def getLastLocation():
-    list = os.listdir(gloVar.locationPath)
-    filePath = os.path.join(gloVar.locationPath, max(list))
-    datas = open(filePath,"r+")
-
-    for data in datas:
-        data = data.strip()
-        if "" == data:
-            continue
-        lastLocation = data
-    lastLocation = lastLocation.replace("'","\"")
-    return Response(lastLocation, mimetype='application/json')
+    #先从百度鹰眼获取，如果不成功，从本地文件获取
+    try:
+        data = YingYanUtil.getLatestPoint()
+        return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
+    except Exception as e:
+        print(e)
+        list = os.listdir(gloVar.locationPath)
+        filePath = os.path.join(gloVar.locationPath, max(list))
+        datas = open(filePath,"r+")
+        for data in datas:
+            data = data.strip()
+            if "" == data:
+                continue
+            lastLocation = data
+        lastLocation = lastLocation.replace("'","\"")
+        lastLocation = lastLocation.replace("lon","longitude")
+        lastLocation = lastLocation.replace("lat", "latitude")
+        return Response(lastLocation, mimetype='application/json')

@@ -22,7 +22,7 @@ def addPoint(jsonData):
         data["radius"] = jsonData["radius"]
 
     if "addr" in jsonData:
-        data["address"] = jsonData["addr"]
+        data["addr"] = jsonData["addr"]
 
     if "locationDescribe" in jsonData:
         data["locationDescribe"] = jsonData["locationDescribe"]
@@ -44,15 +44,19 @@ def addPoint(jsonData):
 
     if "errorCode" in jsonData:
         data["errorCode"] = jsonData["errorCode"]
+
+    if "time" in jsonData:
+        data["time"] = jsonData["time"]
+
     results = requests.post(url, data=json.loads(str(data).replace("'","\""))).text
-    return results
+    return json.loads(results)
 
 def getLatestPoint():
     url = "http://yingyan.baidu.com/api/v3/track/getlatestpoint?service_id={}&entity_name={}&coord_type_output=bd09ll&" \
           "process_option=need_denoise=1,radius_threshold=100,need_mapmatch=0,transport_mode=auto&ak={}"\
         .format(service_id,entity_name,ak)
     results = requests.get(url).text
-    return results
+    return json.loads(results)
 
 def getDistance(startTime,endTime):
     url = "http://yingyan.baidu.com/api/v3/track/getdistance?ak={}&service_id={}&entity_name={}&is_processed=1&" \
@@ -60,7 +64,7 @@ def getDistance(startTime,endTime):
           "supplement_mode=walking&low_speed_threshold=20&start_time={}&end_time={}" \
         .format(ak, service_id, entity_name, startTime, endTime)
     results = requests.get(url).text
-    return results
+    return json.loads(results)
 
 def getTrack(startTime,endTime,pageIndex,pageSize):
     url = "http://yingyan.baidu.com/api/v3/track/gettrack?ak={}&service_id={}&entity_name={}&is_processed=1&" \
@@ -69,7 +73,7 @@ def getTrack(startTime,endTime,pageIndex,pageSize):
           "start_time={}&end_time={}&page_index={}&page_size={}" \
         .format(ak, service_id, entity_name, startTime, endTime, pageIndex, pageSize)
     results = requests.get(url).text
-    return results
+    return json.loads(results)
 
 
 def getStayPoint(startTime,endTime,stayTime,stayRadius):
@@ -78,4 +82,4 @@ def getStayPoint(startTime,endTime,stayTime,stayRadius):
           "process_option=need_denoise=1,need_vacuate=1,radius_threshold=100,need_mapmatch=0,transport_mode=auto" \
         .format(ak, service_id, entity_name, startTime, endTime, stayTime, stayRadius)
     results = requests.get(url).text
-    return results
+    return json.loads(results)

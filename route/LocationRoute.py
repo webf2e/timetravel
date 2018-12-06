@@ -3,6 +3,7 @@ from flask import session,request,Response
 import os
 from util.Global import gloVar
 import json
+from util import YingYanUtil
 
 locationRoute = Blueprint('locationRoute', __name__)
 
@@ -16,7 +17,11 @@ def uploatLocationData():
     locFile.write(str(jsonData)+"\n")
     locFile.close()
     #发送到鹰眼
-    #判断间隔时间是否大于
+    #判断间隔时间是否大于5秒，超过5s才上传
+    try:
+        YingYanUtil.addPoint(jsonData)
+    except Exception as e:
+        print(e)
     return "OK"
 
 @locationRoute.route('/getLastLocation',methods=["POST"])

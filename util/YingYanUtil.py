@@ -13,7 +13,6 @@ def addPoint(jsonData):
     data["entity_name"] = entity_name
     data["latitude"] = jsonData["lat"]
     data["longitude"] = jsonData["lon"]
-    print(jsonData["timestramp"] // 1000)
     data["loc_time"] = jsonData["timestramp"] // 1000
     data["coord_type_input"] = "bd09ll"
     if "height" in jsonData:

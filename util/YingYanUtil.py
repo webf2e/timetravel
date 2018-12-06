@@ -13,7 +13,8 @@ def addPoint(jsonData):
     data["entity_name"] = entity_name
     data["latitude"] = jsonData["lat"]
     data["longitude"] = jsonData["lon"]
-    data["loc_time"] = jsonData["timestramp"] / 1000
+    print(jsonData["timestramp"] // 1000)
+    data["loc_time"] = jsonData["timestramp"] // 1000
     data["coord_type_input"] = "bd09ll"
     if "height" in jsonData:
         data["height"] = jsonData["height"]
@@ -79,11 +80,3 @@ def getStayPoint(startTime,endTime,stayTime,stayRadius):
         .format(ak, service_id, entity_name, startTime, endTime, stayTime, stayRadius)
     results = requests.get(url).text
     return results
-
-# jsonData={}
-# jsonData["lat"] = 40.07853
-# jsonData["lon"] = 116.25201
-# jsonData["city"] = "北京"
-# jsonData["timestramp"] = 1544009304000
-# addPoint(jsonData)
-

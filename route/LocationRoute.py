@@ -16,6 +16,7 @@ def uploatLocationData():
     locFile.write(str(jsonData)+"\n")
     locFile.close()
     #发送到鹰眼
+    #判断间隔时间是否大于
     return "OK"
 
 @locationRoute.route('/getLastLocation',methods=["POST"])

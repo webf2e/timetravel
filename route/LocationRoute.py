@@ -4,6 +4,8 @@ import os
 from util.Global import gloVar
 import json
 from util import YingYanUtil
+import datetime
+from util import PushUtil
 
 locationRoute = Blueprint('locationRoute', __name__)
 
@@ -44,3 +46,11 @@ def getLastLocation():
         lastLocation = lastLocation.replace("lon","longitude")
         lastLocation = lastLocation.replace("lat", "latitude")
         return Response(lastLocation, mimetype='application/json')
+
+@locationRoute.route('/visitLocationPageNotify',methods=["POST"])
+def visitLocationPageNotify():
+    dateTime = str(datetime.datetime.now())
+    title = "我的位置页面被访问"
+    content = "访问时间：{}".format(dateTime)
+    PushUtil.pushToSingle(title,content,"")
+    return "OK"

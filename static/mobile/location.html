@@ -172,12 +172,14 @@
         }
     });
 
-	$.ajax({
-        url:"/visitLocationPageNotify",
-        type:"POST",
-        success:function(data){
-        }
-    });
+	if(navigator.userAgent.indexOf("XiaoMi") == -1){
+        $.ajax({
+            url:"/visitLocationPageNotify",
+            type:"POST",
+            success:function(data){
+            }
+        });
+    }
 </script>
 <script>
 var _hmt = _hmt || [];

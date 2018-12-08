@@ -17,3 +17,13 @@ if(location.href.indexOf("static") != -1){
         }
     }
 }
+$(function(){
+    //随机数判断
+    if(Math.floor(Math.random()*10+1) % 2 == 0){
+        $(".first-name h1").html("刘文斌");
+        $(".last-name h1").html("陈晓静");
+    }else{
+        $(".first-name h1").html("陈晓静");
+        $(".last-name h1").html("刘文斌");
+    }
+});

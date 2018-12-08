@@ -6,6 +6,7 @@ import json
 from util import YingYanUtil
 import datetime
 from util import PushUtil,FileUtil
+import json
 
 locationRoute = Blueprint('locationRoute', __name__)
 
@@ -51,3 +52,12 @@ def visitLocationPageNotify():
     content = "访问时间：{}".format(dateTime)
     PushUtil.pushToSingle(title,content,"")
     return "OK"
+
+@locationRoute.route('/fenceNotify',methods=["POST"])
+def fenceNotify():
+    requestData = request.get_data()
+    jsonData = json.loads(requestData.decode('utf-8'))
+    print(jsonData)
+    if(jsonData["type"] == 2):
+        PushUtil.pushToSingle("百度鹰眼","围栏通知","");
+    return Response("{\"status\":0,\"message\":\"成功\"}",headers={"SignId": "baidu_yingyan"}, mimetype='application/json')

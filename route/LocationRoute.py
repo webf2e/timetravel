@@ -5,26 +5,34 @@ from util.Global import gloVar
 import json
 from util import YingYanUtil
 import datetime
-from util import PushUtil
+from util import PushUtil,FileUtil
 
 locationRoute = Blueprint('locationRoute', __name__)
 
 @locationRoute.route('/uploatLocationData',methods=["POST"])
 def uploatLocationData():
     data = request.form.get("locData")
-    jsonData = json.loads(data)
-    fileName = jsonData["time"]
-    fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
-    locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
-    locFile.write(str(jsonData)+"\n")
-    locFile.close()
-    #发送到鹰眼
-    #判断间隔时间是否大于5秒，超过5s才上传
-    try:
-        YingYanUtil.addPoint(jsonData)
-    except Exception as e:
-        print(e)
-    return "OK"
+    if("" != data and None != data):
+        jsonData = json.loads(data)
+        fileName = jsonData["time"]
+        fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
+        locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
+        locFile.write(str(jsonData)+"\n")
+        locFile.close()
+        #发送到鹰眼
+        #判断间隔时间是否大于5秒，超过5s才上传
+        try:
+            YingYanUtil.addPoint(jsonData)
+        except Exception as e:
+            print(e)
+
+    #获取最后的数据
+    location= FileUtil.getLastLocationInFile()
+    l = json.loads(location)
+    ld = "暂无地理数据"
+    if "locationDescribe" in l:
+        ld = l["locationDescribe"]
+    return "{} {}".format(l["time"],ld)
 
 @locationRoute.route('/getLastLocation',methods=["POST"])
 def getLastLocation():
@@ -34,18 +42,7 @@ def getLastLocation():
         return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
     except Exception as e:
         print(e)
-        list = os.listdir(gloVar.locationPath)
-        filePath = os.path.join(gloVar.locationPath, max(list))
-        datas = open(filePath,"r+")
-        for data in datas:
-            data = data.strip()
-            if "" == data:
-                continue
-            lastLocation = data
-        lastLocation = lastLocation.replace("'","\"")
-        lastLocation = lastLocation.replace("lon","longitude")
-        lastLocation = lastLocation.replace("lat", "latitude")
-        return Response(lastLocation, mimetype='application/json')
+        return Response(FileUtil.getLastLocationInFile(), mimetype='application/json')
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])
 def visitLocationPageNotify():

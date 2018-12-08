@@ -225,3 +225,17 @@ def removeLocationFile(maxcount):
     locationFiles.sort()
     if len(locationFiles) > maxcount:
         os.remove(os.path.join(gloVar.locationPath, locationFiles[0]))
+
+def getLastLocationInFile():
+    list = os.listdir(gloVar.locationPath)
+    filePath = os.path.join(gloVar.locationPath, max(list))
+    datas = open(filePath, "r+")
+    for data in datas:
+        data = data.strip()
+        if "" == data:
+            continue
+        lastLocation = data
+    lastLocation = lastLocation.replace("'", "\"")
+    lastLocation = lastLocation.replace("lon", "longitude")
+    lastLocation = lastLocation.replace("lat", "latitude")
+    return lastLocation

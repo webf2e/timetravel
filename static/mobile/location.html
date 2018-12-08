@@ -131,6 +131,12 @@
                 var desc = data.locationDescribe;
                 var time = data.time;
                 var marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:icon});
+                if(addr == undefined){
+                    addr = "暂无位置信息，请刷新重试"
+                }
+                if(desc == undefined){
+                    desc = "暂无位置信息"
+                }
                 //聚合使用
                 map.addOverlay(marker);
                 marker.addEventListener("click",function(){

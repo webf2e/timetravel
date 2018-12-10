@@ -57,15 +57,22 @@ def uploatLocationData():
         ld = l["locationDescribe"]
     return "{} {}".format(l["time"],ld)
 
+
 @locationRoute.route('/getLastLocation',methods=["POST"])
 def getLastLocation():
     #先从百度鹰眼获取，如果不成功，从本地文件获取
     try:
         data = YingYanUtil.getLatestPoint()
-        return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
+        if int(datetime.datetime.now().timestamp()) - data["latest_point"]["loc_time"] < 60:
+            print("百度定位")
+            return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
+        else:
+            print("本地定位")
+            return Response(FileUtil.getLastLocationInFile(), mimetype='application/json')
     except Exception as e:
         print(e)
         return Response(FileUtil.getLastLocationInFile(), mimetype='application/json')
+
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])
 def visitLocationPageNotify():
@@ -74,6 +81,7 @@ def visitLocationPageNotify():
     content = "访问时间：{}".format(dateTime)
     PushUtil.pushToSingle(title,content,"")
     return "OK"
+
 
 @locationRoute.route('/fenceNotify',methods=["POST"])
 def fenceNotify():

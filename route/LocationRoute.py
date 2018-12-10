@@ -21,10 +21,10 @@ def uploatLocationData():
         locFile.write(str(jsonData)+"\n")
         locFile.close()
         #发送到鹰眼
-        # try:
-        #     YingYanUtil.addPoint(jsonData)
-        # except Exception as e:
-        #     print(e)
+        try:
+            YingYanUtil.addPoint(jsonData)
+        except Exception as e:
+            print(e)
 
     #围栏判断，定位半径精度小于100时开始进行判断。
     if float(jsonData["radius"]) < 80:

@@ -11,3 +11,4 @@ class gloVar():
     staticPath = ""
     systemTongjiPath = ""
     locationPath = ""
+    fences = {}

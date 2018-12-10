@@ -2,11 +2,11 @@ from flask import Blueprint
 from flask import session,request,Response
 import os
 from util.Global import gloVar
-import json
-from util import YingYanUtil
+from util import YingYanUtil,LocationUtil
 import datetime
 from util import PushUtil,FileUtil
 import json
+from service import RedisService
 
 locationRoute = Blueprint('locationRoute', __name__)
 
@@ -21,11 +21,33 @@ def uploatLocationData():
         locFile.write(str(jsonData)+"\n")
         locFile.close()
         #发送到鹰眼
-        #判断间隔时间是否大于5秒，超过5s才上传
-        try:
-            YingYanUtil.addPoint(jsonData)
-        except Exception as e:
-            print(e)
+        # try:
+        #     YingYanUtil.addPoint(jsonData)
+        # except Exception as e:
+        #     print(e)
+
+    #围栏判断，定位半径精度小于100时开始进行判断。
+    if float(jsonData["radius"]) < 80:
+        if not RedisService.isExist("lastFenceTime"):
+            lon = float(jsonData["lon"])
+            lat = float(jsonData["lat"])
+            state = LocationUtil.getFenceState(lon,lat)
+            #从redis中获取上次围栏状态，判断是否要报警
+            lastState = RedisService.get("lastFenceState")
+            if None == lastState:
+                RedisService.set("lastFenceState", state)
+                lastState = state
+            else:
+                lastState = lastState.replace("'","\"")
+                lastState = json.loads(lastState)
+            #比较当前状态和历史状态
+            compareState = LocationUtil.compareState(lastState, state)
+            #状态有更新
+            if(len(compareState) > 0):
+                RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 120)
+                RedisService.set("lastFenceState", state)
+                PushUtil.pushToSingle("围栏有变更", str(compareState), "");
+
 
     #获取最后的数据
     location= FileUtil.getLastLocationInFile()
@@ -61,3 +83,4 @@ def fenceNotify():
     if(jsonData["type"] == 2):
         PushUtil.pushToSingle("百度鹰眼","围栏通知","");
     return Response("{\"status\":0,\"message\":\"成功\"}",headers={"SignId": "baidu_yingyan"}, mimetype='application/json')
+

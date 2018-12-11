@@ -12,3 +12,4 @@ class gloVar():
     systemTongjiPath = ""
     locationPath = ""
     fences = {}
+    notifyMobile = ""

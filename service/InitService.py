@@ -26,6 +26,7 @@ def init():
     TravelService.updateMostDirection()
     #初始化围栏数据
     fencePoints = conf.get('fenceConfig', 'fencePoints')
+    gloVar.notifyMobile = conf.get('fenceConfig', 'notifyMobile')
     fences = fencePoints.split("|")
     for fence in fences:
         name = fence[:fence.find(":")]

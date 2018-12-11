@@ -4,7 +4,7 @@ import os
 from util.Global import gloVar
 from util import YingYanUtil,LocationUtil
 import datetime
-from util import PushUtil,FileUtil
+from util import PushUtil,FileUtil,SmsUtil
 import json
 from service import RedisService
 
@@ -47,7 +47,8 @@ def uploatLocationData():
             if(len(compareState) > 0):
                 RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 120)
                 RedisService.set("lastFenceState", state)
-                PushUtil.pushToSingle("围栏有变更", str(compareState), "");
+                PushUtil.pushToSingle("围栏有变更", str(compareState), "")
+                SmsUtil.sendFenceModify(compareState)
 
 
     #获取最后的数据

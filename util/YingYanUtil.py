@@ -1,5 +1,6 @@
 import requests
 import json
+from service import RedisService
 
 service_id = 207270
 entity_name = "你的小可爱"
@@ -53,10 +54,15 @@ def addPoint(jsonData):
     return json.loads(results)
 
 def getLatestPoint():
+    data = RedisService.get("lastLocationFromBaidu")
+    if None != data:
+        print("从缓存中获取")
+        return json.loads(json.dumps(eval(str(data))))
     url = "http://yingyan.baidu.com/api/v3/track/getlatestpoint?service_id={}&entity_name={}&coord_type_output=bd09ll&" \
           "process_option=need_denoise=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&ak={}"\
         .format(service_id,entity_name,ak)
     results = requests.get(url).text
+    RedisService.setWithTtl("lastLocationFromBaidu", results, 10)
     return json.loads(results)
 
 def getDistance(startTime,endTime):

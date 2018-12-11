@@ -7,6 +7,7 @@ from util.Global import gloVar
 # 120997	已经到家
 # 120994	离开公司
 # 120991	到公司
+# 121042    末次位置数据无更新提示
 
 appkey = "31327b88e60cec38d85ac722d6af2201"
 def sendSmsBytempId(mobile, tpl_id):

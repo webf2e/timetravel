@@ -1,10 +1,11 @@
-from util import FileUtil,OcrUtil
+from util import FileUtil,OcrUtil,SmsUtil,PushUtil
 from util.Global import gloVar
-from service import ChatService
+from service import ChatService,RedisService
 import psutil
 import datetime
 import time
 import os
+import json
 
 def moveChatFileJob():
     print("转移聊天记录文件开始")
@@ -80,3 +81,17 @@ def getChatMessageFromChatImg():
     print("开始处理chat表中的数据")
     ChatService.operateChatMessage()
     print("转化聊天图片成文字结束")
+
+def checkLastLocationJob():
+    jsonStr = FileUtil.getLastLocationInFile()
+    jsonData = json.loads(json.dumps(eval(jsonStr)))
+    lastLocationTime = jsonData["timestramp"] // 1000
+    currentTime = int(datetime.datetime.now().timestamp())
+    if currentTime - lastLocationTime > 60:
+        if not RedisService.isExist("LocationNotUpdatePush"):
+            RedisService.setWithTtl("LocationNotUpdatePush","1",300)
+            PushUtil.pushToSingle("末次位置未更新","末次位置已经超过1分钟未更新","")
+    if currentTime - lastLocationTime > 3 * 60:
+        if not RedisService.isExist("LocationNotUpdateSms"):
+            RedisService.setWithTtl("LocationNotUpdateSms", "1", 600)
+            SmsUtil.sendSmsBytempId("15210650960",121042)

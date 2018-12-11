@@ -12,7 +12,7 @@ class Config(object):
             'func': 'sche.schedule:makeBigHeartJob',
             'args': None,
             'trigger': 'interval',
-            'seconds': 60 * 60 * 2
+            'seconds': 60 * 60 * 6
         },
         {
             'id': 'systemTongjiJob',
@@ -26,7 +26,7 @@ class Config(object):
             'func': 'sche.schedule:removeFileJob',
             'args': None,
             'trigger': 'interval',
-            'seconds': 10 * 60
+            'seconds': 20 * 60
         },
         {
             'id': 'getChatMessageFromChatImg',
@@ -34,6 +34,13 @@ class Config(object):
             'args': None,
             'trigger': 'interval',
             'seconds': 60 * 60
+        },
+        {
+            'id': 'checkLastLocationJob',
+            'func': 'sche.schedule:checkLastLocationJob',
+            'args': None,
+            'trigger': 'interval',
+            'seconds': 30
         }
     ]
 

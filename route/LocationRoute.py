@@ -15,6 +15,7 @@ def uploatLocationData():
     data = request.form.get("locData")
     if("" != data and None != data):
         jsonData = json.loads(data)
+        jsonData["dataSource"] = "local"
         fileName = jsonData["time"]
         fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
         locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
@@ -64,10 +65,8 @@ def getLastLocation():
     try:
         data = YingYanUtil.getLatestPoint()
         if int(datetime.datetime.now().timestamp()) - data["latest_point"]["loc_time"] < 60:
-            print("百度定位")
             return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
         else:
-            print("本地定位")
             return Response(FileUtil.getLastLocationInFile(), mimetype='application/json')
     except Exception as e:
         print(e)

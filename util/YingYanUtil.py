@@ -15,6 +15,7 @@ def addPoint(jsonData):
     data["longitude"] = jsonData["lon"]
     data["loc_time"] = jsonData["timestramp"] // 1000
     data["coord_type_input"] = "bd09ll"
+    data["dataSource"] = "baidu"
     if "height" in jsonData:
         data["height"] = jsonData["height"]
 
@@ -53,14 +54,14 @@ def addPoint(jsonData):
 
 def getLatestPoint():
     url = "http://yingyan.baidu.com/api/v3/track/getlatestpoint?service_id={}&entity_name={}&coord_type_output=bd09ll&" \
-          "process_option=need_denoise=1,radius_threshold=100,need_mapmatch=0,transport_mode=auto&ak={}"\
+          "process_option=need_denoise=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&ak={}"\
         .format(service_id,entity_name,ak)
     results = requests.get(url).text
     return json.loads(results)
 
 def getDistance(startTime,endTime):
     url = "http://yingyan.baidu.com/api/v3/track/getdistance?ak={}&service_id={}&entity_name={}&is_processed=1&" \
-          "process_option=need_denoise=1,radius_threshold=100,need_mapmatch=0,transport_mode=auto&" \
+          "process_option=need_denoise=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&" \
           "supplement_mode=walking&low_speed_threshold=20&start_time={}&end_time={}" \
         .format(ak, service_id, entity_name, startTime, endTime)
     results = requests.get(url).text
@@ -68,7 +69,7 @@ def getDistance(startTime,endTime):
 
 def getTrack(startTime,endTime,pageIndex,pageSize):
     url = "http://yingyan.baidu.com/api/v3/track/gettrack?ak={}&service_id={}&entity_name={}&is_processed=1&" \
-          "process_option=need_denoise=1,need_vacuate=1,radius_threshold=100,need_mapmatch=0,transport_mode=auto&" \
+          "process_option=need_denoise=1,need_vacuate=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&" \
           "supplement_mode=walking&low_speed_threshold=20&coord_type_output=bd09ll&sort_type=asc&" \
           "start_time={}&end_time={}&page_index={}&page_size={}" \
         .format(ak, service_id, entity_name, startTime, endTime, pageIndex, pageSize)
@@ -79,7 +80,7 @@ def getTrack(startTime,endTime,pageIndex,pageSize):
 def getStayPoint(startTime,endTime,stayTime,stayRadius):
     url = "http://yingyan.baidu.com/api/v3/analysis/staypoint?ak={}&service_id={}&entity_name={}&" \
           "start_time={}&end_time={}&stay_time={}&stay_radius={}&coord_type_output=bd09ll&" \
-          "process_option=need_denoise=1,need_vacuate=1,radius_threshold=100,need_mapmatch=0,transport_mode=auto" \
+          "process_option=need_denoise=1,need_vacuate=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto" \
         .format(ak, service_id, entity_name, startTime, endTime, stayTime, stayRadius)
     results = requests.get(url).text
     return json.loads(results)

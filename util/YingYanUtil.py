@@ -62,6 +62,9 @@ def getLatestPoint():
           "process_option=need_denoise=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&ak={}"\
         .format(service_id,entity_name,ak)
     results = requests.get(url).text
+    results = results.replace("latitude","lat")\
+        .replace("longitude","lon")\
+        .replace("loc_time","timestramp")
     RedisService.setWithTtl("lastLocationFromBaidu", results, 10)
     return json.loads(results)
 

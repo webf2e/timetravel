@@ -111,7 +111,10 @@
     <div class="clearfix"></div>
 </div>
 <script>
-    var icon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 20), {
+    var baiduIcon = new BMap.Icon('/static/images/mapheart.gif', new BMap.Size(20, 20), {
+       anchor: new BMap.Size(12, 23)
+    });
+    var localIcon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 20), {
        anchor: new BMap.Size(12, 23)
     });
     var map = new BMap.Map("locationMap");    // 创建Map实例
@@ -125,12 +128,19 @@
             type:"POST",
             success:function(data){
                 map.clearOverlays();
-                var lon = data.longitude;
-                var lat = data.latitude;
+                var lon = data.lon;
+                var lat = data.lat;
                 var addr = data.addr;
                 var desc = data.locationDescribe;
                 var time = data.time;
-                var marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:icon});
+                var dataSource = data.dataSource;
+                var radius = data.radius;
+                var marker = null;
+                if("baidu" == dataSource){
+                    marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:baiduIcon});
+                }else{
+                    marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:localIcon});
+                }
                 if(addr == undefined){
                     addr = "暂无位置信息，请刷新重试"
                 }
@@ -140,9 +150,13 @@
                 //聚合使用
                 map.addOverlay(marker);
                 marker.addEventListener("click",function(){
+                    var locationState = "";
+                    if(radius * 1 >= 80){
+                        locationState = "<p style='margin:0;line-height:1.5;font-size:13px;'>当前定位可能不太准确哦</p>";
+                    }
                     var html = "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+desc+"</h4>" +
                     "<p style='margin:0;line-height:1.5;font-size:13px;'>位置地点："+addr+"</p>" +
-                    "<p style='margin:0;line-height:1.5;font-size:13px;'>更新时间："+time+"</p>" +
+                    "<p style='margin:0;line-height:1.5;font-size:13px;'>更新时间："+time+"</p>" + locationState +
                     "</div>";
                     var infoWindow = new BMap.InfoWindow(html,{width:500,offset:new BMap.Size(0, -10)});
                     marker.openInfoWindow(infoWindow);

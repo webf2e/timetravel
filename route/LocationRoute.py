@@ -48,7 +48,7 @@ def uploatLocationData():
             compareState = LocationUtil.compareState(lastState, state)
             #状态有更新
             if(len(compareState) > 0):
-                RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 120)
+                RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 60 * 10)
                 RedisService.set("lastFenceState", state)
                 PushUtil.pushToSingle("围栏有变更", str(compareState), "")
                 SmsUtil.sendFenceModify(compareState)
@@ -68,13 +68,16 @@ def getLastLocation():
     #先从百度鹰眼获取，如果不成功，从本地文件获取
     try:
         data = YingYanUtil.getLatestPoint()
-        if int(datetime.datetime.now().timestamp()) - data["latest_point"]["loc_time"] < 60:
+        #如果百度的数据是60秒内的，就用百度的数据，如果不是用本地数据
+        print("百度定位和本地时间的时间差：{}".format(int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"]))
+        if int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"] < 60:
             return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
         else:
-            return Response(RedisService.get("lastLocation"), mimetype='application/json')
+            return Response(json.dumps(eval(str(RedisService.get("lastLocation")))), mimetype='application/json')
     except Exception as e:
         print(e)
-        return Response(RedisService.get("lastLocation"), mimetype='application/json')
+        print("报错，使用redis定位数据")
+        return Response(json.dumps(eval(str(RedisService.get("lastLocation")))), mimetype='application/json')
 
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])

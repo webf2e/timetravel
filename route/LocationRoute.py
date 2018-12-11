@@ -16,11 +16,14 @@ def uploatLocationData():
     if("" != data and None != data):
         jsonData = json.loads(data)
         jsonData["dataSource"] = "local"
+        #保存到文件
         fileName = jsonData["time"]
         fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
         locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
         locFile.write(str(jsonData)+"\n")
         locFile.close()
+        #保存到redis中
+        RedisService.set("lastLocation",str(jsonData))
         #发送到鹰眼
         try:
             YingYanUtil.addPoint(jsonData)
@@ -52,8 +55,8 @@ def uploatLocationData():
 
 
     #获取最后的数据
-    location= FileUtil.getLastLocationInFile()
-    l = json.loads(location)
+    location = RedisService.get("lastLocation")
+    l = json.loads(json.dumps(eval(location)))
     ld = "暂无地理数据"
     if "locationDescribe" in l:
         ld = l["locationDescribe"]
@@ -68,10 +71,10 @@ def getLastLocation():
         if int(datetime.datetime.now().timestamp()) - data["latest_point"]["loc_time"] < 60:
             return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
         else:
-            return Response(FileUtil.getLastLocationInFile(), mimetype='application/json')
+            return Response(RedisService.get("lastLocation"), mimetype='application/json')
     except Exception as e:
         print(e)
-        return Response(FileUtil.getLastLocationInFile(), mimetype='application/json')
+        return Response(RedisService.get("lastLocation"), mimetype='application/json')
 
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])

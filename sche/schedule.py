@@ -83,15 +83,16 @@ def getChatMessageFromChatImg():
     print("转化聊天图片成文字结束")
 
 def checkLastLocationJob():
-    jsonStr = FileUtil.getLastLocationInFile()
+    jsonStr = RedisService.get("lastLocation")
     jsonData = json.loads(json.dumps(eval(jsonStr)))
     lastLocationTime = jsonData["timestramp"] // 1000
     currentTime = int(datetime.datetime.now().timestamp())
+    print("最后末次位置的时间差：{}".format(currentTime - lastLocationTime))
     if currentTime - lastLocationTime > 60:
-        if not RedisService.isExist("LocationNotUpdatePush"):
-            RedisService.setWithTtl("LocationNotUpdatePush","1",300)
+        if not RedisService.isExist("locationNotUpdatePush"):
+            RedisService.setWithTtl("locationNotUpdatePush","1",300)
             PushUtil.pushToSingle("末次位置未更新","末次位置已经超过1分钟未更新","")
     if currentTime - lastLocationTime > 3 * 60:
-        if not RedisService.isExist("LocationNotUpdateSms"):
-            RedisService.setWithTtl("LocationNotUpdateSms", "1", 600)
+        if not RedisService.isExist("locationNotUpdateSms"):
+            RedisService.setWithTtl("locationNotUpdateSms", "1", 600)
             SmsUtil.sendSmsBytempId("15210650960",121042)

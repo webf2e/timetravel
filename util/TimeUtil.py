@@ -42,3 +42,9 @@ def getIntervalSecond(startTimeStr,endTimeStr):
 
 def getIntervalSecond(startTime,endTime):
     return float((endTime - startTime).total_seconds())
+
+def getTimeStrFromTimestramp(timestramp,format):
+    return datetime.datetime.strftime(datetime.datetime.fromtimestamp(timestramp / 1000),format)
+
+def getTimestrampNow():
+    return int(datetime.datetime.now().timestamp() * 1000)

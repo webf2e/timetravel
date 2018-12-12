@@ -41,6 +41,13 @@ class Config(object):
             'args': None,
             'trigger': 'interval',
             'seconds': 30
+        },
+        {
+            'id': 'locationTongjiJob',
+            'func': 'sche.schedule:locationTongjiJob',
+            'args': None,
+            'trigger': 'interval',
+            'seconds': 30 * 60
         }
     ]
 

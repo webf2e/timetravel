@@ -1,4 +1,6 @@
 from util.Global import gloVar
+import datetime,os,json
+from util import TimeUtil
 
 def isInPoly(aLon, aLat, pointList):
     '''
@@ -57,3 +59,57 @@ def compareState(lastState,state):
         if state[name] != oldState:
             result[name] = state[name]
     return result
+
+def locationTongji():
+    dateFormatStr = "%Y-%m-%d"
+    timeFormatStr = "%H:%M"
+    gloVar.locationPath="/home/liuwenbin/Desktop/program/location/"
+    currentDate = datetime.datetime.strftime(datetime.datetime.now(),dateFormatStr)
+    files = os.listdir(gloVar.locationPath)
+    files.sort()
+    addrCountMap = {}
+    addrTimestrampMap = {}
+    for file in files:
+        if not file.startswith(currentDate):
+            continue
+        filePath = os.path.join(gloVar.locationPath, file)
+        lines = open(filePath,"r+")
+        for line in lines:
+            line = line.strip()
+            print(line)
+            if line.find("locationDescribe") == -1:
+                continue
+            jsonData = json.loads(json.dumps(eval(line)))
+            locationDescribe = str(jsonData["locationDescribe"])
+            if locationDescribe.startswith("在"):
+                locationDescribe = locationDescribe[1:]
+            if locationDescribe.endswith("附近"):
+                locationDescribe = locationDescribe[:-2]
+            #添加addrCountMap
+            if locationDescribe in addrCountMap:
+                addrCountMap[locationDescribe] = addrCountMap[locationDescribe] + 1
+            else:
+                addrCountMap[locationDescribe] = 1
+            #添加addrTime
+            if locationDescribe in addrTimestrampMap:
+                addrTimestrampMap[locationDescribe][1] = jsonData["timestramp"]
+            else:
+                addrTimestrampMap[locationDescribe] = [jsonData["timestramp"],jsonData["timestramp"]]
+    countList = []
+    for count in addrCountMap.values():
+        countList.append(int(count))
+    countList.sort(reverse=True)
+    #获取top3
+    if len(countList) > 3:
+        countList = countList[0:3]
+    addrMap = {}
+    #获取每个地点的时间
+    for c in countList:
+        for addr,count in addrCountMap.items():
+            if c == count:
+                times = addrTimestrampMap[addr]
+                delay = times[1] - times[0]
+                addrMap[addr] = [TimeUtil.getTimeStrFromTimestramp(times[0],timeFormatStr),
+                                  TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), delay]
+                break
+    return addrMap

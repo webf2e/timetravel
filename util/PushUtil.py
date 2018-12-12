@@ -2,13 +2,14 @@ import requests
 import datetime
 import hashlib
 import json
+from util import TimeUtil
 #coding=utf-8
 
 
 def getAuthCode():
     headers = {"Content-Type": "application/json"}
     url = "https://restapi.getui.com/v1/{}/auth_sign".format("5J6x0OXyjQ76886EHpixH6")
-    timestramp = str(int(datetime.datetime.now().timestamp()) * 1000)
+    timestramp = str(TimeUtil.getTimestrampNow())
     originStr = "{}{}{}".format("j1zfq7NGar5UTyZOc02PB5",timestramp,"WbkzEe9bJ68xZOc46MuCl2")
     sha256 = hashlib.sha256()
     sha256.update(originStr.encode('utf-8'))
@@ -42,7 +43,7 @@ def pushToSingle(title,content,touchuan,clientId="90d5c0eeddef90dab99583952d289f
     """ %(content.encode("utf-8").decode("latin1"),
           title.encode("utf-8").decode("latin1"),
           touchuan.encode("utf-8").decode("latin1"),
-          clientId,str(int(datetime.datetime.now().timestamp() * 1000)))
+          clientId,str(TimeUtil.getTimestrampNow()))
     print(data)
     pushUrl = "https://restapi.getui.com/v1/{}/push_single".format("5J6x0OXyjQ76886EHpixH6")
     r = requests.post(url=pushUrl,data=data,headers=headers)

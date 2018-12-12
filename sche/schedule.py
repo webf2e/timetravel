@@ -1,4 +1,4 @@
-from util import FileUtil,OcrUtil,SmsUtil,PushUtil
+from util import FileUtil,OcrUtil,SmsUtil,PushUtil,LocationUtil
 from util.Global import gloVar
 from service import ChatService,RedisService
 import psutil
@@ -96,3 +96,7 @@ def checkLastLocationJob():
         if not RedisService.isExist("locationNotUpdateSms"):
             RedisService.setWithTtl("locationNotUpdateSms", "1", 600)
             SmsUtil.sendSmsBytempId("15210650960",121042)
+
+def locationTongjiJob():
+    data = LocationUtil.locationTongji()
+    RedisService.set("locationTongji", str(data))

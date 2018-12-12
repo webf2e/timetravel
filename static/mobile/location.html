@@ -102,6 +102,7 @@
                 <hr style="margin: 10px 0"/>
                 亲爱的，我在这里：
                 <div id="locationMap" style="width: 100%;height:440px"></div>
+                是否需要短信通知，当前状态：<button id="switch" class="btn btn-primary" style="display: none">是</button>
                 <div class="register" style="padding:1px 0"></div>
                 <div class="clearfix"></div>
             </div>
@@ -118,16 +119,19 @@
        anchor: new BMap.Size(12, 23)
     });
     var map = new BMap.Map("locationMap");    // 创建Map实例
-	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+	map.centerAndZoom(new BMap.Point(116.404, 39.915), 16);
 	map.enableScrollWheelZoom(true);
 	map.addControl(new BMap.NavigationControl());
 	getPoints();
+	var currentPoint = null;
 	function getPoints(){
 	    $.ajax({
             url:"/getLastLocation",
             type:"POST",
             success:function(data){
-                map.clearOverlays();
+                if(null != currentPoint){
+                    map.removeOverlay(currentPoint);
+                }
                 var lon = data.lon;
                 var lat = data.lat;
                 var addr = data.addr;
@@ -135,11 +139,10 @@
                 var time = data.time;
                 var dataSource = data.dataSource;
                 var radius = data.radius;
-                var marker = null;
                 if("baidu" == dataSource){
-                    marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:baiduIcon});
+                    currentPoint = new BMap.Marker(new BMap.Point(lon, lat),{icon:baiduIcon});
                 }else{
-                    marker = new BMap.Marker(new BMap.Point(lon, lat),{icon:localIcon});
+                    currentPoint = new BMap.Marker(new BMap.Point(lon, lat),{icon:localIcon});
                 }
                 if(addr == undefined){
                     addr = "暂无位置信息，请刷新重试"
@@ -148,8 +151,8 @@
                     desc = "暂无位置信息"
                 }
                 //聚合使用
-                map.addOverlay(marker);
-                marker.addEventListener("click",function(){
+                map.addOverlay(currentPoint);
+                currentPoint.addEventListener("click",function(){
                     var locationState = "";
                     if(radius * 1 >= 80){
                         locationState = "<p style='margin:0;line-height:1.5;font-size:13px;'>当前定位可能不太准确哦</p>";
@@ -159,7 +162,7 @@
                     "<p style='margin:0;line-height:1.5;font-size:13px;'>更新时间："+time+"</p>" + locationState +
                     "</div>";
                     var infoWindow = new BMap.InfoWindow(html,{width:500,offset:new BMap.Size(0, -10)});
-                    marker.openInfoWindow(infoWindow);
+                    currentPoint.openInfoWindow(infoWindow);
                 });
                 //聚合
                 map.panTo(new BMap.Point(lon, lat));
@@ -185,7 +188,6 @@
             }
         }
     });
-
 	if(navigator.userAgent.indexOf("XiaoMi") == -1){
         $.ajax({
             url:"/visitLocationPageNotify",
@@ -194,6 +196,68 @@
             }
         });
     }
+	$.ajax({
+        url:"/getNeedNotify",
+        type:"POST",
+        success:function(data){
+            $("#switch").show();
+            if(data == 1){
+                $("#switch").html("是");
+            }else{
+                $("#switch").html("否");
+            }
+        }
+    });
+    $("#switch").click(function(){
+        var switchState = 0;
+        if($("#switch").html() == "是"){
+            $("#switch").html("否");
+            switchState = 0;
+        }else{
+            $("#switch").html("是");
+            switchState = 1;
+        }
+        $.ajax({
+            url:"/updateNeedNotify",
+            data:"isNeedNotify="+switchState,
+            type:"POST",
+            success:function(data){
+            }
+        });
+    });
+    var opt = {fillOpacity: 0.1,fillColor: "none",strokeStyle:"dashed",strokeColor:"blue", strokeWeight:5, strokeOpacity:0.5};
+    $.ajax({
+        url:"/getFence",
+        type:"POST",
+        success:function(data){
+            var mh = data["小可爱的家"];
+            var points = [];
+            $.each(mh,function(i,n){
+                n = n + "";
+                points.push(new BMap.Point(n.split(",")[0] * 1,n.split(",")[1] * 1))
+            });
+            var polygon = new BMap.Polygon(points, opt);
+            map.addOverlay(polygon);
+
+            mh = data["小可爱的公司"];
+            points = [];
+            $.each(mh,function(i,n){
+                n = n + "";
+                points.push(new BMap.Point(n.split(",")[0] * 1,n.split(",")[1] * 1))
+            });
+            polygon = new BMap.Polygon(points, opt);
+            map.addOverlay(polygon);
+
+            mh = data["亲爱的家"];
+            points = [];
+            $.each(mh,function(i,n){
+                n = n + "";
+                points.push(new BMap.Point(n.split(",")[0] * 1,n.split(",")[1] * 1))
+            });
+            polygon = new BMap.Polygon(points, opt);
+            map.addOverlay(polygon);
+        }
+    });
 </script>
 <script>
 var _hmt = _hmt || [];

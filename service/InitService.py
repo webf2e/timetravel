@@ -1,7 +1,7 @@
 from util.Global import gloVar
 import configparser
 import os
-from service import TravelService
+from service import TravelService,RedisService
 
 def init():
     print("doInit")
@@ -23,6 +23,7 @@ def init():
     gloVar.staticPath = conf.get('staticConfig', 'staticPath')
     gloVar.systemTongjiPath = conf.get('systemConfig', 'systemTongjiPath')
     gloVar.locationPath = conf.get('locationConfig', 'locationPath')
+    #更新最XX的位置信息
     TravelService.updateMostDirection()
     #初始化围栏数据
     fencePoints = conf.get('fenceConfig', 'fencePoints')
@@ -38,3 +39,6 @@ def init():
             lonlat = (float(lonlat[0]),float(lonlat[1]))
             data.append(lonlat)
         gloVar.fences[name] = data
+    #初始化围栏是否需要通知的redis信息
+    if not RedisService.isExist("isNeedNotify"):
+        RedisService.set("isNeedNotify", "1")

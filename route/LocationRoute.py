@@ -98,3 +98,12 @@ def fenceNotify():
         PushUtil.pushToSingle("百度鹰眼","围栏通知","");
     return Response("{\"status\":0,\"message\":\"成功\"}",headers={"SignId": "baidu_yingyan"}, mimetype='application/json')
 
+
+@locationRoute.route('/isNeedNotify', methods=["POST"])
+def isNeedNotify():
+    return RedisService.get("isNeedNotify")
+
+
+@locationRoute.route('/getFence', methods=["POST"])
+def getFence():
+    return Response(json.dumps(eval(str(gloVar.fences))), mimetype='application/json')

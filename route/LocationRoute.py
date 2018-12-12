@@ -1,8 +1,8 @@
 from flask import Blueprint
-from flask import session,request,Response
+from flask import request,Response
 import os
 from util.Global import gloVar
-from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil,Log
+from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil
 import datetime
 import json
 from service import RedisService

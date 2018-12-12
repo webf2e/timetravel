@@ -114,3 +114,11 @@ def updateNeedNotify():
 @locationRoute.route('/getFence', methods=["POST"])
 def getFence():
     return Response(json.dumps(eval(str(gloVar.fences))), mimetype='application/json')
+
+
+@locationRoute.route('/getLocationTongji', methods=["POST"])
+def getLocationTongji():
+    data = RedisService.get("locationTongji")
+    if None == data:
+        return Response("{}", mimetype='application/json')
+    return Response(json.dumps(eval(str(data))), mimetype='application/json')

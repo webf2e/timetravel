@@ -99,9 +99,16 @@ def fenceNotify():
     return Response("{\"status\":0,\"message\":\"成功\"}",headers={"SignId": "baidu_yingyan"}, mimetype='application/json')
 
 
-@locationRoute.route('/isNeedNotify', methods=["POST"])
-def isNeedNotify():
+@locationRoute.route('/getNeedNotify', methods=["POST"])
+def getNeedNotify():
     return RedisService.get("isNeedNotify")
+
+
+@locationRoute.route('/updateNeedNotify', methods=["POST"])
+def updateNeedNotify():
+    isNeedNotify = request.form.get("isNeedNotify")
+    RedisService.set("isNeedNotify", isNeedNotify)
+    return "OK"
 
 
 @locationRoute.route('/getFence', methods=["POST"])

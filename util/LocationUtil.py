@@ -63,7 +63,6 @@ def compareState(lastState,state):
 def locationTongji():
     dateFormatStr = "%Y-%m-%d"
     timeFormatStr = "%H:%M"
-    gloVar.locationPath="/home/liuwenbin/Desktop/program/location/"
     currentDate = datetime.datetime.strftime(datetime.datetime.now(),dateFormatStr)
     files = os.listdir(gloVar.locationPath)
     files.sort()
@@ -76,7 +75,6 @@ def locationTongji():
         lines = open(filePath,"r+")
         for line in lines:
             line = line.strip()
-            print(line)
             if line.find("locationDescribe") == -1:
                 continue
             jsonData = json.loads(json.dumps(eval(line)))

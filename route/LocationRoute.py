@@ -102,7 +102,10 @@ def fenceNotify():
 
 @locationRoute.route('/getNeedNotify', methods=["POST"])
 def getNeedNotify():
-    return RedisService.get("isNeedNotify")
+    slience = 0
+    if RedisService.isExist("fenceNotifySlience"):
+        slience = 1
+    return "{}:{}".format(RedisService.get("isNeedNotify"),slience)
 
 
 @locationRoute.route('/updateNeedNotify', methods=["POST"])

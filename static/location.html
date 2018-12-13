@@ -93,10 +93,12 @@
             <div class="inner padding40px content-borders resize">
                 <button id="refreshBtn" class="btn btn-default">刷新位置</button>
                 <button id="autoRefreshBtn" class="btn btn-primary">自动刷新</button>
-                <hr style="margin: 10px 0"/>
+                <button id="locTongjiBtn" class="btn btn-info">位置统计</button>
+                <div id="tongji" class="alert alert-info" role="alert" style="margin-top: 10px;display:none"></div>
+                <hr style="margin: 5px 0"/>
                 亲爱的，我在这里：
                 <div id="locationMap" style="width: 100%;height:600px"></div>
-                是否需要短信通知，当前状态：<button id="switch" class="btn btn-primary" style="display: none">是</button>（每天23:00到次日06:00为勿扰模式，不会收到短信哦）
+                是否需要短信通知，当前状态：<button id="switch" class="btn btn-primary" style="display: none">是</button>（每天23:00到次日06:00为勿扰模式，不会收到短信哦<span id="slienceSpan"></span>）
                 <div class="register" style="padding:1px 0"></div>
                 <div class="clearfix"></div>
             </div>
@@ -202,10 +204,16 @@
         type:"POST",
         success:function(data){
             $("#switch").show();
+            var datas = data.split(":");
+            data = datas[0];
+            var slience = datas[1];
             if(data == 1){
                 $("#switch").html("是");
             }else{
                 $("#switch").html("否");
+            }
+            if(slience == 1){
+                $("#slienceSpan").html("，当前为勿扰");
             }
         }
     });
@@ -226,7 +234,7 @@
             }
         });
     });
-    var opt = {fillColor: "none",strokeStyle:"dashed",strokeColor:"blue", strokeWeight:5, strokeOpacity:0.5}
+    var opt = {fillOpacity: 0.01,fillColor: "none",strokeStyle:"dashed",strokeColor:"blue", strokeWeight:5, strokeOpacity:0.5};
     $.ajax({
         url:"/getFence",
         type:"POST",
@@ -259,6 +267,46 @@
             map.addOverlay(polygon);
         }
     });
+    $("#locTongjiBtn").click(function(){
+        if($("#tongji").css("display") == "none"){
+            $.ajax({
+                url:"/getLocationTongji",
+                type:"POST",
+                success:function(data){
+                    $("#tongji").show();
+                    var time = data["tongjiTime"];
+                    time = time.split(" ")[1];
+                    time = time.substr(0,time.length-3);
+                    var html = "今天截止到"+time+"，我停留时间比较长的地方：<br>";
+                    var index = 1;
+                    $.each(data["data"],function(name,time){
+                        html += (index++)+". "+name+"，"+time[0]+"到"+time[1];
+                        html += "，停留"+operateTime(time[2] / 1000);
+                        html += "<br>";
+                    });
+                    $("#tongji").html(html);
+                }
+            });
+        }else{
+            $("#tongji").hide();
+        }
+
+    });
+    function operateTime(time){
+        var result = "";
+        var day = parseInt(time / 86400);
+        if(0 != day){
+            result += day + "天"
+        }
+        time = time - day * 86400;
+        var hour = parseInt(time / (60 * 60))
+        result += hour + "时";
+
+        time = time - hour * (60 * 60);
+        var min = parseInt(time / 60);
+        result += min + "分";
+        return result
+    }
 </script>
 <script>
 var _hmt = _hmt || [];

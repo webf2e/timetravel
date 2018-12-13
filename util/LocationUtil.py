@@ -61,7 +61,6 @@ def compareState(lastState,state):
     return result
 
 def locationTongji():
-    gloVar.locationPath = "/home/liuwenbin/Desktop/program/location/"
     dateFormatStr = "%Y-%m-%d"
     timeFormatStr = "%H:%M"
     currentDate = datetime.datetime.strftime(datetime.datetime.now(),dateFormatStr)

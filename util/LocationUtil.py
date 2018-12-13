@@ -61,6 +61,7 @@ def compareState(lastState,state):
     return result
 
 def locationTongji():
+    gloVar.locationPath = "/home/liuwenbin/Desktop/program/location/"
     dateFormatStr = "%Y-%m-%d"
     timeFormatStr = "%H:%M"
     currentDate = datetime.datetime.strftime(datetime.datetime.now(),dateFormatStr)
@@ -68,6 +69,7 @@ def locationTongji():
     files.sort()
     addrCountMap = {}
     addrTimestrampMap = {}
+    tongjiEndTime = ""
     for file in files:
         if not file.startswith(currentDate):
             continue
@@ -93,6 +95,7 @@ def locationTongji():
                 addrTimestrampMap[locationDescribe][1] = jsonData["timestramp"]
             else:
                 addrTimestrampMap[locationDescribe] = [jsonData["timestramp"],jsonData["timestramp"]]
+            tongjiEndTime = jsonData["time"]
     countList = []
     for count in addrCountMap.values():
         countList.append(int(count))
@@ -100,6 +103,7 @@ def locationTongji():
     #获取top3
     if len(countList) > 3:
         countList = countList[0:3]
+    result = {}
     addrMap = {}
     #获取每个地点的时间
     for c in countList:
@@ -110,4 +114,6 @@ def locationTongji():
                 addrMap[addr] = [TimeUtil.getTimeStrFromTimestramp(times[0],timeFormatStr),
                                   TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), delay]
                 break
-    return addrMap
+    result["data"] = addrMap
+    result["tongjiTime"] = tongjiEndTime
+    return result

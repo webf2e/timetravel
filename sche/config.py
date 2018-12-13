@@ -48,6 +48,18 @@ class Config(object):
             'args': None,
             'trigger': 'interval',
             'seconds': 30 * 60
+        },
+        {
+            'id': 'setFenceNotifySlienceJob',
+            'func': 'sche.schedule:setFenceNotifySlienceJob',
+            'args': None,
+            'trigger': {
+                'type': 'cron',
+                'day_of_week':"mon-sun",
+                'hour':'23',
+                'minute':'0',
+                'second': '0'
+            }
         }
     ]
 

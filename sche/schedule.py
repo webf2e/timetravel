@@ -88,10 +88,10 @@ def checkLastLocationJob():
     lastLocationTime = jsonData["timestramp"] // 1000
     currentTime = int(datetime.datetime.now().timestamp())
     print("最后末次位置的时间差：{}".format(currentTime - lastLocationTime))
-    if currentTime - lastLocationTime > 60:
+    if currentTime - lastLocationTime > 90:
         if not RedisService.isExist("locationNotUpdatePush"):
             RedisService.setWithTtl("locationNotUpdatePush","1",300)
-            PushUtil.pushToSingle("末次位置未更新","末次位置已经超过1分钟未更新","")
+            PushUtil.pushToSingle("末次位置未更新","末次位置已经超过1分半未更新","")
     if currentTime - lastLocationTime > 3 * 60:
         if not RedisService.isExist("locationNotUpdateSms"):
             RedisService.setWithTtl("locationNotUpdateSms", "1", 600)
@@ -100,3 +100,6 @@ def checkLastLocationJob():
 def locationTongjiJob():
     data = LocationUtil.locationTongji()
     RedisService.set("locationTongji", str(data))
+
+def setFenceNotifySlienceJob():
+    RedisService.setWithTtl("fenceNotifySlience", "1", 60 * 60 * 7)

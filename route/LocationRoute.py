@@ -49,7 +49,7 @@ def uploatLocationData():
             if(len(compareState) > 0):
                 RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 60 * 10)
                 RedisService.set("lastFenceState", state)
-                if (int(RedisService.get("isNeedNotify")) == 1):
+                if (int(RedisService.get("isNeedNotify")) == 1 and not RedisService.isExist("fenceNotifySlience")):
                     PushUtil.pushToSingle("围栏有变更", str(compareState), "")
                     SmsUtil.sendFenceModify(compareState)
                 else:

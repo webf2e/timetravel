@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import session,request,Response
 from service import QuestionService
-import json
+import json,logging
 import uuid
 
 questionRoute = Blueprint('questionRoute', __name__)
@@ -20,13 +20,13 @@ def getAnswer():
     result={}
     for a in answers:
         index = ids.index(str(a[0]))
-        print("{}->{}".format(a[1],answer[index]))
+        logging.warning("{}->{}".format(a[1],answer[index]))
         if(a[1] == answer[index]):
             result[a[0]] = 1
             QuestionService.updateCorrectQuestion(a[0])
         else:
             result[a[0]] = 0
-            print("【回答错误】{} -> {}".format(a[2], answer[index]))
+            logging.warning("【回答错误】{} -> {}".format(a[2], answer[index]))
             QuestionService.updateErrorQuestion(a[0])
     result["uuid"] = str(uuid.uuid4())
     session["uuid"]=result["uuid"]

@@ -1,4 +1,5 @@
 from aip import AipOcr
+import logging
 
 def getContent(imgPath):
     APP_ID = '14966224'
@@ -18,6 +19,6 @@ def getContent(imgPath):
     """ 调用通用文字识别, 图片参数为本地图片 """
     result = client.accurate(image)
     if str(result).find("error_msg") != -1:
-        print(result)
+        logging.warning("文字识别出错：{}".format(result))
         return ""
     return result

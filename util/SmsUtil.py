@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, logging
 from util.Global import gloVar
 
 # 121001	离开你家
@@ -26,13 +26,13 @@ def sendSmsBytempId(mobile, tpl_id):
         if error_code == 0:
             # 发送成功
             smsid = result['result']['sid']
-            print("sendsms success,smsid: %s" % (smsid))
+            logging.warning("sendsms success,smsid: %s" % (smsid))
         else:
             # 发送失败
-            print("sendsms error :(%s) %s" % (error_code, result['reason']))
+            logging.warning("sendsms error :(%s) %s" % (error_code, result['reason']))
     else:
         # 请求失败
-        print("request sendsms error")
+        logging.warning("request sendsms error")
 
 
 def sendFenceModify(jsonMsg):

@@ -1,8 +1,5 @@
 from flask import Blueprint
-from flask import session,request,Response
-import os
-from util.Global import gloVar
-import json
+from flask import request,Response
 from service import TravelService
 
 travelRoute = Blueprint('travelRoute', __name__)
@@ -28,5 +25,4 @@ def getByLonLat():
 @travelRoute.route('/getByDate',methods=["POST"])
 def getByDate():
     date = request.form.get("date");
-    print(date)
     return Response(TravelService.getByDate(date), mimetype='application/json')

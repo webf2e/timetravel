@@ -11,6 +11,8 @@ from service import InitService
 from datetime import timedelta
 from flask_apscheduler import APScheduler
 from sche.config import Config
+from util import Log
+import logging
 
 app = Flask(__name__)
 
@@ -36,7 +38,7 @@ def login():
     isIphone = not ipad and ua.find("iPhone") != -1
     isAndroid = ua.find("Android") != -1
     isMobile = isIphone or isAndroid;
-    print("isMobile:{}".format(isMobile))
+    logging.warning("isMobile:{}".format(isMobile))
     if isLogin == None:
         if isMobile:
             return app.send_static_file("mobile/login.html")
@@ -57,6 +59,7 @@ scheduler = APScheduler()
 app.config.from_object(Config())
 scheduler.init_app(app)
 scheduler.start()
+Log.init()
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=8010)
 

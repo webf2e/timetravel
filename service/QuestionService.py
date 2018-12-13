@@ -1,5 +1,5 @@
 from util.Global import gloVar
-import json
+import json,logging
 import datetime
 import mysql.connector
 
@@ -12,7 +12,7 @@ def getRandomQuestions():
     )
     cursor = db.cursor()
     sql = "SELECT id,question FROM question ORDER BY RAND() LIMIT 3"
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
@@ -29,7 +29,7 @@ def getAnswerByIds(ids):
     )
     cursor = db.cursor()
     sql = "SELECT id,answer,question FROM question where id in ({})".format(ids)
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
@@ -45,7 +45,7 @@ def updateErrorQuestion(id):
     )
     cursor = db.cursor()
     sql = "update question set errorTimes = errorTimes + 1,useTimes = useTimes + 1,lastUseTime='{}' where id={}".format(datetime.datetime.now(),id)
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -59,7 +59,7 @@ def updateCorrectQuestion(id):
     )
     cursor = db.cursor()
     sql = "update question set correctTimes = correctTimes + 1,useTimes = useTimes + 1,lastUseTime='{}' where id={}".format(datetime.datetime.now(),id)
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()

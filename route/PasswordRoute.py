@@ -1,9 +1,8 @@
 from flask import Blueprint
 from flask import session,request,Response
 from service import PasswordService
-import json
+import json,logging
 from util import TimeUtil
-from util.Global import gloVar
 import datetime
 
 passwordRoute = Blueprint('passwordRoute', __name__)
@@ -20,28 +19,28 @@ def getPassword():
     uuidInRequest = str(request.form.get("uuid"))
     if(uuidInRequest == uuidInServer):
         currentPwd = PasswordService.getCurrentPassword()
-        print("currentPwd:"+str(currentPwd))
+        logging.warning("currentPwd:"+str(currentPwd))
         isReset = False
         if(len(currentPwd) == 0):
             isReset = True
         elif TimeUtil.getIntervalSecond(currentPwd[0][2],datetime.datetime.now()) > 3 * 86400:
             isReset = True
             PasswordService.resetAllPassword()
-            print("重置所有密码")
+            logging.warning("重置所有密码")
         if isReset:
             PasswordService.updateRandomPassword()
-            print("更新随机密码")
+            logging.warning("更新随机密码")
             currentPwd = PasswordService.getCurrentPassword()
-            print("当前密码为：" + str(currentPwd))
+            logging.warning("当前密码为：" + str(currentPwd))
         result["password"] = currentPwd[0][1]
-    print(result)
+    logging.warning(result)
     return Response(json.dumps(result, ensure_ascii=False), mimetype='application/json')
 
 @passwordRoute.route('/login',methods=["POST"])
 def login():
     password = str(request.form.get("password"))
     currentPwdInDb = PasswordService.getCurrentPassword()
-    print("currentPwd:" + str(currentPwdInDb))
+    logging.warning("currentPwd:" + str(currentPwdInDb))
     if(len(currentPwdInDb) == 0):
         return Response("password_overtime")
     currentPwdInDb = currentPwdInDb[0]
@@ -51,7 +50,7 @@ def login():
         return Response("password_overtime")
     res = Response("success")
     if request.cookies.get('isLogin') == None:
-        print("设置cookie")
+        logging.warning("设置cookie")
         outdate = datetime.datetime.now() + datetime.timedelta(days=3)
         res.set_cookie("isLogin","OK",expires=outdate)
     return res

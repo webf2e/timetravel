@@ -1,14 +1,13 @@
 from util.Global import gloVar
 import configparser
-import os
+import os,logging
 from service import TravelService,RedisService
 
 def init():
-    print("doInit")
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
-    print("读取配置文件地址：%s" % configFilePath)
+    logging.warning("读取配置文件地址：%s" % configFilePath)
     if not os.path.exists(configFilePath):
-        print("配置文件不存在，请检查")
+        logging.warning("配置文件不存在，请检查")
         exit(0)
     conf = configparser.ConfigParser()
     conf.read(configFilePath, encoding="UTF-8")
@@ -23,6 +22,7 @@ def init():
     gloVar.staticPath = conf.get('staticConfig', 'staticPath')
     gloVar.systemTongjiPath = conf.get('systemConfig', 'systemTongjiPath')
     gloVar.locationPath = conf.get('locationConfig', 'locationPath')
+    gloVar.loggingFilePath = conf.get('loggingConfig', 'loggingFilePath')
     #更新最XX的位置信息
     TravelService.updateMostDirection()
     #初始化围栏数据

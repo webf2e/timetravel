@@ -55,7 +55,6 @@ def getImageByMonthPage():
     for dbId in dbIds:
         ids.append(dbId[0])
     imgs = FileUtil.getGalleryImgByMonth(ids)
-    print(imgs)
     imgLength = len(imgs)
     if imgLength == 0:
         return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
@@ -67,7 +66,6 @@ def getImageByMonthPage():
     elif page < 1:
         page = 1
     resultMap["currentPageNum"] = page
-    print(imgs)
     if totalPageNum == page:
         resultMap["imgList"] = imgs[(page - 1) * countInOnePage:]
     else:

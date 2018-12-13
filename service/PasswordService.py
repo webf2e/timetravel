@@ -1,5 +1,5 @@
 from util.Global import gloVar
-import json
+import json,logging
 import datetime
 import mysql.connector
 
@@ -12,7 +12,7 @@ def getCurrentPassword():
     )
     cursor = db.cursor()
     sql = "SELECT id,password,useTime FROM password where useTime is not null";
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
@@ -28,7 +28,7 @@ def resetAllPassword():
     )
     cursor = db.cursor()
     sql = "update password set useTime = null"
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -56,7 +56,7 @@ def updateRandomPassword():
     )
     cursor = db.cursor()
     sql = "update password set useTime = '{}' ORDER BY RAND() LIMIT 1".format(datetime.datetime.now())
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()

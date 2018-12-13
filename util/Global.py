@@ -13,3 +13,4 @@ class gloVar():
     locationPath = ""
     fences = {}
     notifyMobile = ""
+    loggingFilePath = ""

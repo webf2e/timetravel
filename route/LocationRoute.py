@@ -4,7 +4,7 @@ import os
 from util.Global import gloVar
 from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil
 import datetime
-import json
+import json,logging
 from service import RedisService
 
 locationRoute = Blueprint('locationRoute', __name__)
@@ -27,7 +27,7 @@ def uploatLocationData():
         try:
             YingYanUtil.addPoint(jsonData)
         except Exception as e:
-            print(e)
+            logging.warning(e)
 
     #围栏判断，定位半径精度小于100时开始进行判断。
     if float(jsonData["radius"]) < 80:
@@ -71,14 +71,14 @@ def getLastLocation():
     try:
         data = YingYanUtil.getLatestPoint()
         #如果百度的数据是60秒内的，就用百度的数据，如果不是用本地数据
-        print("百度定位和本地时间的时间差：{}".format(int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"]))
+        logging.warning("百度定位和本地时间的时间差：{}".format(int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"]))
         if int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"] < 60:
             return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
         else:
             return Response(json.dumps(eval(str(RedisService.get("lastLocation")))), mimetype='application/json')
     except Exception as e:
-        print(e)
-        print("报错，使用redis定位数据")
+        logging.warning(e)
+        logging.warning("报错，使用redis定位数据")
         return Response(json.dumps(eval(str(RedisService.get("lastLocation")))), mimetype='application/json')
 
 
@@ -95,7 +95,6 @@ def visitLocationPageNotify():
 def fenceNotify():
     requestData = request.get_data()
     jsonData = json.loads(requestData.decode('utf-8'))
-    print(jsonData)
     if(jsonData["type"] == 2):
         PushUtil.pushToSingle("百度鹰眼","围栏通知","");
     return Response("{\"status\":0,\"message\":\"成功\"}",headers={"SignId": "baidu_yingyan"}, mimetype='application/json')
@@ -120,6 +119,7 @@ def getFence():
 
 @locationRoute.route('/getLocationTongji', methods=["POST"])
 def getLocationTongji():
+    logging.info("日志")
     data = RedisService.get("locationTongji")
     if None == data:
         return Response("{}", mimetype='application/json')

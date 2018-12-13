@@ -1,5 +1,5 @@
 import json
-import os
+import logging
 import mysql.connector
 from util.Global import gloVar
 
@@ -12,7 +12,7 @@ def getByImgName(imgName):
     )
     cursor = db.cursor()
     sql = "SELECT * FROM chat where imgName='{}'".format(imgName)
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
@@ -29,7 +29,7 @@ def insert(imgName, imgPath, result, createTime):
     cursor = db.cursor()
     sql = "insert into chat(imgName,imgPath,result,createTime) VALUES ('{}','{}','{}','{}')"\
         .format(imgName, imgPath, result, createTime)
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -43,7 +43,7 @@ def getNotFinished():
     )
     cursor = db.cursor()
     sql = "SELECT * FROM chat where isFinish = 0"
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
@@ -60,7 +60,7 @@ def updateById(voiceTime, content, voiceCount, wordLength, times, id):
     cursor = db.cursor()
     sql = "update chat set voiceTime = {},content='{}',voiceCount={},wordLength={},times='{}',isFinish=1 where id={}"\
         .format(voiceTime, content, voiceCount, wordLength, times, id)
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -74,7 +74,7 @@ def getChatSumTongji():
     )
     cursor = db.cursor()
     sql = "SELECT sum(voiceTime) as voiceTime, sum(voiceCount) as voiceCount, sum(wordLength) as wordLength FROM chat where isFinish = 1"
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     fields = cursor.description
@@ -91,7 +91,7 @@ def getChatTimes():
     )
     cursor = db.cursor()
     sql = "SELECT times FROM chat where times != '' and times is not null"
-    print("[sql]:{}".format(sql))
+    logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     db.commit()
@@ -116,7 +116,7 @@ def changeToJsonStr(fields,data):
 
 def operateChatMessage():
     datas = getNotFinished()
-    print("chat表中有{}数据没有处理".format(len(datas)))
+    logging.warning("chat表中有{}数据没有处理".format(len(datas)))
     for data in datas:
         try:
             # 解析每一张
@@ -170,7 +170,7 @@ def operateChatMessage():
             totalWord = totalWord.replace("'", "\"")
             updateById(voiceTime, totalWord, voiceCount, len(totalWord), changeSetTimeToStr(times), id)
         except Exception as e:
-            print("处理chat数据报错：{}".format(str(e)))
+            logging.warning("处理chat数据报错：{}".format(str(e)))
 
 def getHourTime(time):
     return time[0:3] + "00"

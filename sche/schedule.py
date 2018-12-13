@@ -6,14 +6,17 @@ import datetime
 import time
 import os
 import json
+import logging
 
 def moveChatFileJob():
-    print("转移聊天记录文件开始")
+    logging.warning("转移聊天记录文件开始")
     FileUtil.renameAndMove(gloVar().chatDirPath)
-    print("转移聊天记录文件结束")
+    logging.warning("转移聊天记录文件结束")
 
 def makeBigHeartJob():
+    logging.warning("开始制作首页心形图片")
     FileUtil.makeHeartImg()
+    logging.warning("制作首页心形图片结束")
 
 def systemTongjiJob():
     #获取时间
@@ -70,7 +73,7 @@ def getChatMessageFromChatImg():
                         #没有数据，需要添加到mysql，调用百度ocr获取数据
                         result = OcrUtil.getContent(absImgPath)
                         if result == "":
-                            print("超过限额，退出")
+                            logging.warning("超过限额，退出")
                             isOverLimit = True
                             break
                         result = str(result).replace("'","\"")
@@ -78,16 +81,16 @@ def getChatMessageFromChatImg():
                         time.sleep(5)
         if isOverLimit:
             break
-    print("开始处理chat表中的数据")
+    logging.warning("开始处理chat表中的数据")
     ChatService.operateChatMessage()
-    print("转化聊天图片成文字结束")
+    logging.warning("转化聊天图片成文字结束")
 
 def checkLastLocationJob():
     jsonStr = RedisService.get("lastLocation")
     jsonData = json.loads(json.dumps(eval(jsonStr)))
     lastLocationTime = jsonData["timestramp"] // 1000
     currentTime = int(datetime.datetime.now().timestamp())
-    print("最后末次位置的时间差：{}".format(currentTime - lastLocationTime))
+    logging.warning("最后末次位置的时间差：{}".format(currentTime - lastLocationTime))
     if currentTime - lastLocationTime > 90:
         if not RedisService.isExist("locationNotUpdatePush"):
             RedisService.setWithTtl("locationNotUpdatePush","1",300)

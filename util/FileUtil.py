@@ -1,4 +1,4 @@
-import os
+import os,logging
 import traceback
 from PIL import Image
 import pytesseract
@@ -23,17 +23,17 @@ def renameAndMove(dirPath):
             if len(end) == 6:
                 afterEnd = end.replace("_", "_0")
                 newFileName = fileName.replace(end, afterEnd)
-                print("{} -> {}".format(fileName, newFileName))
+                logging.warning("{} -> {}".format(fileName, newFileName))
                 os.rename(os.path.join(dirPath, fileName), os.path.join(dirPath, newFileName))
             #转移文件夹
             fileNames = newFileName.split("_")
             dPath = os.path.join(dirPath, fileNames[0], fileNames[1], fileNames[2])
-            print(dPath)
+            logging.warning(dPath)
             if not os.path.exists(dPath):
                 os.makedirs(dPath)
             os.rename(os.path.join(dirPath, newFileName), os.path.join(dPath, newFileName))
     except Exception as e:
-        print("move chat fileError",traceback.format_exc())
+        logging.warning("move chat fileError",traceback.format_exc())
 
 
 def resizeImg(file,width,height):
@@ -43,7 +43,7 @@ def resizeImg(file,width,height):
 
 def getText(filePath):
     text=pytesseract.image_to_string(Image.open(filePath),lang='chi_sim')
-    print(text)
+    logging.warning(text)
 
 def getGalleryImgByMonth(ids):
     list = []
@@ -162,13 +162,11 @@ def getCorrectImg(imgPath,width,height):
     wPercent = imgWidth / width
     hPercent = imgHeight / height
     if wPercent < hPercent:
-        print((int(imgWidth / wPercent), int(imgHeight / wPercent)))
         img = img.resize((int(imgWidth / wPercent), int(imgHeight / wPercent)), Image.ANTIALIAS)
         x = 0
         y = int(imgHeight / wPercent / 2 - height / 2)
         height = height + y
     else:
-        print((int(imgWidth / hPercent), int(imgHeight / hPercent)))
         img = img.resize((int(imgWidth / hPercent), int(imgHeight / hPercent)), Image.ANTIALIAS)
         x = int(imgWidth / hPercent / 2 - width / 2)
         y = 0

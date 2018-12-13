@@ -6,6 +6,7 @@ import json
 from service import TravelService,ChatService
 from util import FileUtil
 import datetime
+import logging
 
 adminRoute = Blueprint('adminRoute', __name__)
 
@@ -219,8 +220,6 @@ def deleteChatImg():
 def rotateImg():
     path = str(request.form.get("path"))
     absPath = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
-    print(absPath)
-    print(path)
     FileUtil.rotateImg(absPath)
     return path
 
@@ -299,8 +298,6 @@ def print_request_info():
     urlPath = str(request.path)
     if(urlPath.find("admin") != -1):
         agent = str(request.headers.get("User-agent"))
-        print(agent)
+        logging.warning("访问admin的agent：{}".format(agent))
         if(agent.find("MI 8 Explorer Edition") == -1):
-            #todo 去掉下面的注释
-            #abort(400)
-            pass
+            abort(400)

@@ -1,5 +1,5 @@
 import requests
-import datetime
+import logging
 import hashlib
 import json
 from util import TimeUtil
@@ -44,7 +44,7 @@ def pushToSingle(title,content,touchuan,clientId="90d5c0eeddef90dab99583952d289f
           title.encode("utf-8").decode("latin1"),
           touchuan.encode("utf-8").decode("latin1"),
           clientId,str(TimeUtil.getTimestrampNow()))
-    print(data)
+    logging.warning("推送的请求参数：{}".format(data))
     pushUrl = "https://restapi.getui.com/v1/{}/push_single".format("5J6x0OXyjQ76886EHpixH6")
     r = requests.post(url=pushUrl,data=data,headers=headers)
-    print(r.text)
+    logging.warning("推送的相应结果：{}".format(r.text))

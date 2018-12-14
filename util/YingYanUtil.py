@@ -93,3 +93,11 @@ def getStayPoint(startTime,endTime,stayTime,stayRadius):
         .format(ak, service_id, entity_name, startTime, endTime, stayTime, stayRadius)
     results = requests.get(url).text
     return json.loads(results)
+
+jsonData = getTrack(1544284800,1544371199,1,5000)
+print(str(jsonData))
+ps = jsonData["points"]
+lonLats = ""
+for p in ps:
+    lonLats += "new BMap.Point({},{}),\n".format(p["longitude"],p["latitude"])
+print(lonLats[:-2])

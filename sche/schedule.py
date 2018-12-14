@@ -115,6 +115,7 @@ def splitLogJob():
     #清空文件
     f = open(gloVar.loggingFilePath, "w+")
     f.truncate()
+    f.close()
     #清除过期文件
     parentDir = gloVar.loggingFilePath[:gloVar.loggingFilePath.rfind("/")]
     files = os.listdir(parentDir)
@@ -127,3 +128,12 @@ def splitLogJob():
         logging.warning("删除文件：{}".format(oldLogFiles[0]))
         os.remove(oldLogFiles[0])
         oldLogFiles.remove(oldLogFiles[0])
+
+def delOtherLogJob():
+    logDir = gloVar.loggingFilePath[:gloVar.loggingFilePath.rfind("/")]
+    files = os.listdir(logDir)
+    for file in files:
+        if not file.startswith("timeTravel"):
+            f = open(os.path.join(logDir,file), "w+")
+            f.truncate()
+            f.close()

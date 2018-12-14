@@ -1,5 +1,5 @@
 from util.Global import gloVar
-import datetime,os,json
+import datetime,os,json,logging
 from util import TimeUtil
 
 def isInPoly(aLon, aLat, pointList):
@@ -68,7 +68,11 @@ def locationTongji():
     files.sort()
     addrCountMap = {}
     addrTimestrampMap = {}
+    addrDelayMap = {}
+    addrLastTimeMap = {}
+    lastAddr = ""
     tongjiEndTime = ""
+    maxTimestramp = 0
     for file in files:
         if not file.startswith(currentDate):
             continue
@@ -95,6 +99,25 @@ def locationTongji():
             else:
                 addrTimestrampMap[locationDescribe] = [jsonData["timestramp"],jsonData["timestramp"]]
             tongjiEndTime = jsonData["time"]
+            #计算停留时间
+            if "" == lastAddr:
+                lastAddr = locationDescribe
+                addrLastTimeMap[lastAddr] = jsonData["timestramp"]
+
+            if lastAddr != locationDescribe:
+                delay = jsonData["timestramp"] - addrLastTimeMap[lastAddr]
+                if lastAddr in addrDelayMap:
+                    addrDelayMap[lastAddr] = addrDelayMap[lastAddr] + delay
+                else:
+                    addrDelayMap[lastAddr] = delay
+                addrLastTimeMap[locationDescribe] = jsonData["timestramp"]
+            lastAddr = locationDescribe
+            maxTimestramp = jsonData["timestramp"]
+    delay = maxTimestramp - addrLastTimeMap[lastAddr]
+    if lastAddr in addrDelayMap:
+        addrDelayMap[lastAddr] = addrDelayMap[lastAddr] + delay
+    else:
+        addrDelayMap[lastAddr] = delay
     countList = []
     for count in addrCountMap.values():
         countList.append(int(count))
@@ -109,10 +132,10 @@ def locationTongji():
         for addr,count in addrCountMap.items():
             if c == count:
                 times = addrTimestrampMap[addr]
-                delay = times[1] - times[0]
                 addrMap[addr] = [TimeUtil.getTimeStrFromTimestramp(times[0],timeFormatStr),
-                                  TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), delay]
+                                  TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), addrDelayMap[addr]]
                 break
     result["data"] = addrMap
     result["tongjiTime"] = tongjiEndTime
+    logging.warning("位置统计结果：{}".format(result))
     return result

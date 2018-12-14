@@ -25,6 +25,13 @@ def systemTongjiJob():
     memory = psutil.virtual_memory().percent
     FileUtil.writeSystemTongji("memory",hour,"{}\t{}".format(t,memory))
     disk = psutil.disk_usage("/").percent
+    #添加磁盘容量报警
+    if disk > 80:
+        #判断是否需要报警
+        if not RedisService.isExist("diskAlarm"):
+            #需要报警
+            PushUtil.pushToSingle("磁盘空间报警","当前磁盘使用率已经大于80%，请登录服务器查看","")
+            RedisService.setWithTtl("diskAlarm","1", 60 * 60 * 6)
     FileUtil.writeSystemTongji("disk", hour, "{}\t{}".format(t, disk))
     cpu = psutil.cpu_percent(0)
     FileUtil.writeSystemTongji("cpu", hour, "{}\t{}".format(t, cpu))

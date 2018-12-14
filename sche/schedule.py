@@ -6,7 +6,7 @@ import datetime
 import time
 import os
 import json
-import logging
+import logging,shutil
 
 def moveChatFileJob():
     logging.warning("转移聊天记录文件开始")
@@ -106,3 +106,24 @@ def locationTongjiJob():
 
 def setFenceNotifySlienceJob():
     RedisService.setWithTtl("fenceNotifySlience", "1", 60 * 60 * 7)
+
+def splitLogJob():
+    time = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(hours=1),"%Y%m%d")
+    newLogFilePath = gloVar.loggingFilePath.replace(".log","-{}.log".format(time))
+    #复制文件
+    shutil.copyfile(gloVar.loggingFilePath,newLogFilePath)
+    #清空文件
+    f = open(gloVar.loggingFilePath, "w+")
+    f.truncate()
+    #清除过期文件
+    parentDir = gloVar.loggingFilePath[:gloVar.loggingFilePath.rfind("/")]
+    files = os.listdir(parentDir)
+    oldLogFiles = []
+    for file in files:
+        if file.startswith("timeTravel-"):
+            oldLogFiles.append(os.path.join(parentDir, file))
+    while len(oldLogFiles) > 30:
+        oldLogFiles.sort()
+        logging.warning("删除文件：{}".format(oldLogFiles[0]))
+        os.remove(oldLogFiles[0])
+        oldLogFiles.remove(oldLogFiles[0])

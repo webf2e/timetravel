@@ -60,6 +60,18 @@ class Config(object):
                 'minute':'0',
                 'second': '0'
             }
+        },
+        {
+            'id': 'splitLogJob',
+            'func': 'sche.schedule:splitLogJob',
+            'args': None,
+            'trigger': {
+                'type': 'cron',
+                'day_of_week':"mon-sun",
+                'hour':'0',
+                'minute':'0',
+                'second': '0'
+            }
         }
     ]
 

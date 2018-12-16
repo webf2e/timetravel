@@ -1,13 +1,12 @@
-from flask import Blueprint
-from flask import session,request,Response
-from service import PasswordService
+from flask import Blueprint,Response
 import json
 from util import TimeUtil
-from util.Global import gloVar
-import datetime
 
 indexRoute = Blueprint('indexRoute', __name__)
 
 @indexRoute.route('/getMeetingDays',methods=["POST"])
 def getMeetingDays():
-    return str(TimeUtil.subDay())
+    timeList = []
+    timeList.append("我们已经相遇{}天！".format(TimeUtil.subDay("2018-10-05 00:00:00")))
+    timeList.append("我成为你的男朋友第{}天！".format(TimeUtil.subDay("2018-12-09 00:00:00")))
+    return Response(json.dumps(timeList), mimetype='application/json')

@@ -111,7 +111,7 @@
                 <div class="right-bg visible-desktop visible-tablet"><img src="/static/images/banner-controlbg2.png" alt=""></div>
             </div>
 
-            <div style="text-align:center;color:#f1a693;"><span class="label label-warning">我们已经相遇 <b id="meetingDay"></b> 天！</span></div>
+            <div style="text-align:center;color:#f1a693;"><span class="label label-warning" id="meetingDay"></span></div>
             <div class="innter padding40px" style="padding-bottom: 0">
                 <div class="love-message relative">
                 	<!--left love box start-->
@@ -204,13 +204,26 @@
 <script>selectnav('nav'); </script>-->
 </body>
 <script>
+    var timeData = 0;
+    var count = 0;
     $.ajax({
         url:"/getMeetingDays",
         type:"POST",
         success:function(data){
-            $("#meetingDay").html(data);
+            timeData = data;
+            changeMeetingDay();
         }
     });
+    function changeMeetingDay(){
+        if(timeData != null){
+            $("#meetingDay").html(timeData[count]);
+            count ++;
+            if(count == timeData.length){
+                count = 0;
+            }
+        }
+    }
+    setInterval("changeMeetingDay()",3000)
 </script>
 <script>
 var _hmt = _hmt || [];

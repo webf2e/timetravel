@@ -25,6 +25,12 @@ def subDay():
     days = dateDelta.days
     return days + 1
 
+def subDay(timestr):
+    start = datetime.datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S")
+    dateDelta = (datetime.datetime.now()-start)
+    days = dateDelta.days
+    return days + 1
+
 def dealSeconds(seconds):
     if seconds < 60:
         return "{}秒".format(seconds)

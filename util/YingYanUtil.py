@@ -78,7 +78,7 @@ def getDistance(startTime,endTime):
 
 def getTrack(startTime,endTime,pageIndex,pageSize):
     url = "http://yingyan.baidu.com/api/v3/track/gettrack?ak={}&service_id={}&entity_name={}&is_processed=1&" \
-          "process_option=need_denoise=1,need_vacuate=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&" \
+          "process_option=need_denoise=1,need_vacuate=1,radius_threshold=80,need_mapmatch=1,transport_mode=auto&" \
           "supplement_mode=walking&low_speed_threshold=20&coord_type_output=bd09ll&sort_type=asc&" \
           "start_time={}&end_time={}&page_index={}&page_size={}" \
         .format(ak, service_id, entity_name, startTime, endTime, pageIndex, pageSize)
@@ -93,11 +93,3 @@ def getStayPoint(startTime,endTime,stayTime,stayRadius):
         .format(ak, service_id, entity_name, startTime, endTime, stayTime, stayRadius)
     results = requests.get(url).text
     return json.loads(results)
-
-jsonData = getTrack(1544284800,1544371199,1,5000)
-print(str(jsonData))
-ps = jsonData["points"]
-lonLats = ""
-for p in ps:
-    lonLats += "new BMap.Point({},{}),\n".format(p["longitude"],p["latitude"])
-print(lonLats[:-2])

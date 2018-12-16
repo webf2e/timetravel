@@ -300,4 +300,5 @@ def print_request_info():
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
         if(agent.find("MI 8 Explorer Edition") == -1):
-            abort(400)
+            #abort(400)
+            pass

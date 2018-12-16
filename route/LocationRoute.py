@@ -122,7 +122,6 @@ def getFence():
 
 @locationRoute.route('/getLocationTongji', methods=["POST"])
 def getLocationTongji():
-    logging.info("日志")
     data = RedisService.get("locationTongji")
     if None == data:
         return Response("{}", mimetype='application/json')

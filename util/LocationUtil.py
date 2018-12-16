@@ -63,10 +63,9 @@ def compareState(lastState,state):
 def locationTongji():
     dateFormatStr = "%Y-%m-%d"
     timeFormatStr = "%H:%M"
-    currentDate = datetime.datetime.strftime(datetime.datetime.now(),dateFormatStr)
+    currentDate = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=2),dateFormatStr)
     files = os.listdir(gloVar.locationPath)
     files.sort()
-    addrCountMap = {}
     addrTimestrampMap = {}
     addrDelayMap = {}
     addrLastTimeMap = {}
@@ -88,11 +87,6 @@ def locationTongji():
                 locationDescribe = locationDescribe[1:]
             if locationDescribe.endswith("附近"):
                 locationDescribe = locationDescribe[:-2]
-            #添加addrCountMap
-            if locationDescribe in addrCountMap:
-                addrCountMap[locationDescribe] = addrCountMap[locationDescribe] + 1
-            else:
-                addrCountMap[locationDescribe] = 1
             #添加addrTime
             if locationDescribe in addrTimestrampMap:
                 addrTimestrampMap[locationDescribe][1] = jsonData["timestramp"]
@@ -118,19 +112,19 @@ def locationTongji():
         addrDelayMap[lastAddr] = addrDelayMap[lastAddr] + delay
     else:
         addrDelayMap[lastAddr] = delay
-    countList = []
-    for count in addrCountMap.values():
-        countList.append(int(count))
-    countList.sort(reverse=True)
+    timeList = []
+    for time in addrDelayMap.values():
+        timeList.append(int(time))
+        timeList.sort(reverse=True)
     #获取top3
-    if len(countList) > 3:
-        countList = countList[0:3]
+    if len(timeList) > 3:
+        timeList = timeList[0:3]
     result = {}
     addrMap = {}
     #获取每个地点的时间
-    for c in countList:
-        for addr,count in addrCountMap.items():
-            if c == count:
+    for t in timeList:
+        for addr,time in addrDelayMap.items():
+            if t == time:
                 times = addrTimestrampMap[addr]
                 addrMap[addr] = [TimeUtil.getTimeStrFromTimestramp(times[0],timeFormatStr),
                                   TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), addrDelayMap[addr]]

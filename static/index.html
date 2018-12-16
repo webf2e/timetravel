@@ -74,7 +74,7 @@
             <div class="innter padding40px content-borders" style="padding-bottom: 0">
             	<!--banners start-->
             	<div class="banner relative">
-                    <h4>我们已经相遇 <b id="meetingDay"></b> 天！</h4>
+                    <h4 id="meetingDay"></h4>
                 	<div class="left-bg visible-desktop visible-tablet"><img src="/static/images/banner-controlbg1.png" alt=""></div>
                     <div class="left-shadow"><img src="/static/images/banner-corner-left.png" alt=""></div>
                     <div class="right-shadow"><img src="/static/images/banner-corner-right.png" alt=""></div>
@@ -197,13 +197,26 @@
 <script>selectnav('nav'); </script>-->
 </body>
 <script>
+    var timeData = 0;
+    var count = 0;
     $.ajax({
         url:"/getMeetingDays",
         type:"POST",
         success:function(data){
-            $("#meetingDay").html(data);
+            timeData = data;
+            changeMeetingDay();
         }
     });
+    function changeMeetingDay(){
+        if(timeData != null){
+            $("#meetingDay").html(timeData[count]);
+            count ++;
+            if(count == timeData.length){
+                count = 0;
+            }
+        }
+    }
+    setInterval("changeMeetingDay()",3000)
 </script>
 <script>
 var _hmt = _hmt || [];

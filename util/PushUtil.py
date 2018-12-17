@@ -18,7 +18,7 @@ def getAuthCode():
     res = requests.post(url=url,data=data,headers=headers)
     return json.loads(res.text)["auth_token"]
 
-def pushToSingle(title,content,touchuan,clientId="90d5c0eeddef90dab99583952d289f52"):
+def pushToSingle(title,content,touchuan,clientId="0533b1031f41300e289bcfb743331227"):
     headers = {"Content-Type": "application/json","authtoken":getAuthCode()}
     data = """
         {
@@ -48,3 +48,10 @@ def pushToSingle(title,content,touchuan,clientId="90d5c0eeddef90dab99583952d289f
     pushUrl = "https://restapi.getui.com/v1/{}/push_single".format("5J6x0OXyjQ76886EHpixH6")
     r = requests.post(url=pushUrl,data=data,headers=headers)
     logging.warning("推送的相应结果：{}".format(r.text))
+
+
+def getUserStatus(clientId="0533b1031f41300e289bcfb743331227"):
+    headers = {"Content-Type": "application/json","authtoken":getAuthCode()}
+    pushUrl = "https://restapi.getui.com/v1/{}/user_status/{}".format("5J6x0OXyjQ76886EHpixH6",clientId)
+    r = requests.get(url=pushUrl,headers=headers)
+    logging.warning("获取用户状态结果：{}".format(r.text))

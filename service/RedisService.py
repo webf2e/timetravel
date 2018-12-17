@@ -41,3 +41,7 @@ def getSetting(key):
         return val.decode("utf-8")
     return None
 
+def isSettingExist(key):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    return r.hexists("setting",key)

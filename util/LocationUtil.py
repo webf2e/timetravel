@@ -63,7 +63,7 @@ def compareState(lastState,state):
 def locationTongji():
     dateFormatStr = "%Y-%m-%d"
     timeFormatStr = "%H:%M"
-    currentDate = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=2),dateFormatStr)
+    currentDate = datetime.datetime.strftime(datetime.datetime.now(),dateFormatStr)
     files = os.listdir(gloVar.locationPath)
     files.sort()
     addrTimestrampMap = {}

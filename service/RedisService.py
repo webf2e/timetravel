@@ -27,3 +27,17 @@ def isExist(key):
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)
     r = redis.Redis(connection_pool=pool)
     return r.exists(key)
+
+def setSetting(key,value):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    r.hset("setting",key,value)
+
+def getSetting(key):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    val = r.hget("setting",key)
+    if None != val:
+        return val.decode("utf-8")
+    return None
+

@@ -126,3 +126,9 @@ def getLocationTongji():
     if None == data:
         return Response("{}", mimetype='application/json')
     return Response(json.dumps(eval(str(data))), mimetype='application/json')
+
+@locationRoute.route('/updateCid', methods=["POST"])
+def updateCid():
+    cid = request.form.get("cid")
+    if None != cid:
+        RedisService.setSetting("cid",cid)

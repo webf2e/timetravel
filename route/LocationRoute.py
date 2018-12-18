@@ -132,3 +132,4 @@ def updateCid():
     cid = request.form.get("cid")
     if None != cid:
         RedisService.setSetting("cid",cid)
+    return "OK"

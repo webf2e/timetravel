@@ -40,5 +40,5 @@ def init():
             data.append(lonlat)
         gloVar.fences[name] = data
     #初始化围栏是否需要通知的redis信息
-    if not RedisService.isExist("isNeedNotify"):
-        RedisService.set("isNeedNotify", "1")
+    if not RedisService.isSettingExist("isNeedNotify"):
+        RedisService.setSetting("isNeedNotify", "1")

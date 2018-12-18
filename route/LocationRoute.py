@@ -49,7 +49,7 @@ def uploatLocationData():
             if(len(compareState) > 0):
                 RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 60 * 10)
                 RedisService.set("lastFenceState", state)
-                if (int(RedisService.get("isNeedNotify")) == 1 and not RedisService.isExist("fenceNotifySlience")):
+                if (int(RedisService.getSetting("isNeedNotify")) == 1 and not RedisService.isExist("fenceNotifySlience")):
                     PushUtil.pushToSingle("围栏有变更", str(compareState), "")
                     SmsUtil.sendFenceModify(compareState)
                 else:
@@ -105,13 +105,13 @@ def getNeedNotify():
     slience = 0
     if RedisService.isExist("fenceNotifySlience"):
         slience = 1
-    return "{}:{}".format(RedisService.get("isNeedNotify"),slience)
+    return "{}:{}".format(RedisService.getSetting("isNeedNotify"),slience)
 
 
 @locationRoute.route('/updateNeedNotify', methods=["POST"])
 def updateNeedNotify():
     isNeedNotify = request.form.get("isNeedNotify")
-    RedisService.set("isNeedNotify", isNeedNotify)
+    RedisService.setSetting("isNeedNotify", isNeedNotify)
     return "OK"
 
 

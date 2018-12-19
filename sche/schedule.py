@@ -1,5 +1,6 @@
 from util import FileUtil,OcrUtil,SmsUtil,PushUtil,LocationUtil
 from util.Global import gloVar
+from util.RedisKey import redisKey
 from service import ChatService,RedisService
 import psutil
 import datetime
@@ -28,10 +29,10 @@ def systemTongjiJob():
     #添加磁盘容量报警
     if disk > 80:
         #判断是否需要报警
-        if not RedisService.isExist("diskAlarm"):
+        if not RedisService.isExist(redisKey.diskAlarm):
             #需要报警
             PushUtil.pushToSingle("磁盘空间报警","当前磁盘使用率已经大于80%，请登录服务器查看","")
-            RedisService.setWithTtl("diskAlarm","1", 60 * 60 * 6)
+            RedisService.setWithTtl(redisKey.diskAlarm,"1", 60 * 60 * 6)
     FileUtil.writeSystemTongji("disk", hour, "{}\t{}".format(t, disk))
     cpu = psutil.cpu_percent(0)
     FileUtil.writeSystemTongji("cpu", hour, "{}\t{}".format(t, cpu))
@@ -55,8 +56,7 @@ def removeFileJob():
     FileUtil.removeLocationFile(240)
 
 def getChatMessageFromChatImg():
-    #todo 后期该值需要调小
-    maxDay = 100
+    maxDay = 10
     isOverLimit = False
     for i in range(0,maxDay):
         t = datetime.datetime.now() - datetime.timedelta(days=i)
@@ -93,26 +93,29 @@ def getChatMessageFromChatImg():
     logging.warning("转化聊天图片成文字结束")
 
 def checkLastLocationJob():
-    jsonStr = RedisService.get("lastLocation")
+    jsonStr = RedisService.get(redisKey.lastLocation)
     jsonData = json.loads(json.dumps(eval(jsonStr)))
     lastLocationTime = jsonData["timestramp"] // 1000
     currentTime = int(datetime.datetime.now().timestamp())
     logging.warning("最后末次位置的时间差：{}".format(currentTime - lastLocationTime))
-    if currentTime - lastLocationTime > 120:
-        if not RedisService.isExist("locationNotUpdatePush"):
-            RedisService.setWithTtl("locationNotUpdatePush","1",300)
-            PushUtil.pushToSingle("末次位置未更新","末次位置已经超过两分钟未更新","")
-    if currentTime - lastLocationTime > 5 * 60:
-        if not RedisService.isExist("locationNotUpdateSms"):
-            RedisService.setWithTtl("locationNotUpdateSms", "1", 600)
-            SmsUtil.sendSmsBytempId("15210650960",121042)
+    if RedisService.getSetting(redisKey.isNeedLocationNotUpdateForAppNotify) == "1":
+        if currentTime - lastLocationTime > 120:
+            if not RedisService.isExist(redisKey.locationNotUpdatePush):
+                RedisService.setWithTtl(redisKey.locationNotUpdatePush,"1",300)
+                PushUtil.pushToSingle("末次位置未更新","末次位置已经超过两分钟未更新","")
+
+    if RedisService.getSetting(redisKey.isNeedLocationNotUpdateForSmsNotify) == "1":
+        if currentTime - lastLocationTime > 5 * 60:
+            if not RedisService.isExist(redisKey.locationNotUpdateSms):
+                RedisService.setWithTtl(redisKey.locationNotUpdateSms, "1", 600)
+                SmsUtil.sendSmsBytempId("15210650960",121042)
 
 def locationTongjiJob():
     data = LocationUtil.locationTongji()
-    RedisService.set("locationTongji", str(data))
+    RedisService.set(redisKey.locationTongji, str(data))
 
 def setFenceNotifySlienceJob():
-    RedisService.setWithTtl("fenceNotifySlience", "1", 60 * 60 * 7)
+    RedisService.setWithTtl(redisKey.fenceNotifySlience, "1", 60 * 60 * 7)
 
 def splitLogJob():
     time = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(hours=1),"%Y%m%d")

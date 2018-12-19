@@ -1,4 +1,5 @@
 from util.Global import gloVar
+from util.RedisKey import redisKey
 import configparser
 import os,logging
 from service import TravelService,RedisService
@@ -39,6 +40,10 @@ def init():
             lonlat = (float(lonlat[0]),float(lonlat[1]))
             data.append(lonlat)
         gloVar.fences[name] = data
-    #初始化围栏是否需要通知的redis信息
-    if not RedisService.isSettingExist("isNeedNotify"):
-        RedisService.setSetting("isNeedNotify", "1")
+    #初始化setting
+    if not RedisService.isSettingExist(redisKey.isNeedFenceInOutNotify):
+        RedisService.setSetting(redisKey.isNeedFenceInOutNotify, "1")
+    if not RedisService.isSettingExist(redisKey.isNeedLocationNotUpdateForSmsNotify):
+        RedisService.setSetting(redisKey.isNeedLocationNotUpdateForSmsNotify, "1")
+    if not RedisService.isSettingExist(redisKey.isNeedLocationNotUpdateForAppNotify):
+        RedisService.setSetting(redisKey.isNeedLocationNotUpdateForAppNotify, "1")

@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask import request,Response
 import os
 from util.Global import gloVar
+from util.RedisKey import redisKey
 from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil
 import datetime
 import json,logging
@@ -21,24 +22,24 @@ def uploatLocationData():
         locFile = open(os.path.join(gloVar.locationPath,fileName),"a+")
         locFile.write(str(jsonData)+"\n")
         locFile.close()
-        #保存到redis中
-        RedisService.set("lastLocation",str(jsonData))
+        #保存末次位置到redis中
+        RedisService.set(redisKey.lastLocation,str(jsonData))
         #发送到鹰眼
         try:
             YingYanUtil.addPoint(jsonData)
         except Exception as e:
             logging.warning(e)
 
-    #围栏判断，定位半径精度小于100时开始进行判断。
+    #围栏判断，定位半径精度小于80时开始进行判断。
     if float(jsonData["radius"]) < 80:
-        if not RedisService.isExist("lastFenceTime"):
+        if not RedisService.isExist(redisKey.lastFenceTime):
             lon = float(jsonData["lon"])
             lat = float(jsonData["lat"])
             state = LocationUtil.getFenceState(lon,lat)
             #从redis中获取上次围栏状态，判断是否要报警
-            lastState = RedisService.get("lastFenceState")
+            lastState = RedisService.get(redisKey.lastFenceState)
             if None == lastState:
-                RedisService.set("lastFenceState", state)
+                RedisService.set(redisKey.lastFenceState, state)
                 lastState = state
             else:
                 lastState = lastState.replace("'","\"")
@@ -47,9 +48,9 @@ def uploatLocationData():
             compareState = LocationUtil.compareState(lastState, state)
             #状态有更新
             if(len(compareState) > 0):
-                RedisService.setWithTtl("lastFenceTime", str(datetime.datetime.now()), 60 * 10)
-                RedisService.set("lastFenceState", state)
-                if (int(RedisService.getSetting("isNeedNotify")) == 1 and not RedisService.isExist("fenceNotifySlience")):
+                RedisService.setWithTtl(redisKey.lastFenceTime, str(datetime.datetime.now()), 60 * 10)
+                RedisService.set(redisKey.lastFenceState, state)
+                if (int(RedisService.getSetting(redisKey.isNeedFenceInOutNotify)) == 1 and not RedisService.isExist(redisKey.fenceNotifySlience)):
                     PushUtil.pushToSingle("围栏有变更", str(compareState), "")
                     SmsUtil.sendFenceModify(compareState)
                 else:
@@ -57,7 +58,7 @@ def uploatLocationData():
 
 
     #获取最后的数据
-    location = RedisService.get("lastLocation")
+    location = RedisService.get(redisKey.lastLocation)
     l = json.loads(json.dumps(eval(location)))
     ld = "暂无地理数据"
     if "locationDescribe" in l:
@@ -75,11 +76,11 @@ def getLastLocation():
         if int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"] < 60:
             return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
         else:
-            return Response(json.dumps(eval(str(RedisService.get("lastLocation")))), mimetype='application/json')
+            return Response(json.dumps(eval(str(RedisService.get(redisKey.lastLocation)))), mimetype='application/json')
     except Exception as e:
         logging.warning(e)
         logging.warning("报错，使用redis定位数据")
-        return Response(json.dumps(eval(str(RedisService.get("lastLocation")))), mimetype='application/json')
+        return Response(json.dumps(eval(str(RedisService.get(redisKey.lastLocation)))), mimetype='application/json')
 
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])
@@ -103,15 +104,15 @@ def fenceNotify():
 @locationRoute.route('/getNeedNotify', methods=["POST"])
 def getNeedNotify():
     slience = 0
-    if RedisService.isExist("fenceNotifySlience"):
+    if RedisService.isExist(redisKey.fenceNotifySlience):
         slience = 1
-    return "{}:{}".format(RedisService.getSetting("isNeedNotify"),slience)
+    return "{}:{}".format(RedisService.getSetting(redisKey.isNeedFenceInOutNotify),slience)
 
 
 @locationRoute.route('/updateNeedNotify', methods=["POST"])
 def updateNeedNotify():
     isNeedNotify = request.form.get("isNeedNotify")
-    RedisService.setSetting("isNeedNotify", isNeedNotify)
+    RedisService.setSetting(redisKey.isNeedFenceInOutNotify, isNeedNotify)
     return "OK"
 
 
@@ -122,7 +123,7 @@ def getFence():
 
 @locationRoute.route('/getLocationTongji', methods=["POST"])
 def getLocationTongji():
-    data = RedisService.get("locationTongji")
+    data = RedisService.get(redisKey.locationTongji)
     if None == data:
         return Response("{}", mimetype='application/json')
     return Response(json.dumps(eval(str(data))), mimetype='application/json')
@@ -131,5 +132,5 @@ def getLocationTongji():
 def updateCid():
     cid = request.form.get("cid")
     if None != cid:
-        RedisService.setSetting("cid",cid)
+        RedisService.setSetting(redisKey.cid, cid)
     return "OK"

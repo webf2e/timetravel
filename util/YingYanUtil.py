@@ -1,6 +1,7 @@
 import requests
 import json, logging
 from service import RedisService
+from util.RedisKey import redisKey
 
 service_id = 207270
 entity_name = "你的小可爱"
@@ -54,7 +55,7 @@ def addPoint(jsonData):
     return json.loads(results)
 
 def getLatestPoint():
-    data = RedisService.get("lastLocationFromBaidu")
+    data = RedisService.get(redisKey.lastLocationFromBaidu)
     if None != data:
         logging.warning("从缓存中获取")
         return json.loads(json.dumps(eval(str(data))))
@@ -65,7 +66,7 @@ def getLatestPoint():
     results = results.replace("latitude","lat")\
         .replace("longitude","lon")\
         .replace("loc_time","timestramp")
-    RedisService.setWithTtl("lastLocationFromBaidu", results, 10)
+    RedisService.setWithTtl(redisKey.lastLocationFromBaidu, results, 10)
     return json.loads(results)
 
 def getDistance(startTime,endTime):

@@ -4,6 +4,7 @@ import hashlib
 import json
 from util import TimeUtil
 from service import RedisService
+from util.RedisKey import redisKey
 #coding=utf-8
 
 appId = "5J6x0OXyjQ76886EHpixH6"
@@ -23,7 +24,7 @@ def getAuthCode():
     res = requests.post(url=url,data=data,headers=headers)
     return json.loads(res.text)["auth_token"]
 
-def pushToSingle(title,content,touchuan,clientId=RedisService.getSetting("cid")):
+def pushToSingle(title,content,touchuan,clientId=RedisService.getSetting(redisKey.cid)):
     headers = {"Content-Type": "application/json","authtoken":getAuthCode()}
     data = """
         {
@@ -55,7 +56,7 @@ def pushToSingle(title,content,touchuan,clientId=RedisService.getSetting("cid"))
     logging.warning("推送的相应结果：{}".format(r.text))
 
 
-def getUserStatus(clientId=RedisService.getSetting("cid")):
+def getUserStatus(clientId=RedisService.getSetting(redisKey.cid)):
     headers = {"Content-Type": "application/json","authtoken":getAuthCode()}
     pushUrl = "https://restapi.getui.com/v1/{}/user_status/{}".format(appId,clientId)
     r = requests.get(url=pushUrl,headers=headers)

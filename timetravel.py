@@ -7,6 +7,7 @@ from route.TravelRoute import travelRoute
 from route.AdminRoute import adminRoute
 from route.GalleryRoute import galleryRoute
 from route.LocationRoute import locationRoute
+from route.SettingRoute import settingRoute
 from route.AppRoute import appRoute
 from service import InitService
 from datetime import timedelta
@@ -26,6 +27,7 @@ app.register_blueprint(adminRoute)
 app.register_blueprint(galleryRoute)
 app.register_blueprint(locationRoute)
 app.register_blueprint(appRoute)
+app.register_blueprint(settingRoute)
 
 # var ua = navigator.userAgent;
 # var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),

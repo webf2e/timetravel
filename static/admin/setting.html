@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统设置</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap-switch.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+</head>
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">后台管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/static/admin/index.html">首页</a></li>
+            <li><a href="/static/admin/chatimg.html">聊天管理</a></li>
+            <li><a href="/static/admin/traveledit.html">旅游管理</a></li>
+            <li><a href="/static/admin/gallery.html">画廊管理</a></li>
+            <li><a href="/static/admin/tongji.html">数据统计</a></li>
+            <li><a href="/static/admin/system.html">系统统计</a></li>
+            <li><a href="/static/admin/setting.html">系统设置</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <table id="settingTable" style="width: 100%;" class="table table-bordered">
+
+    </table>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript">
+    function getSettings() {
+        $.ajax({
+            url:"/setting/getSettings",
+            dataType: 'json',
+            type:"POST",
+            success:function(data){
+                var html = "";
+                $.each(data,function(i,n){
+                    html += "<tr><td>"+n.content+"</td>";
+                    html += "<td>";
+                    if(n.type == "radio"){
+                        html += "<div class='switch'><input id='"+n.name+"' type='checkbox'/></div>";
+                    }
+                    html += "</td>";
+                    html += "</tr>";
+                });
+                $("#settingTable").html(html);
+                $("[type='checkbox']").bootstrapSwitch();
+                $.each(data,function(i,n){
+                    if(n.type == "radio"){
+                        if(n.value == "1"){
+                            $("#" + n.name).bootstrapSwitch('state', true, false);
+                        }else{
+                            $("#" + n.name).bootstrapSwitch('state', false, false);
+                        }
+                        $("#" + n.name).on('switchChange.bootstrapSwitch', function(event, state) {
+                            var value = 0;
+                            var name = n.name;
+                            if(state){
+                                value = 1;
+                            }
+                            setSetting(name,value);
+                        });
+                    }
+                });
+            }
+        });
+    }
+    function setSetting(name,value){
+        $.ajax({
+            url:"/setting/setSetting",
+            dataType: 'json',
+            type:"POST",
+            data:"name="+name+"&value="+value,
+            success:function(data){
+                getSettings();
+            }
+        });
+    }
+    getSettings();
+</script>
+</html>

@@ -41,6 +41,16 @@ def getSetting(key):
         return val.decode("utf-8")
     return None
 
+def getSettings():
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    resultMap = {}
+    dataMap = r.hgetall("setting")
+    for k,v in dataMap.items():
+        resultMap[k.decode("utf-8")] = v.decode("utf-8")
+    return resultMap
+
+
 def isSettingExist(key):
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)
     r = redis.Redis(connection_pool=pool)

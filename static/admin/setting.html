@@ -36,10 +36,9 @@
     </table>
     <table id="sysTable" style="width: 100%;" class="table table-bordered">
         <tr>
-            <td id="pidTd"></td>
+            <td id="pidTd" colspan="3"></td>
         </tr>
-        <tr>
-            <td id="operateTd"></td>
+        <tr id="operateTd">
         </tr>
     </table>
 </body>
@@ -112,12 +111,14 @@
             url:"/setting/isStarted",
             type:"POST",
             success:function(data){
-                var html = "<div class='switch'><input id='sysState' type='checkbox'/></div>";
-                if("False" == data){
+                var html = "<td><div class='switch'><input id='sysState' type='checkbox'/></div></td>";
+                if("True" == data){
                     //启动状态
-                    html += "<button class='btn btn-warning'>重启服务</button>"
+                    html += "<td><button class='btn btn-warning'>重启服务</button></td><td>"
+                }else{
+                    html += "<td colspan='2'>"
                 }
-                html += "<button class='btn btn-primary'>刷新状态</button>"
+                html += "<button class='btn btn-primary'>刷新状态</button></td>";
                 $("#operateTd").html(html);
                 if("True" == data){
                     //启动状态

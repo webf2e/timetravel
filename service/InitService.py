@@ -4,6 +4,7 @@ import configparser
 import os,logging
 from service import TravelService,RedisService
 import datetime
+from util import EmailUtil
 
 def init():
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
@@ -48,4 +49,8 @@ def init():
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForSmsNotify, "1")
     if not RedisService.isSettingExist(redisKey.isNeedLocationNotUpdateForAppNotify):
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForAppNotify, "1")
-    RedisService.set(redisKey.serverStartTime, datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S"))
+    #记录服务启动时间到redis中
+    serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
+    RedisService.set(redisKey.serverStartTime, serverStartTime)
+    #服务启动时发送邮件
+    EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))

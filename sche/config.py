@@ -47,7 +47,7 @@ class Config(object):
             'func': 'sche.schedule:locationTongjiJob',
             'args': None,
             'trigger': 'interval',
-            'seconds': 30 * 60
+            'seconds': 10 * 60
         },
         {
             'id': 'setFenceNotifySlienceJob',

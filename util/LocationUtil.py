@@ -69,6 +69,7 @@ def locationTongji():
     addrTimestrampMap = {}
     addrDelayMap = {}
     addrLastTimeMap = {}
+    addrLonLatMap = {}
     lastAddr = ""
     tongjiEndTime = ""
     maxTimestramp = 0
@@ -93,6 +94,13 @@ def locationTongji():
             else:
                 addrTimestrampMap[locationDescribe] = [jsonData["timestramp"],jsonData["timestramp"]]
             tongjiEndTime = jsonData["time"]
+            #添加添加addrLonLatMap
+            if locationDescribe in addrLonLatMap:
+                #使用精度最高的数据
+                if addrLonLatMap[locationDescribe][2] > jsonData["radius"]:
+                    addrLonLatMap[locationDescribe] = [jsonData["lon"], jsonData["lat"], jsonData["radius"]]
+            else:
+                addrLonLatMap[locationDescribe] = [jsonData["lon"], jsonData["lat"], jsonData["radius"]]
             #计算停留时间
             if "" == lastAddr:
                 lastAddr = locationDescribe
@@ -127,7 +135,8 @@ def locationTongji():
             if t == time:
                 times = addrTimestrampMap[addr]
                 addrMap[addr] = [TimeUtil.getTimeStrFromTimestramp(times[0],timeFormatStr),
-                                  TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), addrDelayMap[addr]]
+                                  TimeUtil.getTimeStrFromTimestramp(times[1],timeFormatStr), addrDelayMap[addr],
+                                 addrLonLatMap[addr][0], addrLonLatMap[addr][1], addrLonLatMap[addr][2]]
                 break
     result["data"] = addrMap
     result["tongjiTime"] = tongjiEndTime

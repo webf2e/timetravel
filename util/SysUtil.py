@@ -27,6 +27,7 @@ def restart():
     kill(getPid())
     time.sleep(0.5)
     start()
+    time.sleep(1)
     return getPid()
 
 def isStarted():

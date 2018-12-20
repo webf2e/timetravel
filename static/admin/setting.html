@@ -33,7 +33,14 @@
       </div>
     </nav>
     <table id="settingTable" style="width: 100%;" class="table table-bordered">
-
+    </table>
+    <table id="sysTable" style="width: 100%;" class="table table-bordered">
+        <tr>
+            <td id="pidTd"></td>
+        </tr>
+        <tr>
+            <td id="operateTd"></td>
+        </tr>
     </table>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -81,7 +88,6 @@
     function setSetting(name,value){
         $.ajax({
             url:"/setting/setSetting",
-            dataType: 'json',
             type:"POST",
             data:"name="+name+"&value="+value,
             success:function(data){
@@ -90,5 +96,40 @@
         });
     }
     getSettings();
+
+    function getPid(){
+        $.ajax({
+            url:"/setting/getPid",
+            type:"POST",
+            success:function(data){
+                $("#pidTd").html("当前PID为：" + data);
+            }
+        });
+    }
+    getPid();
+    function getState(){
+        $.ajax({
+            url:"/setting/isStarted",
+            type:"POST",
+            success:function(data){
+                var html = "<div class='switch'><input id='sysState' type='checkbox'/></div>";
+                if("False" == data){
+                    //启动状态
+                    html += "<button class='btn btn-warning'>重启服务</button>"
+                }
+                html += "<button class='btn btn-primary'>刷新状态</button>"
+                $("#operateTd").html(html);
+                if("True" == data){
+                    //启动状态
+                    $("#sysState").bootstrapSwitch('state', true, false);
+                }else{
+                    //停用状态
+                    $("#sysState").bootstrapSwitch('state', false, false);
+                }
+            }
+        });
+    }
+    getState();
+
 </script>
 </html>

@@ -1,6 +1,7 @@
 import os
 import time
 
+
 def getPid():
     output = os.popen('ps -ef | grep uwsgiconfig.ini')
     lines = output.read().split("\n")
@@ -17,18 +18,24 @@ def getPid():
 
 def kill(pid):
     # 返回0，成功，其他失败
-    return os.system("kill -9 {}".format(pid))
+    if isStarted():
+        return os.system("kill -9 {}".format(pid))
+    return "NOT_STARTED"
 
 
 def start():
-    return os.system("sh /root/python_proj/timetravel/run.sh")
+    if not isStarted():
+        return os.system("sh /root/python_proj/timetravel/run.sh")
+    return "ALREADY_STARTED"
+
 
 def restart():
     kill(getPid())
-    time.sleep(0.5)
+    time.sleep(1.5)
     start()
-    time.sleep(1)
+    time.sleep(2)
     return getPid()
+
 
 def isStarted():
     if getPid() == None:

@@ -3,10 +3,11 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService
+from service import TravelService,ChatService,RedisService
 from util import FileUtil
 import datetime
 import logging
+from util.RedisKey import redisKey
 
 adminRoute = Blueprint('adminRoute', __name__)
 
@@ -292,6 +293,10 @@ def systemNet():
     if endTime == '' or endTime == None:
         endTime = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H")
     return Response(json.dumps(FileUtil.getSystemTongji("net-{}".format(netId),startTime,endTime), ensure_ascii=False), mimetype='application/json')
+
+@adminRoute.route('/admin/tongji/getServerStartTime',methods=["POST"])
+def getServerStartTime():
+    return RedisService.get(redisKey.serverStartTime)
 
 @adminRoute.before_request
 def print_request_info():

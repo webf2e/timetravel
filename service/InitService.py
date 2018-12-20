@@ -3,6 +3,7 @@ from util.RedisKey import redisKey
 import configparser
 import os,logging
 from service import TravelService,RedisService
+import datetime
 
 def init():
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
@@ -47,3 +48,4 @@ def init():
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForSmsNotify, "1")
     if not RedisService.isSettingExist(redisKey.isNeedLocationNotUpdateForAppNotify):
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForAppNotify, "1")
+    RedisService.set(redisKey.serverStartTime, datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S"))

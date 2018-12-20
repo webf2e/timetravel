@@ -27,9 +27,12 @@ class redisKey():
     lastLocationFromBaidu = "lastLocationFromBaidu"
 
     #key类型
+
     #末次位置
     lastLocation = "lastLocation"
     #上次围栏的状态
     lastFenceState = "lastFenceState"
     #位置统计
     locationTongji = "locationTongji"
+    #服务器启动时间
+    serverStartTime = "serverStartTime"

@@ -30,11 +30,9 @@ def start():
 
 
 def restart():
-    kill(getPid())
-    time.sleep(1.5)
-    start()
-    time.sleep(2)
-    return getPid()
+    shell = "sh /root/python_proj/timetravel/restart.sh {} &".format(getPid())
+    print(shell)
+    return os.system(shell)
 
 
 def isStarted():

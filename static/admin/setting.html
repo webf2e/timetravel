@@ -40,6 +40,9 @@
         </tr>
         <tr id="operateTd">
         </tr>
+        <tr>
+            <td id="operateResult" colspan="3"></td>
+        </tr>
     </table>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -114,11 +117,11 @@
                 var html = "<td><div class='switch'><input id='sysState' type='checkbox'/></div></td>";
                 if("True" == data){
                     //启动状态
-                    html += "<td><button class='btn btn-warning'>重启服务</button></td><td>"
+                    html += "<td><button class='btn btn-warning' onclick='restart()'>重启服务</button></td><td>"
                 }else{
                     html += "<td colspan='2'>"
                 }
-                html += "<button class='btn btn-primary'>刷新状态</button></td>";
+                html += "<button class='btn btn-primary' onclick='refresh()'>刷新状态</button></td>";
                 $("#operateTd").html(html);
                 if("True" == data){
                     //启动状态
@@ -127,10 +130,52 @@
                     //停用状态
                     $("#sysState").bootstrapSwitch('state', false, false);
                 }
+                $("#sysState").on('switchChange.bootstrapSwitch', function(event, state) {
+                    if(state){
+                        //调用启动
+                        start()
+                    }else{
+                        //调用停用
+                        stop()
+                    }
+                });
             }
         });
     }
     getState();
-
+    function start(){
+        $.ajax({
+            url:"/setting/startServer",
+            type:"POST",
+            success:function(data){
+                $("#operateResult").html("启动结果："+data);
+                refresh();
+            }
+        });
+    }
+    function refresh(){
+        getPid();
+        getState();
+    }
+    function stop(){
+        $.ajax({
+            url:"/setting/stopServer",
+            type:"POST",
+            success:function(data){
+                $("#operateResult").html("停止结果："+data);
+                refresh();
+            }
+        });
+    }
+    function restart(){
+        $.ajax({
+            url:"/setting/restartServer",
+            type:"POST",
+            success:function(data){
+                $("#operateResult").html("重启结果："+data);
+                refresh();
+            }
+        });
+    }
 </script>
 </html>

@@ -36,6 +36,19 @@ def getPid():
 def isStarted():
     return str(SysUtil.isStarted())
 
+@settingRoute.route('/setting/startServer',methods=["POST"])
+def startServer():
+    return str(SysUtil.start())
+
+@settingRoute.route('/setting/stopServer',methods=["POST"])
+def stopServer():
+    return str(SysUtil.kill(SysUtil.getPid()))
+
+@settingRoute.route('/setting/restartServer',methods=["POST"])
+def restartServer():
+    return str(SysUtil.restart())
+
+
 
 @settingRoute.before_request
 def print_request_info():

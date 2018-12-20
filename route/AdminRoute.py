@@ -162,7 +162,7 @@ def getContent():
         w += content[0] + "。"
     resultMap["wordCount"] = wordCount
     fileName = "wordcloud.png"
-    FileUtil.makeCloudWord(w, os.path.join(gloVar.staticPath, "images", fileName))
+    #FileUtil.makeCloudWord(w, os.path.join(gloVar.staticPath, "images", fileName))
     resultMap["wordCloudPath"] = os.path.join("/static/images",fileName)
     return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
 

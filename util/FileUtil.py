@@ -4,7 +4,7 @@ from PIL import Image
 import pytesseract
 from util.Global import gloVar
 import jieba
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import random
 from util import ImgUtil
@@ -77,7 +77,7 @@ def makeCloudWord(w,imgPath):
     wordcloud = WordCloud(background_color="white", max_words=2000, scale=20,
                           max_font_size=120, random_state=42,
                           font_path=gloVar.wordCloudFontPath).generate(words)
-    plt.imshow(wordcloud)
+    #plt.imshow(wordcloud)
     wordcloud.to_file(imgPath)
 
 def clearStaticDownloadFiles():

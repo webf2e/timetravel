@@ -31,7 +31,7 @@ def uploatLocationData():
             logging.warning(e)
 
     #围栏判断，定位半径精度小于80时开始进行判断。
-    if float(jsonData["radius"]) < 80:
+    if float(jsonData["radius"]) < 50:
         if not RedisService.isExist(redisKey.lastFenceTime):
             lon = float(jsonData["lon"])
             lat = float(jsonData["lat"])

@@ -1,7 +1,7 @@
 import os
-import time
+import requests
 
-
+url = "http://127.0.0.1:5000/server/{}"
 def getPid():
     output = os.popen('ps -ef | grep uwsgiconfig.ini')
     lines = output.read().split("\n")
@@ -16,23 +16,21 @@ def getPid():
     return pid
 
 
-def kill(pid):
+def kill():
     # 返回0，成功，其他失败
     if isStarted():
-        return os.system("kill -9 {}".format(pid))
+        return requests.post(url.format("stopServer"))
     return "NOT_STARTED"
 
 
 def start():
     if not isStarted():
-        return os.system("sh /root/python_proj/timetravel/run.sh")
+        return requests.post(url.format("startServer"))
     return "ALREADY_STARTED"
 
 
 def restart():
-    shell = "sh /root/python_proj/timetravel/restart.sh {} &".format(getPid())
-    print(shell)
-    return os.system(shell)
+    return requests.post(url.format("restartServer"))
 
 
 def isStarted():

@@ -3,7 +3,6 @@ from flask import abort,request,Response
 import json
 from service import SettingService,RedisService
 import logging
-from util import SysUtil
 
 settingRoute = Blueprint('settingRoute', __name__)
 
@@ -25,29 +24,6 @@ def setSetting():
     if RedisService.isSettingExist(name):
         RedisService.setSetting(name,value)
     return "OK"
-
-
-@settingRoute.route('/setting/getPid',methods=["POST"])
-def getPid():
-    return str(SysUtil.getPid())
-
-
-@settingRoute.route('/setting/isStarted',methods=["POST"])
-def isStarted():
-    return str(SysUtil.isStarted())
-
-@settingRoute.route('/setting/startServer',methods=["POST"])
-def startServer():
-    return str(SysUtil.start())
-
-@settingRoute.route('/setting/stopServer',methods=["POST"])
-def stopServer():
-    return str(SysUtil.kill(SysUtil.getPid()))
-
-@settingRoute.route('/setting/restartServer',methods=["POST"])
-def restartServer():
-    return str(SysUtil.restart())
-
 
 
 @settingRoute.before_request

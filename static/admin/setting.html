@@ -101,17 +101,17 @@
 
     function getPid(){
         $.ajax({
-            url:"/setting/getPid",
+            url:"http://47.90.32.49:8011/server/getPid",
             type:"POST",
             success:function(data){
                 $("#pidTd").html("当前PID为：" + data);
-            }
+            },
         });
     }
     getPid();
     function getState(){
         $.ajax({
-            url:"/setting/isStarted",
+            url:"http://47.90.32.49:8011/server/isStarted",
             type:"POST",
             success:function(data){
                 var html = "<td><div class='switch'><input id='sysState' type='checkbox'/></div></td>";
@@ -145,7 +145,7 @@
     getState();
     function start(){
         $.ajax({
-            url:"/setting/startServer",
+            url:"http://47.90.32.49:8011/server/startServer",
             type:"POST",
             success:function(data){
                 $("#operateResult").html("启动结果："+data);
@@ -159,7 +159,7 @@
     }
     function stop(){
         $.ajax({
-            url:"/setting/stopServer",
+            url:"http://47.90.32.49:8011/server/stopServer",
             type:"POST",
             success:function(data){
                 $("#operateResult").html("停止结果："+data);
@@ -167,15 +167,24 @@
             }
         });
     }
+    var checkTime = 0;
     function restart(){
         $.ajax({
-            url:"/setting/restartServer",
+            url:"http://47.90.32.49:8011/server/restartServer",
             type:"POST",
             success:function(data){
                 $("#operateResult").html("重启结果："+data);
-                refresh();
+                checkTime = 0;
+                check();
             }
         });
+    }
+    function check(){
+        checkTime ++;
+        if(checkTime < 5){
+            refresh();
+            setTimeout("check()",1000);
+        }
     }
 </script>
 </html>

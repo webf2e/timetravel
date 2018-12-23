@@ -65,6 +65,14 @@ def uploatLocationData():
         ld = l["locationDescribe"]
     return "{} {}".format(l["time"],ld)
 
+@appRoute.route('/pushToApp',methods=["POST"])
+def pushToApppos():
+    title = request.form.get("title")
+    content = request.form.get("content")
+    if(None != title and "" != title and None != content and "" != content):
+        PushUtil.pushToSingle(title,content,"")
+    return "OK"
+
 @appRoute.route('/updateCid', methods=["POST"])
 def updateCid():
     cid = request.form.get("cid")

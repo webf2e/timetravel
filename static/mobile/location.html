@@ -129,6 +129,9 @@
     var localIcon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 20), {
        anchor: new BMap.Size(12, 23)
     });
+    var commonPointIcon = new BMap.Icon('/static/images/commonPoint.png', new BMap.Size(20, 20), {
+       anchor: new BMap.Size(12, 23)
+    });
     var map = new BMap.Map("locationMap");    // 创建Map实例
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 16);
 	map.enableScrollWheelZoom(true);
@@ -275,6 +278,7 @@
             map.addOverlay(polygon);
         }
     });
+    var commonPoints = [];
     $("#locTongjiBtn").click(function(){
         if($("#tongji").css("display") == "none"){
             $.ajax({
@@ -285,21 +289,40 @@
                     var time = data["tongjiTime"];
                     time = time.split(" ")[1];
                     time = time.substr(0,time.length-3);
-                    var html = "今天截止到"+time+"，我停留时间比较长的地方：<br>";
+                    var html = "今天截止到"+time+"，我停留时间比较长的地点：<br>";
                     var index = 1;
                     $.each(data["data"],function(name,time){
-                        html += (index++)+". "+name+"，"+time[0]+"到"+time[1];
-                        html += "，停留"+operateTime(time[2] / 1000);
+                        var delayTime = operateTime(time[2] / 1000);
+                        html += (index++)+". <b onclick='moveToPoint("+time[3]+","+time[4]+")'>"+name+"</b>，"+time[0]+"到"+time[1];
+                        html += "，停留"+delayTime;
                         html += "<br>";
+
+                        var p = new BMap.Marker(new BMap.Point(time[3], time[4]),{icon:commonPointIcon});
+                        commonPoints.push(p);
+                        map.addOverlay(p);
+                        p.addEventListener("click",function(){
+                            var html = "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>停留时间长的地点："+name+"</h4>" +
+                            "<p style='margin:0;line-height:1.5;font-size:13px;'>从"+time[0]+"到"+time[1]+"，停留"+delayTime+"</p>" +
+                            "</div>";
+                            var infoWindow = new BMap.InfoWindow(html,{width:300,offset:new BMap.Size(0, -10)});
+                            p.openInfoWindow(infoWindow);
+                        });
                     });
                     $("#tongji").html(html);
                 }
             });
         }else{
             $("#tongji").hide();
+            for(var i = 0;i < commonPoints.length;i++){
+                map.removeOverlay(commonPoints[i]);
+            }
+            commonPoints = [];
         }
 
     });
+    function moveToPoint(lon,lat){
+        map.panTo(new BMap.Point(lon, lat));
+    }
     function operateTime(time){
         var result = "";
         var day = parseInt(time / 86400);

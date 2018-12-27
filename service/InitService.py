@@ -53,4 +53,7 @@ def init():
     serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
     RedisService.set(redisKey.serverStartTime, serverStartTime)
     #服务启动时发送邮件
-    EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
+    try:
+        EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
+    except Exception as e:
+        logging.warning("发送邮件失败",e)

@@ -28,6 +28,10 @@ tr {
 }
 '''
 
+"""
+百度静态图：http://lbsyun.baidu.com/index.php?title=static
+"""
+
 def makePdfForTravel():
     gloVar.staticPath="/home/liuwenbin/PycharmProjects/timetravel/static"
     bookDir = os.path.join(gloVar.staticPath, "book")
@@ -49,19 +53,39 @@ def makePdfForTravel():
             finalHtml += getCssContent(file)
             continue
         if tempLine.startswith("#travels"):
-            travels = json.loads(TravelService.getNew4())
+            travels = json.loads(TravelService.getByDate("2018年12月"))
             for travel in  travels:
                 print(travel)
                 finalHtml += """
                 <div class="panel panel-primary">
                   <div class="panel-heading">
-                    <h3 class="panel-title">Panel title</h3>
+                    <h3 class="panel-title">{}</h3>
                   </div>
                   <div class="panel-body">
-                    Panel content
-                  </div>
+                    <table style='width:100%'>
+                        <tr>
+                            <td>
+                                <img src='http://lovexj.pro{}' style='float: left;width:180px;height:156px;margin-right:10px;margin-bottom:5px'/>
+                                <img src="http://api.map.baidu.com/staticimage/v2?ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA&center={},{}&width=270&height=234&zoom=19&dpiType=ph
+                                &markers={},{}" 
+                                style='float: left;width:180px;height:156px;margin-right:10px;margin-bottom:5px'/>
+                                {}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <hr/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            
+                            </td>
+                        </tr>
+                    </table>
+                  </div> 
                 </div>
-                """
+                """.format(travel["travelName"],travel["indexImg"],travel["lon"],travel["lat"],travel["lon"],travel["lat"],travel["content"])
             continue
         finalHtml += tempLine + "\n"
     tempLines.close()

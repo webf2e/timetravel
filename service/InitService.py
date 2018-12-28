@@ -4,7 +4,7 @@ import configparser
 import os,logging
 from service import TravelService,RedisService
 import datetime
-from util import EmailUtil
+from util import EmailUtil,PDFUtil
 
 def init():
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
@@ -54,6 +54,8 @@ def init():
     RedisService.set(redisKey.serverStartTime, serverStartTime)
     #服务启动时发送邮件
     try:
-        EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
+        #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
+        PDFUtil.makePdfForTravel()
+        pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

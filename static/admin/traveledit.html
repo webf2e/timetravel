@@ -54,6 +54,14 @@
                         <td colspan="2"><select class="form-control type" name="type"></select></td>
                     </tr>
                     <tr>
+                        <td style="width: 80px">电影名称</td>
+                        <td colspan="2"><input class="form-control movieName" name="movieName" type="text" placeholder="影"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">餐饮类型</td>
+                        <td colspan="2"><input class="form-control foodType" name="foodType" type="text" placeholder="火锅"/></td>
+                    </tr>
+                    <tr>
                         <td style="width: 80px">内容</td>
                         <td colspan="2">
                             <textarea name="content" class="form-control content" rows="5" style="width: 100%"></textarea>
@@ -116,6 +124,14 @@
                     <tr>
                         <td style="width: 80px">类型</td>
                         <td colspan="2"><select class="form-control type" name="type"></select></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">电影名称</td>
+                        <td colspan="2"><input class="form-control movieName" name="movieName" type="text" placeholder="比如：影"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">餐饮类型</td>
+                        <td colspan="2"><input class="form-control foodType" name="foodType" type="text" placeholder="比如：火锅"/></td>
                     </tr>
                     <tr>
                         <td style="width: 80px">内容</td>
@@ -278,6 +294,8 @@
                 $("#editInfoTable .travelName").val(data.travelName);
                 $("#editInfoTable .type option").attr("selected",false);
                 $("#editInfoTable .type option[value='"+data.type+"']").attr("selected",true);
+                $("#editInfoTable .movieName").val(data.movieName == "None"?"":data.movieName);
+                $("#editInfoTable .foodType").val(data.foodType == "None"?"":data.foodType);
                 $("#editInfoTable .content").val(data.content);
                 $("#editInfoTable .keyword").val(data.keyword);
                 $("#editInfoTable .lon").val(data.lon);

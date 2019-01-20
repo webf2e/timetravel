@@ -4,7 +4,7 @@ import os,oss2
 from util.Global import gloVar
 import json
 from service import TravelService,ChatService,RedisService
-from util import FileUtil
+from util import FileUtil,NetInfoUtil
 import datetime
 import logging
 from util.RedisKey import redisKey
@@ -89,7 +89,12 @@ def addTravelInfo():
     lat = request.form.get("lat")
     travelTime = request.form.get("travelTime")
     keyword = request.form.get("keyword")
-    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword)
+    movieName = request.form.get("movieName")
+    foodType = request.form.get("foodType")
+    movieType = ""
+    if "" != movieName:
+        movieType = NetInfoUtil.getMovieType(movieName)
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
     TravelService.updateMostDirection()
     return "添加成功"
 
@@ -103,7 +108,12 @@ def editTravelInfo():
     lat = request.form.get("lat")
     travelTime = request.form.get("travelTime")
     keyword = request.form.get("keyword")
-    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword)
+    movieName = request.form.get("movieName")
+    foodType = request.form.get("foodType")
+    movieType = ""
+    if "" != movieName:
+        movieType = NetInfoUtil.getMovieType(movieName)
+    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
     TravelService.updateMostDirection()
     return "修改成功"
 

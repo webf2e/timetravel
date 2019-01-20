@@ -2,6 +2,7 @@ import json,logging
 import os
 import mysql.connector
 from util.Global import gloVar
+from util import NetInfoUtil
 
 def getAllPoint():
     db = mysql.connector.connect(
@@ -232,7 +233,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime,keyword):
+def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -240,14 +241,14 @@ def insert(travelName,type,content,lon,lat,travelTime,keyword):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction) VALUES ('{}','{}','{}',{},{},'{}','{}','')"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
 
-def updateById(id,travelName,type,content,lon,lat,travelTime,keyword):
+def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -255,8 +256,8 @@ def updateById(id,travelName,type,content,lon,lat,travelTime,keyword):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='' where id={}"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,id)
+    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='',movieName='{}',foodType='{}',movieType='{}' where id={}"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
@@ -285,3 +286,23 @@ def isShowImgText(id):
     if len(os.listdir(filePath)) == 0:
         return 0
     return 1
+
+def updateMovieType():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select id,movieName from travel where movieName != '' and (movieType = '' or movieType is null)"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    for d in data:
+        updateSql = "update travel set movieType = '{}' where id={}".format(NetInfoUtil.getMovieType(d[1]), d[0])
+        logging.warning("[sql]:{}".format(updateSql))
+        cursor.execute(updateSql)
+    db.commit()
+    db.close()
+

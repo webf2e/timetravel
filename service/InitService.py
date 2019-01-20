@@ -52,6 +52,8 @@ def init():
     #记录服务启动时间到redis中
     serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
     RedisService.set(redisKey.serverStartTime, serverStartTime)
+    #更新travel表中的movieType类型
+    TravelService.updateMovieType()
     #服务启动时发送邮件
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))

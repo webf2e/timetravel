@@ -4,7 +4,7 @@ import configparser
 import os,logging
 from service import TravelService,RedisService
 import datetime
-from util import EmailUtil,PDFUtil
+from util import EmailUtil,PDFUtil,TongjiUtil
 
 def init():
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
@@ -54,6 +54,7 @@ def init():
     RedisService.set(redisKey.serverStartTime, serverStartTime)
     #更新travel表中的movieType类型
     TravelService.updateMovieType()
+    TongjiUtil.getTravelTongji()
     #服务启动时发送邮件
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))

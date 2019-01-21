@@ -91,7 +91,7 @@
                 <!--banners end-->
             <div class="inner padding40px resize">
                 <div class="events pretty-photos">
-                	<div class="rightbar" style="margin-bottom: 50px">
+                	<div class="rightbar" style="margin-bottom: 20px">
                     	<!--location map widget start-->
                     	<div class="widget map">
                         	<!--heading start-->
@@ -104,8 +104,9 @@
                             <div id="travelmap" style="border: 1px solid #000;width: 100%;height :300px"></div>
                         </div>
                     </div>
-                    <div class="leftbar" id="contentDiv">
-
+                    <div class="leftbar" >
+                        <div id="travelTongji" class="alert alert-info" role="alert"></div>
+                        <div id="contentDiv"></div>
                     </div>
                     <div class="rightbar">
                         <div class="widget message-board">
@@ -230,6 +231,20 @@
             }
         });
     }
+    function getTongji(){
+        $.ajax({
+            url:"/getTravelTongji",
+            dataType: 'json',
+            type:"POST",
+            success:function(data){
+                var html = "亲爱哒，在我们相遇的这段日子里<br/>一共看了<b>"+data.movieCount+"</b>场电影和演出<br/>";
+                html += "我们看的最多的是<b>"+data.maxMovieType+"片</b>，看了<b>"+data.maxMovieTypeCount+"</b>场<br/>";
+                html += "我们一起吃了<b>"+data.foodCount+"</b>顿饭，有<b>"+data.maxFoodTypeCount+"</b>顿吃的<b>"+data.maxFoodType+"</b>";
+                $("#travelTongji").html(html);
+            }
+        });
+    }
+    getTongji();
     function getTravelContent(n){
         var tag = "<ul>"
         var keyword = n.keyword;

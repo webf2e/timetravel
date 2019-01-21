@@ -41,6 +41,19 @@ def getSetting(key):
         return val.decode("utf-8")
     return None
 
+def setTongji(key,value):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    r.hset("tongji",key,value)
+
+def getTongji(key):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    val = r.hget("tongji",key)
+    if None != val:
+        return val.decode("utf-8")
+    return None
+
 def getSettings():
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)
     r = redis.Redis(connection_pool=pool)

@@ -87,8 +87,9 @@
             <div class="inner padding40px content-borders resize">
                 <div class="events pretty-photos">
                 	<!--LEFT BAR START-->
-                    <div class="leftbar" id="contentDiv">
-
+                    <div class="leftbar" >
+                        <div id="travelTongji" class="alert alert-info" role="alert"></div>
+                        <div id="contentDiv"></div>
                     </div>
                     <!--LEFT BAR END-->
                     <!--RIGHT BAR START-->
@@ -239,6 +240,20 @@
             }
         });
     }
+    function getTongji(){
+        $.ajax({
+            url:"/getTravelTongji",
+            dataType: 'json',
+            type:"POST",
+            success:function(data){
+                var html = "亲爱哒，在我们相遇的这段日子里，一共看了<b>"+data.movieCount+"</b>场电影和演出<br/>";
+                html += "在这些电影和演出中，我们看的最多的是<b>"+data.maxMovieType+"片</b>，一共看了<b>"+data.maxMovieTypeCount+"</b>场<br/>";
+                html += "我们一共吃了<b>"+data.foodCount+"</b>顿饭，其中有<b>"+data.maxFoodTypeCount+"</b>顿饭都是吃的<b>"+data.maxFoodType+"</b>";
+                $("#travelTongji").html(html);
+            }
+        });
+    }
+    getTongji();
     function getTravelContent(n){
         var tag = "<ul>"
         var keyword = n.keyword;

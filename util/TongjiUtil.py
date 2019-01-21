@@ -1,5 +1,5 @@
 from service import TravelService
-import json
+from service import RedisService
 
 def getTravelTongji():
     tongjiMap = {}
@@ -36,3 +36,5 @@ def getTravelTongji():
     tongjiMap["maxFoodType"] = maxFoodType
     tongjiMap["maxFoodTypeCount"] = maxFoodTypeCount
     tongjiMap["foodCount"] = len(foodTypes)
+    json = str(tongjiMap).replace("'", "\"")
+    RedisService.setTongji("travel", json)

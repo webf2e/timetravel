@@ -296,6 +296,7 @@ def getAllMovieType():
     db.close()
     return data
 
+
 def getAllFoodType():
     db = mysql.connector.connect(
         host=gloVar.dbHost,

@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import request,Response
-from service import TravelService
+from service import TravelService,RedisService
+
 
 travelRoute = Blueprint('travelRoute', __name__)
 
@@ -18,11 +19,15 @@ def getNew4():
 
 @travelRoute.route('/getByLonLat',methods=["POST"])
 def getByLonLat():
-    lon = request.form.get("lon");
-    lat = request.form.get("lat");
+    lon = request.form.get("lon")
+    lat = request.form.get("lat")
     return Response(TravelService.getByLonLat(lon,lat), mimetype='application/json')
 
 @travelRoute.route('/getByDate',methods=["POST"])
 def getByDate():
-    date = request.form.get("date");
+    date = request.form.get("date")
     return Response(TravelService.getByDate(date), mimetype='application/json')
+
+@travelRoute.route('/getTravelTongji',methods=["POST"])
+def getTravelTongji():
+    return Response(RedisService.getTongji("travel"), mimetype='application/json')

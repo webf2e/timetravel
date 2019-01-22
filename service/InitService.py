@@ -55,6 +55,7 @@ def init():
     #更新travel表中的movieType类型
     TravelService.updateMovieType()
     TongjiUtil.getTravelTongji()
+    TravelService.updateCountryToDistrict()
     #服务启动时发送邮件
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))

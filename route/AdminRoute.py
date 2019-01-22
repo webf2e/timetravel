@@ -80,6 +80,7 @@ def upTravelIndexImg():
     TravelService.updateImgBy(id, os.path.join("/static/travelIndexImg","{}.png".format(id)))
     return "文件上传成功"
 
+
 @adminRoute.route('/admin/addTravelInfo',methods=["POST"])
 def addTravelInfo():
     travelName = request.form.get("travelName")
@@ -97,7 +98,9 @@ def addTravelInfo():
     TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
+    TravelService.updateCountryToDistrict()
     return "添加成功"
+
 
 @adminRoute.route('/admin/editTravelInfo',methods=["POST"])
 def editTravelInfo():

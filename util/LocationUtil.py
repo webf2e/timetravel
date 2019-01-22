@@ -1,6 +1,7 @@
 from util.Global import gloVar
 import datetime,os,json,logging
 from util import TimeUtil
+import requests,json
 
 def isInPoly(aLon, aLat, pointList):
     '''
@@ -141,4 +142,22 @@ def locationTongji():
     result["data"] = addrMap
     result["tongjiTime"] = tongjiEndTime
     logging.warning("位置统计结果：{}".format(result))
+    return result
+
+def getAddressByLonLat(lon,lat):
+    url = "http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location={},{}" \
+          "&output=json&latest_admin=1&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA".format(lat,lon)
+    r = requests.get(url)
+    jsonStr = r.text
+    jsonStr = jsonStr.replace("renderReverse&&renderReverse(","")[0:-1]
+    logging.warning("getAddressByLonLat:{}".format(jsonStr))
+    if jsonStr.find("addressComponent") == -1:
+        return None
+    jsonObj = json.loads(jsonStr)
+    jsonObj = jsonObj["result"]["addressComponent"]
+    result = {}
+    result["country"]=jsonObj["country"]
+    result["province"] =jsonObj["province"]
+    result["city"] =jsonObj["city"]
+    result["district"] =jsonObj["district"]
     return result

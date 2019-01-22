@@ -2,7 +2,7 @@ import json,logging
 import os
 import mysql.connector
 from util.Global import gloVar
-from util import NetInfoUtil
+from util import NetInfoUtil,LocationUtil
 
 def getAllPoint():
     db = mysql.connector.connect(
@@ -340,3 +340,23 @@ def updateMovieType():
     db.commit()
     db.close()
 
+def updateCountryToDistrict():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select id,lon,lat from travel where country = '' or country is null"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    for d in data:
+        cpcd = LocationUtil.getAddressByLonLat(d[1], d[2])
+        updateSql = "update travel set country = '{}',province = '{}',city = '{}',district = '{}' where id={}"\
+            .format(cpcd["country"],cpcd["province"],cpcd["city"],cpcd["district"],d[0])
+        logging.warning("[sql]:{}".format(updateSql))
+        cursor.execute(updateSql)
+    db.commit()
+    db.close()

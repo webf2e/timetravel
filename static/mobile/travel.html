@@ -29,6 +29,13 @@
         padding-right:0px;
         padding-left:0px
     }
+    .event-text ul li{
+        padding: 0px;
+        font-size: 16px;
+    }
+    .fenlei p{
+        margin: 0px;
+    }
 </style>
 </head>
 	<body>
@@ -263,6 +270,27 @@
             tag += "<li><code>"+direction+"</code></li>";
         }
         tag += "</ul>";
+        var address = "";
+        if(n.country != "中国"){
+            address += n.country;
+        }
+        address += n.province;
+        if(n.province != n.city){
+            address += n.city;
+        }
+        address += n.district;
+        var movie = "";
+        if(n.movieName != "None" && n.movieName != ""){
+            movie += "<p>剧目：《"+n.movieName+"》";
+            if(n.movieType != "None" && n.movieType != "" && n.movieType != "暂无类型"){
+                movie += "("+n.movieType+")";
+            }
+            movie += "</p>";
+        }
+        var food = "";
+        if(n.foodType != "None" && n.foodType != ""){
+            food += "<p>类型："+n.foodType +　"</p>";
+        }
         return "<div class=\"event-box relative\">\n" +
             "\t<div class=\"story-avatar relative\">\n" +
             "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:100%;' alt=\"\" src=\""+n.indexImg+"\">\n" +
@@ -272,11 +300,15 @@
             "\t</div>\n" +
             "\t<div class=\"event-text\">\n" +
             "\t\t<h2>["+n.type+"] "+n.travelName+"</h2>\n" +
-            "\t    <p>"+n.content+"</p>\n" +
-            "\t\t<ul>\n" +
-            "\t    \t<li class=\"time\"><p>Time:"+n.travelTime+"</p></li>\n" +
-            (n.hasImg == "1"?"\t    \t<li><a href='/static/traimg.html?i="+n.id+"'>查看图片</a></li>\n":"") +
-            "\t    </ul>\n" + tag +
+            "\t\t<div class='fenlei alert alert-info' style='margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'>\n" +
+            "\t    \t<p>时间："+n.travelTime+"</p>\n" +
+            "\t    \t<p>地点："+address+"</p>\n" +
+            movie+
+            food+
+            "\t    </div>\n"+
+            "\t    <p style='font-size:16px'>"+n.content+"</p>\n" +
+            (n.hasImg == "1"?"\t    \t<ul><li><a target='_blank' href='/static/traimg.html?i="+n.id+"'>&gt;&gt;查看照片</a></li></ul>\n":"") +
+             tag +
             "\t</div>               \t\n" +
             "\t<span class=\"dot-left\"></span>\n" +
             "\t<span class=\"flower\"><img alt=\"\" src=\"/static/images/flower2.png\"></span>\n" +

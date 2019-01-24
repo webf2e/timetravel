@@ -64,7 +64,8 @@
                     <tr>
                         <td style="width: 80px">内容</td>
                         <td colspan="2">
-                            <textarea name="content" class="form-control content" rows="5" style="width: 100%"></textarea>
+                            <div id="addEmoji"></div>
+                            <textarea name="content" class="form-control content" rows="15" style="width: 100%"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -136,7 +137,8 @@
                     <tr>
                         <td style="width: 80px">内容</td>
                         <td colspan="2">
-                            <textarea class="form-control content" name="content" rows="5" style="width: 100%"></textarea>
+                            <div id="editEmoji"></div>
+                            <textarea class="form-control content" name="content" rows="15" style="width: 100%"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -217,6 +219,55 @@
 <script src="/static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
 <script>
+    $(function() {
+	/*  在textarea处插入文本--Start */
+	(function($) {
+		$.fn
+            .extend({
+                insertContent : function(myValue, t) {
+                    var $t = $(this)[0];
+                    if (document.selection) { // ie
+                        this.focus();
+                        var sel = document.selection.createRange();
+                        sel.text = myValue;
+                        this.focus();
+                        sel.moveStart('character', -l);
+                        var wee = sel.text.length;
+                        if (arguments.length == 2) {
+                            var l = $t.value.length;
+                            sel.moveEnd("character", wee + t);
+                            t <= 0 ? sel.moveStart("character", wee - 2 * t
+                                    - myValue.length) : sel.moveStart(
+                                    "character", wee - t - myValue.length);
+                            sel.select();
+                        }
+                    } else if ($t.selectionStart
+                            || $t.selectionStart == '0') {
+                        var startPos = $t.selectionStart;
+                        var endPos = $t.selectionEnd;
+                        var scrollTop = $t.scrollTop;
+                        $t.value = $t.value.substring(0, startPos)
+                                + myValue
+                                + $t.value.substring(endPos,
+                                        $t.value.length);
+                        this.focus();
+                        $t.selectionStart = startPos + myValue.length;
+                        $t.selectionEnd = startPos + myValue.length;
+                        $t.scrollTop = scrollTop;
+                        if (arguments.length == 2) {
+                            $t.setSelectionRange(startPos - t,
+                                    $t.selectionEnd + t);
+                            this.focus();
+                        }
+                    } else {
+                        this.value += myValue;
+                        this.focus();
+                    }
+                }
+            })
+        })(jQuery);
+        /* 在textarea处插入文本--Ending */
+    });
     var map1 = new BMap.Map("travelmap1");    // 创建Map实例
 	map1.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
 	map1.enableScrollWheelZoom(true);
@@ -384,5 +435,31 @@
         minute = "0" + minute;
     }
     $(".time").val(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
+
+    //添加emoji
+    function getEmoji(){
+        var html = "";
+        var emojis = ["daxiao","haixiu","huaixiao","ku","qinqin","se","tiaopi","weixiao"];
+        for(var i = 0;i < emojis.length;i ++){
+            var emoji = emojis[i];
+            html += "<img class='emoji' content='"+emoji+"' src='/static/images/emoji/"+emoji+".gif' width='30px' height='30px'/>";
+        }
+        html+="<br/><a href='javascript:;'>换行</a>"
+        return html;
+    }
+    $("#addEmoji").html(getEmoji());
+    $("#editEmoji").html(getEmoji());
+    $("#addEmoji .emoji").click(function(){
+        $("#addInfoTable textarea").insertContent("["+$(this).attr("content")+"]");
+    });
+    $("#addEmoji a").click(function(){
+        $("#addInfoTable textarea").insertContent("|");
+    });
+    $("#editEmoji .emoji").click(function(){
+        $("#editInfoTable textarea").insertContent("["+$(this).attr("content")+"]");
+    });
+    $("#editEmoji a").click(function(){
+        $("#editInfoTable textarea").insertContent("|");
+    });
 </script>
 </html>

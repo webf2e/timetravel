@@ -301,6 +301,13 @@
         if(n.foodType != "None" && n.foodType != ""){
             food += "<p>类型："+n.foodType +　"</p>";
         }
+        var re = new RegExp("\\|","g")
+        var space4 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        var content = space4 + n.content;
+        if(content.indexOf("|") != -1){
+            content = content.replace(re,"<br>"+space4);
+        }
+        content = addEmoji(content);
         return "<div class=\"event-box relative\">\n" +
             "\t<div class=\"story-avatar relative\">\n" +
             "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:150px;height:130px' alt=\"\" src=\""+n.indexImg+"\">\n" +
@@ -316,7 +323,7 @@
             movie+
             food+
             "\t    </div>\n"+
-            "\t    <p style='font-size:16px'>"+n.content+"</p>\n" +
+            "\t    <p style='font-size:17px'>"+content+"</p>\n" +
             (n.hasImg == "1"?"\t    \t<ul><li><a target='_blank' href='/static/traimg.html?i="+n.id+"'>&gt;&gt;查看照片</a></li></ul>\n":"") +
              tag +
             "\t</div>               \t\n" +
@@ -324,6 +331,17 @@
             "\t<span class=\"flower\"><img alt=\"\" src=\"/static/images/flower2.png\"></span>\n" +
             "\t<span class=\"dot-right\"></span>\n" +
             "</div>";
+    }
+    function addEmoji(content){
+        var emojis = ["daxiao","haixiu","huaixiao","ku","qinqin","se","tiaopi","weixiao"];
+        for(var i = 0;i < emojis.length;i ++){
+            var emoji = emojis[i];
+            if(content.indexOf("["+emoji+"]") != -1){
+                var re = new RegExp("\\["+emoji+"\\]","g")
+                content = content.replace(re,"<img src='/static/images/emoji/"+emoji+".gif' width='27px' height='27px'/>")
+            }
+        }
+        return content;
     }
 </script>
 <script>

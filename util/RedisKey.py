@@ -7,6 +7,8 @@ class redisKey():
     isNeedLocationNotUpdateForSmsNotify = "isNeedLocationNotUpdateForSmsNotify"
     #当位置长时间不更新时，是否进行app推送通知
     isNeedLocationNotUpdateForAppNotify = "isNeedLocationNotUpdateForAppNotify"
+    #app是否自动重启的标示
+    isNeedAutoRestartForApp = "isNeedAutoRestartForApp"
     # app的客户端ID（个推）
     cid = "cid"
 

@@ -49,6 +49,8 @@ def init():
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForSmsNotify, "1")
     if not RedisService.isSettingExist(redisKey.isNeedLocationNotUpdateForAppNotify):
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForAppNotify, "1")
+    if not RedisService.isSettingExist(redisKey.isNeedAutoRestartForApp):
+        RedisService.setSetting(redisKey.isNeedAutoRestartForApp, "1")
     #记录服务启动时间到redis中
     serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
     RedisService.set(redisKey.serverStartTime, serverStartTime)
@@ -59,7 +61,7 @@ def init():
     #服务启动时发送邮件
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
-        PDFUtil.makePdfForTravel()
+        #PDFUtil.makePdfForTravel()
         pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

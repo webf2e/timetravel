@@ -63,7 +63,7 @@ def uploatLocationData():
     ld = "暂无地理数据"
     if "locationDescribe" in l:
         ld = l["locationDescribe"]
-    return "{} {}".format(l["time"],ld)
+    return "{} {} {}".format(l["time"],ld,RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
 
 @appRoute.route('/pushToApp',methods=["POST"])
 def pushToApppos():

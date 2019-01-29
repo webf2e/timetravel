@@ -62,7 +62,10 @@
                         <td colspan="2"><input class="form-control foodType" name="foodType" type="text" placeholder="比如：火锅"/></td>
                     </tr>
                     <tr>
-                        <td style="width: 80px">内容</td>
+                        <td style="width: 80px">
+                            内容
+                            <br><span id="fontCount"></span>
+                        </td>
                         <td colspan="2">
                             <div id="addEmoji"></div>
                             <textarea name="content" class="form-control content" rows="15" style="width: 100%"></textarea>
@@ -139,7 +142,10 @@
                         <td colspan="2"><input class="form-control foodType" name="foodType" type="text" placeholder="比如：火锅"/></td>
                     </tr>
                     <tr>
-                        <td style="width: 80px">内容</td>
+                        <td style="width: 80px">
+                            内容
+                            <br><span id="fontCount1"></span>
+                        </td>
                         <td colspan="2">
                             <div id="editEmoji"></div>
                             <textarea class="form-control content" name="content" rows="15" style="width: 100%"></textarea>
@@ -362,6 +368,10 @@
                 $("#editInfoTable .time").val(data.travelTime);
                 map2.centerAndZoom(new BMap.Point(data.lon, data.lat), 15);
                 map2.addOverlay(new BMap.Marker(new BMap.Point(data.lon, data.lat)));
+                var count = data.content.length;
+                if(count != 0){
+                    $("#editInfoTableForm #fontCount1").html("("+count+"字)");
+                }
             }
         });
     }
@@ -521,5 +531,18 @@
         $("#editInfoTable .lat").val(lat);
         map2.panTo(new BMap.Point(lon, lat))
     }
+    $("#addInfoTableForm textarea").blur(function(){
+        var count = $(this).val().length;
+        if(count != 0){
+            $("#addInfoTableForm #fontCount").html("("+count+"字)");
+        }
+    });
+
+    $("#editInfoTableForm textarea").blur(function(){
+        var count = $(this).val().length;
+        if(count != 0){
+            $("#editInfoTableForm #fontCount1").html("("+count+"字)");
+        }
+    });
 </script>
 </html>

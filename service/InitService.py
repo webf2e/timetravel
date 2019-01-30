@@ -4,7 +4,7 @@ import configparser
 import os,logging
 from service import TravelService,RedisService
 import datetime
-from util import EmailUtil,PDFUtil,TongjiUtil
+from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil
 
 def init():
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
@@ -51,6 +51,8 @@ def init():
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForAppNotify, "1")
     if not RedisService.isSettingExist(redisKey.isNeedAutoRestartForApp):
         RedisService.setSetting(redisKey.isNeedAutoRestartForApp, "1")
+    if not RedisService.isExist(redisKey.weatherCityName):
+        WeatherUtil.getWeatherCity()
     #记录服务启动时间到redis中
     serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
     RedisService.set(redisKey.serverStartTime, serverStartTime)

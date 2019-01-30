@@ -31,7 +31,6 @@ def getWeatherCity():
     r.encoding = 'gbk'
     soup = BeautifulSoup(r.text,"html.parser")
     hrefs = soup.find_all(class_="citychk")[0].find_all("a")
-    jsonStr = "{"
     for href in hrefs:
         if str(href).find("<b>") != -1:
             itemUrl = domain+href["href"]
@@ -41,19 +40,18 @@ def getWeatherCity():
             r.encoding = "utf-8"
             soup = BeautifulSoup(r.text,"html.parser")
             dls = soup.find_all(class_="citychk")[0].find_all("dl")
+            jsonStr = "{"
             for dl in dls:
                 cityCname = dl.find_all("dt")[0].text
                 areas = dl.find_all("dd")[0].find_all("a")
                 for area in areas:
                     areaName = str(area.text).strip()
-                    finalName = provinceCname
-                    if provinceCname != cityCname:
-                        finalName += cityCname
+                    finalName = cityCname
                     if cityCname != areaName:
                         finalName += areaName
                     areaEName = area["href"]
                     areaEName = areaEName[areaEName.rfind("/") + 1:areaEName.rfind(".")]
                     jsonStr += "\"" + finalName + "\":\"" + areaEName + "\","
-    jsonStr = jsonStr[0:-1] + "}"
-    print(jsonStr)
-    RedisService.set(redisKey.weatherCityName, jsonStr)
+            jsonStr = jsonStr[0:-1] + "}"
+            logging.warning("天气城市数据为：%s" % jsonStr)
+            RedisService.setMap(redisKey.weatherCityName,provinceCname,jsonStr)

@@ -313,6 +313,16 @@ def systemNet():
 def getServerStartTime():
     return RedisService.get(redisKey.serverStartTime)
 
+@adminRoute.route('/admin/getWeatherProvince',methods=["POST"])
+def getWeatherProvince():
+    return Response(json.dumps(RedisService.getMapByKey(redisKey.weatherCityName)),mimetype='application/json')
+
+@adminRoute.route('/admin/getWeatherCity',methods=["POST"])
+def getWeatherCity():
+    weatherCity = request.form.get("weatherCity")
+    print("weatherCity:"+weatherCity)
+    return Response(json.dumps(RedisService.getMapByHash(redisKey.weatherCityName,weatherCity)),mimetype='application/json')
+
 @adminRoute.before_request
 def print_request_info():
     urlPath = str(request.path)

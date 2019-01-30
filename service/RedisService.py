@@ -54,6 +54,31 @@ def getTongji(key):
         return val.decode("utf-8")
     return None
 
+def setMap(key,hash,value):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    r.hset(key,hash,value)
+
+def getMapByKey(key):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    val = r.hgetall(key)
+    if None != val:
+        result = []
+        keys = dict(val).keys()
+        for key in keys:
+            result.append(key.decode("utf-8"))
+        return result
+    return None
+
+def getMapByHash(key,hash):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    val = r.hget(key,hash)
+    if None != val:
+        return val.decode("utf-8")
+    return None
+
 def getSettings():
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)
     r = redis.Redis(connection_pool=pool)

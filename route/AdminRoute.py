@@ -319,9 +319,9 @@ def getWeatherProvince():
 
 @adminRoute.route('/admin/getWeatherCity',methods=["POST"])
 def getWeatherCity():
-    weatherCity = request.form.get("weatherCity")
-    print("weatherCity:"+weatherCity)
-    return Response(json.dumps(RedisService.getMapByHash(redisKey.weatherCityName,weatherCity)),mimetype='application/json')
+    weatherProvince = request.form.get("weatherProvince")
+    print("weatherProvince:"+weatherProvince)
+    return Response(json.dumps(RedisService.getMapByHash(redisKey.weatherCityName,weatherProvince)),mimetype='application/json')
 
 @adminRoute.before_request
 def print_request_info():

@@ -289,6 +289,14 @@
             address += n.city;
         }
         address += n.district;
+        var weather = "";
+        if(n.weather != "None" && n.weather != ""){
+            weather = "\t    \t<p>天气：";
+            weather += "<img width='24' height='24' src='http://www.tianqihoubao.com/legend/"+n.weather.split("-")[0]+".gif'/>";
+            weather += "<img width='24' height='24' src='http://www.tianqihoubao.com/legend/"+n.weather.split("-")[1]+".gif'/>";
+            weather += "</p>\n";
+        }
+
         var movie = "";
         if(n.movieName != "None" && n.movieName != ""){
             movie += "<p>剧目：《"+n.movieName+"》";
@@ -320,6 +328,7 @@
             "\t\t<div class='fenlei alert alert-info' style='margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'>\n" +
             "\t    \t<p>时间："+n.travelTime+"</p>\n" +
             "\t    \t<p>地点："+address+"</p>\n" +
+            weather+
             movie+
             food+
             "\t    </div>\n"+

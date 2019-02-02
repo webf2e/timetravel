@@ -263,23 +263,29 @@
     }
     getTongji();
     function getTravelContent(n){
-        var tag = "<ul>"
+        var tag = "<p>标签："
         var keyword = n.keyword;
+        var hasTag = false;
         if(keyword != ""){
+            hasTag = true;
             if(keyword.indexOf(",") != -1){
                 var ks = keyword.split(",")
                 for(var i = 0;i < ks.length;i++){
-                    tag += "<li><code>"+ks[i]+"</code></li>";
+                    tag += "<code>"+ks[i]+"</code>";
                 }
             }else{
-                tag += "<li><code>"+keyword+"</code></li>";
+                tag += "<code>"+keyword+"</code>";
             }
         }
         var direction = n.direction;
         if(direction != ""){
-            tag += "<li><code>"+direction+"</code></li>";
+            hasTag = true;
+            tag += "<code>"+direction+"</code>";
         }
-        tag += "</ul>";
+        tag += "</p>";
+        if(!hasTag){
+            tag = ""
+        }
         var address = "";
         if(n.country != "中国"){
             address += n.country;
@@ -331,10 +337,10 @@
             weather+
             movie+
             food+
+            tag+
             "\t    </div>\n"+
             "\t    <p style='font-size:17px'>"+content+"</p>\n" +
             (n.hasImg == "1"?"\t    \t<ul><li><a target='_blank' href='/static/traimg.html?i="+n.id+"'>&gt;&gt;查看照片</a></li></ul>\n":"") +
-             tag +
             "\t</div>               \t\n" +
             "\t<span class=\"dot-left\"></span>\n" +
             "\t<span class=\"flower\"><img alt=\"\" src=\"/static/images/flower2.png\"></span>\n" +

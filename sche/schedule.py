@@ -1,7 +1,7 @@
-from util import FileUtil,OcrUtil,SmsUtil,PushUtil,LocationUtil
+from util import FileUtil,OcrUtil,SmsUtil,PushUtil,LocationUtil,WeatherUtil
 from util.Global import gloVar
 from util.RedisKey import redisKey
-from service import ChatService,RedisService
+from service import ChatService,RedisService,TravelService
 import psutil
 import datetime
 import time
@@ -147,3 +147,13 @@ def delOtherLogJob():
             f = open(os.path.join(logDir,file), "w+")
             f.truncate()
             f.close()
+
+def updateWeatherJob():
+    datas = TravelService.getAllNullWeather()
+    for data in datas:
+        id = data[0]
+        city = data[1]
+        time = data[2]
+        weather = WeatherUtil.getWeather(city,time)
+        logging.warning("更新{}在{}的天气：{}".format(city,time,weather))
+        TravelService.updateWeather(id,weather)

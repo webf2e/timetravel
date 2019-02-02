@@ -92,10 +92,11 @@ def addTravelInfo():
     keyword = request.form.get("keyword")
     movieName = request.form.get("movieName")
     foodType = request.form.get("foodType")
+    weatherCity = request.form.get("weatherCity")
     movieType = ""
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()
@@ -321,7 +322,7 @@ def getWeatherProvince():
 def getWeatherCity():
     weatherProvince = request.form.get("weatherProvince")
     print("weatherProvince:"+weatherProvince)
-    return Response(json.dumps(RedisService.getMapByHash(redisKey.weatherCityName,weatherProvince)),mimetype='application/json')
+    return Response(RedisService.getMapByHash(redisKey.weatherCityName,weatherProvince),mimetype='application/json')
 
 @adminRoute.before_request
 def print_request_info():

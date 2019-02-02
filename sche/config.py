@@ -50,6 +50,13 @@ class Config(object):
             'seconds': 10 * 60
         },
         {
+            'id': 'updateWeatherJob',
+            'func': 'sche.schedule:updateWeatherJob',
+            'args': None,
+            'trigger': 'interval',
+            'seconds': 10 * 60
+        },
+        {
             'id': 'setFenceNotifySlienceJob',
             'func': 'sche.schedule:setFenceNotifySlienceJob',
             'args': None,

@@ -233,7 +233,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType):
+def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -241,8 +241,8 @@ def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}')"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weatherCity) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
@@ -313,6 +313,22 @@ def getAllFoodType():
     db.close()
     return data
 
+def getAllNullWeather():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select id,weatherCity,DATE_FORMAT(travelTime,'%Y%m%d') from travel where weather = '' or weather is null"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data
+
 def isShowImgText(id):
     filePath = os.path.join(gloVar.galleryImgPath, str(id))
     if not os.path.exists(filePath):
@@ -358,5 +374,19 @@ def updateCountryToDistrict():
             .format(cpcd["country"],cpcd["province"],cpcd["city"],cpcd["district"],d[0])
         logging.warning("[sql]:{}".format(updateSql))
         cursor.execute(updateSql)
+    db.commit()
+    db.close()
+
+def updateWeather(id,weather):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "update travel set weather = '{}' where id={}".format(weather, id)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
     db.commit()
     db.close()

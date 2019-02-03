@@ -3,7 +3,7 @@ from util.RedisKey import redisKey
 import configparser
 import os,logging
 from service import TravelService,RedisService
-import datetime
+import datetime,json
 from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil
 
 def init():
@@ -26,6 +26,7 @@ def init():
     gloVar.systemTongjiPath = conf.get('systemConfig', 'systemTongjiPath')
     gloVar.locationPath = conf.get('locationConfig', 'locationPath')
     gloVar.loggingFilePath = conf.get('loggingConfig', 'loggingFilePath')
+    gloVar.specialDay = json.loads(conf.get('specialDayConfig', 'specialDay'))
     #更新最XX的位置信息
     TravelService.updateMostDirection()
     #初始化围栏数据

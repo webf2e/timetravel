@@ -27,19 +27,23 @@ $(function(){
         $(".last-name h1").html("刘文斌");
     }
     $.ajax({
-        url:"/isSpecialDay",
-        dataType: 'html',
+        url:"/getSpecialDay",
         type:"POST",
         success:function(data){
-            if(data != "None"){
+            if(data["time"] != undefined){
                 var link = document.createElement("link");
                 link.rel = "stylesheet";
                 link.type = "text/css";
                 link.href = "/static/css/specialday.css";
                 document.getElementsByTagName("head")[0].appendChild(link);
-                $(".label-warning,.banner h4").css("backgroundColor","#b65555");
+                $(".label-warning,.banner h4").css("backgroundColor",data["themeColor"]);
                 if(location.href.indexOf("index.html") != -1){
-                    var html = "<marquee bgcolor='#b65555' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>"+data+"</marquee>";
+                    var html = "<a href='javaScript:;'><marquee bgcolor='"+data["themeColor"]+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>【"+data["festival"]+"】"+data["word"]+"</marquee></a>";
+                    $("#myCarousel .active").prepend(html)
+                }
+            }else{
+                if(location.href.indexOf("index.html") != -1){
+                    var html = "<a href='javaScript:;'><marquee bgcolor='#f1a693' style='font-size:16px;color:#fff;padding-top: 5px;padding-bottom: 5px'>亲爱的晓静，我会爱你一辈子</marquee></a>";
                     $("#myCarousel .active").prepend(html)
                 }
             }

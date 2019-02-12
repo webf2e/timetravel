@@ -14,4 +14,3 @@ class gloVar():
     fences = {}
     notifyMobile = ""
     loggingFilePath = ""
-    specialDay = ""

@@ -9,6 +9,7 @@ from route.GalleryRoute import galleryRoute
 from route.LocationRoute import locationRoute
 from route.SettingRoute import settingRoute
 from route.AppRoute import appRoute
+from route.SpecialDayRoute import specialDayRoute
 from service import InitService
 from datetime import timedelta
 from flask_apscheduler import APScheduler
@@ -28,12 +29,8 @@ app.register_blueprint(galleryRoute)
 app.register_blueprint(locationRoute)
 app.register_blueprint(appRoute)
 app.register_blueprint(settingRoute)
+app.register_blueprint(specialDayRoute)
 
-# var ua = navigator.userAgent;
-# var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
-# isIphone =!ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
-# isAndroid = ua.match(/(Android)\s+([\d.]+)/),
-# isMobile = isIphone || isAndroid;
 @app.route('/')
 def login():
     isLogin = request.cookies.get('isLogin')

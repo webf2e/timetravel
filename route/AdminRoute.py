@@ -24,8 +24,9 @@ def upChatImg():
     #先判断文件夹是否存在
     filePath = os.path.join(gloVar.chatDirPath, dates[0], dates[1], dates[2])
     if os.path.exists(filePath):
-        index = str(max(os.listdir(filePath)))
-        index = int(index[index.rfind("_")+1:index.rfind(".")])
+        if len(os.listdir(filePath)) != 0:
+            index = str(max(os.listdir(filePath)))
+            index = int(index[index.rfind("_") + 1:index.rfind(".")])
     else:
         os.makedirs(filePath)
     count = 0
@@ -34,9 +35,6 @@ def upChatImg():
         if files.rfind("'{}'".format(typeName)) == -1:
             continue
         file = request.files[typeName]
-        fn = str(file.filename)
-        if not fn.lower().endswith("png"):
-            continue
         index += 1
         file.save(os.path.join(gloVar.chatDirPath, "{}_{}.png".format(date, index)))
         count += 1
@@ -330,6 +328,6 @@ def print_request_info():
     if(urlPath.find("admin") != -1):
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
-        if(agent.find("MI 8 Explorer Edition") == -1):
-            #abort(400)
+        if(agent.find("HUAWEILYA-AL10") == -1):
+            abort(400)
             pass

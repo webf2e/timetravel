@@ -3,7 +3,7 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService,RedisService
+from service import TravelService,ChatService,RedisService,SpecialWordService
 from util import FileUtil,NetInfoUtil,TongjiUtil
 import datetime
 import logging
@@ -321,6 +321,37 @@ def getWeatherCity():
     weatherProvince = request.form.get("weatherProvince")
     print("weatherProvince:"+weatherProvince)
     return Response(RedisService.getMapByHash(redisKey.weatherCityName,weatherProvince),mimetype='application/json')
+
+
+@adminRoute.route('/admin/addSpecialDay',methods=["POST"])
+def addSpecialDay():
+    time = request.form.get("time")
+    word = request.form.get("word")
+    themeColor = request.form.get("themeColor")
+    festival = request.form.get("festival")
+    dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
+    SpecialWordService.insert(time,word,themeColor,festival,dateTime)
+    return "添加成功"
+
+@adminRoute.route('/admin/editSpecialDay',methods=["POST"])
+def editSpecialDay():
+    time = request.form.get("time")
+    word = request.form.get("word")
+    themeColor = request.form.get("themeColor")
+    festival = request.form.get("festival")
+    dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
+    SpecialWordService.updateByTime(time,word,themeColor,festival,dateTime)
+    return "修改成功"
+
+@adminRoute.route('/admin/getAllSpecialDayTime',methods=["POST"])
+def getAllSpecialDayTime():
+    return Response(SpecialWordService.getAllSpecialDayTime(), mimetype='application/json')
+
+@adminRoute.route('/admin/getSpecialDayByTime',methods=["POST"])
+def getSpecialDayByTime():
+    time = request.form.get("time")
+    return Response(SpecialWordService.getByDate(time), mimetype='application/json')
+
 
 @adminRoute.before_request
 def print_request_info():

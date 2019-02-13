@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>情话修改</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+
+</head>
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">后台管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/static/admin/index.html">首页</a></li>
+            <li><a href="/static/admin/chatimg.html">聊天管理</a></li>
+            <li><a href="/static/admin/traveledit.html">旅游管理</a></li>
+            <li><a href="/static/admin/gallery.html">画廊管理</a></li>
+            <li><a href="/static/admin/special.html">情话管理</a></li>
+            <li><a href="/static/admin/tongji.html">数据统计</a></li>
+            <li><a href="/static/admin/system.html">系统统计</a></li>
+            <li><a href="/static/admin/setting.html">系统设置</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              添加情话信息
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <form id="addInfoTableForm">
+                <table id="addInfoTable" class="table table-bordered" style="width: 100%">
+                    <tr>
+                        <td style="width: 80px">时间</td>
+                        <td colspan="2"><input class="form-control time" name="time" type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">
+                            内容
+                        </td>
+                        <td colspan="2">
+                            <textarea name="word" class="form-control word" rows="10" style="width: 100%"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">主题色</td>
+                        <td colspan="2"><input class="form-control themeColor" name="themeColor" type="text" value="#b65555"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">节日</td>
+                        <td colspan="2">
+                            <input class="form-control festival" name="festival" type="text" placeholder="2019年除夕"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn btn-primary" id="saveBtn" style="width: 100%">保存信息</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              编辑情话信息
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <form id="editInfoTableForm">
+                <table id="editInfoTable" class="table table-bordered" style="width: 100%">
+                    <tr>
+                        <td style="width: 80px">时间</td>
+                        <td colspan="2"><select class="form-control timeSelect" name="time"></select></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">
+                            内容
+                        </td>
+                        <td colspan="2">
+                            <textarea name="word" class="form-control word" rows="10" style="width: 100%"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">主题色</td>
+                        <td colspan="2"><input class="form-control themeColor" name="themeColor" type="text" value="#b65555"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">节日</td>
+                        <td colspan="2">
+                            <input class="form-control festival" name="festival" type="text" placeholder="2019年除夕"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn btn-primary" id="editBtn" style="width: 100%">修改信息</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script>
+    var date = new Date();
+    year = date.getYear() + 1900;
+    month = date.getMonth() + 1;
+    if(month < 10){
+        month = "0" + month
+    }
+    day = date.getDate();
+    if(day < 10){
+        day = "0" + day;
+    }
+    $(".time").val(year + "年" + month + "月" + day + "日");
+
+    $("#saveBtn").click(function(){
+        var data = $("#addInfoTableForm").serialize();
+        $.ajax({
+            url:"/admin/addSpecialDay",
+            type: "POST",
+            data: data,
+            success:function (returndata) {
+                alert(returndata)
+            }
+        });
+        return false;
+    });
+
+    $.ajax({
+        url:"/admin/getAllSpecialDayTime",
+        type: "POST",
+        success:function (data) {
+            var html = "<option>请选择日期</option>";
+            $.each(data,function(i,n){
+                html += "<option value='"+n+"'>"+n+"</option>";
+            });
+            $(".timeSelect").html(html);
+        }
+    });
+    $("#editInfoTable .timeSelect").change(function(){
+        var time = $(this).val();
+        $.ajax({
+            url:"/admin/getSpecialDayByTime",
+            type: "POST",
+            data:"time=" + time,
+            success:function (data) {
+                $("#editInfoTable .word").val(data.word);
+                $("#editInfoTable .themeColor").val(data.themeColor);
+                $("#editInfoTable .festival").val(data.festival);
+            }
+        });
+    });
+
+    $("#editBtn").click(function(){
+        var data = $("#editInfoTableForm").serialize();
+        $.ajax({
+            url:"/admin/editSpecialDay",
+            type: "POST",
+            data: data,
+            success:function (returndata) {
+                alert(returndata)
+            }
+        });
+        return false;
+    });
+</script>
+</html>

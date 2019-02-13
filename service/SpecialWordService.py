@@ -20,6 +20,23 @@ def getByDate(date):
     db.close()
     return changeOneToJsonStr(fields, data)
 
+def getAllByBelowDate(date):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT time,word,themeColor,festival FROM specialWord where datetime <= '{}' order by datetime desc".format(date)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields, data)
+
 def changeOneToJsonStr(fields,data):
     finalResult = ""
     column_list = []

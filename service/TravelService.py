@@ -29,7 +29,7 @@ def getTravelTimeGroup():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym"
+    sql = "SELECT DATE_FORMAT(travelTime,'%Y年%m月') AS ym FROM travel GROUP BY ym order by ym desc"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()

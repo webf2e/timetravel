@@ -108,10 +108,17 @@
         type:"POST",
         success:function(data){
             var html = "";
+            var festivalColor='f2c8c2';
             $.each(data,function(i,n){
-                html += "<div class='panel panel-default'>";
-                html += "<div class='panel-heading'>";
-                html += "<h3 class='panel-title'>"+n.time+"&nbsp;&nbsp;【"+n.festival+"】</h3>";
+                if(n.festival != ""){
+                    html += "<div class='panel panel-default' style='border-color:#"+festivalColor+"'>";
+                    html += "<div class='panel-heading' style='background-color:#"+festivalColor+";border-color:#"+festivalColor+"'>";
+                    html += "<h3 class='panel-title'>"+n.time+"&nbsp;&nbsp;【"+n.festival+"】</h3>";
+                }else{
+                    html += "<div class='panel panel-default'>";
+                    html += "<div class='panel-heading'>";
+                    html += "<h3 class='panel-title'>"+n.time+"</h3>";
+                }
                 html += "</div>";
                 html += "<div class='panel-body'>";
                 html += n.word;

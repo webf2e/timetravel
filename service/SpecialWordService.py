@@ -15,10 +15,24 @@ def getByDate(date):
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
+    if len(data) != 0:
+        #是纪念日
+        fields = cursor.description
+        db.commit()
+        db.close()
+        return changeOneToJsonStr(fields, data)
+    #获取普通的语句
+    #获取最新的一句
+    dateStr = date.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
+    sql = "SELECT time,word,themeColor,festival FROM specialWord where festival = '' and dateTime <= '{}' order by dateTime desc limit 0,1 ".format(dateStr)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
     fields = cursor.description
     db.commit()
     db.close()
     return changeOneToJsonStr(fields, data)
+
 
 def getAllByBelowDate(date):
     db = mysql.connector.connect(

@@ -30,7 +30,7 @@ $(function(){
         url:"/getSpecialDay",
         type:"POST",
         success:function(data){
-            if(data["time"] != undefined){
+            if(data["festival"] != ''){
                 var link = document.createElement("link");
                 link.rel = "stylesheet";
                 link.type = "text/css";
@@ -43,7 +43,7 @@ $(function(){
                 }
             }else{
                 if(location.href.indexOf("index.html") != -1){
-                    var html = "<a href='/static/special.html'><marquee bgcolor='#f1a693' style='font-size:16px;color:#fff;padding-top: 5px;padding-bottom: 5px'>让我们慢慢成为适合对方的人，手牵手走过属于我们的春夏秋冬</marquee></a>";
+                    var html = "<a href='/static/special.html'><marquee bgcolor='#f1a693' style='font-size:16px;color:#fff;padding-top: 5px;padding-bottom: 5px'>"+data["word"]+"</marquee></a>";
                     $("#myCarousel .active").prepend(html)
                 }
             }

@@ -163,13 +163,13 @@
 }
 
 .panel-default {
-    border-color: #f2e5e1
+    border-color: #ffe8e8
 }
 
 .panel-default > .panel-heading {
     color: #333;
-    background-color: #f2e5e1;
-    border-color: #f2e5e1
+    background-color: #ffe8e8;
+    border-color: #ffe8e8
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {

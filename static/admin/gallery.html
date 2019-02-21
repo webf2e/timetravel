@@ -66,6 +66,9 @@
                     <td colspan="3"><img id="galleryImg" style="width:100%" ondblclick="rotateImg()"/></td>
                 </tr>
                 <tr>
+                    <td colspan="3" id="upResult"></td>
+                </tr>
+                <tr>
                     <td colspan="3">
                         <button class="btn btn-primary" id="uploadImgBtn" style="width: 100%">上传图片</button>
                     </td>
@@ -154,11 +157,16 @@
             cashe: false,
             contentType:false,
             processData:false,
+            beforeSend:function(){
+                $("#upResult").html("正在上传...");
+            },
             success:function (returndata) {
-                alert("上传成功")
                 $("#galleryImg").attr("src",returndata+"?t="+Math.random());
+                $("#upResult").html("上传成功");
+                alert("上传成功")
             },
         　　 error: function (returndata) {
+                $("#upResult").html("上传失败");
                 alert("上传失败！")
             }
         });

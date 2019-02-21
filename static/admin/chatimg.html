@@ -54,6 +54,7 @@
                     图片二：
                     <input class="form-control" type="file" name="file1" value="">
                     <hr/>
+                    <div id="uploadResult"></div>
                     <input style="width:100%" class="btn btn-primary" type="button" value="上传" id="upFileBtn">
                 </div>
             </form>
@@ -104,11 +105,16 @@
             cashe: false,
             contentType:false,
             processData:false,
+            beforeSend:function(){
+                $("#uploadResult").html("正在上传...");
+            },
             success:function (returndata) {
+                $("#uploadResult").html("正在完成");
                 alert(returndata)
             },
         　　 error: function (returndata) {
-              alert("上传失败！")
+                $("#uploadResult").html("上传失败");
+                alert("上传失败！")
             }
         });
     });

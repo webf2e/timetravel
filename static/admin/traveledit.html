@@ -108,6 +108,9 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="3" class="result"></td>
+                    </tr>
+                    <tr>
                         <td colspan="3">
                             <button class="btn btn-primary" id="saveBtn" style="width: 100%">保存信息</button>
                         </td>
@@ -188,6 +191,9 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="3" class="result"></td>
+                    </tr>
+                    <tr>
                         <td colspan="3">
                             <button class="btn btn-primary" id="editBtn" style="width: 100%">修改信息</button>
                         </td>
@@ -225,6 +231,9 @@
                         </form>
                         <img class="indexImg" src="" style='width:150px;height:130px'/>
                     </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="result"></td>
                 </tr>
                 <tr>
                     <td colspan="3">
@@ -435,10 +444,15 @@
             cashe: false,
             contentType:false,
             processData:false,
+            beforeSend:function(){
+                $("#editImgTable .result").html("图片上传中...");
+            },
             success:function (returndata) {
+                $("#editImgTable .result").html("图片上传成功");
                 alert(returndata)
             },
         　　 error: function (returndata) {
+                $("#editImgTable .result").html("图片上传失败");
                 alert("上传失败！")
             }
         });
@@ -450,8 +464,16 @@
             url:"/admin/addTravelInfo",
             type: "POST",
             data: data,
+            beforeSend:function(){
+                $("#addInfoTable .result").html("旅游信息保存中...");
+            },
             success:function (returndata) {
+                $("#addInfoTable .result").html("保存成功");
                 alert(returndata)
+            },
+        　　 error: function (returndata) {
+                $("#addInfoTable .result").html("图片上传失败");
+                alert("保存失败！")
             }
         });
         return false;
@@ -463,8 +485,16 @@
             url:"/admin/editTravelInfo",
             type: "POST",
             data: data,
+            beforeSend:function(){
+                $("#editInfoTable .result").html("旅游信息编辑保存中...");
+            },
             success:function (returndata) {
+                $("#editInfoTable .result").html("保存成功");
                 alert(returndata)
+            },
+        　　 error: function (returndata) {
+                $("#addInfoTable .result").html("图片上传失败");
+                alert("保存失败！")
             }
         });
         return false;

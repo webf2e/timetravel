@@ -4,7 +4,7 @@ import os,oss2
 from util.Global import gloVar
 import json
 from service import TravelService,ChatService,RedisService,SpecialWordService
-from util import FileUtil,NetInfoUtil,TongjiUtil
+from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil
 import datetime
 import logging
 from util.RedisKey import redisKey
@@ -92,6 +92,7 @@ def addTravelInfo():
     foodType = request.form.get("foodType")
     weatherCity = request.form.get("weatherCity")
     movieType = ""
+    weekDay = TimeUtil.getWeekNumByDate(travelTime)
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
     TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity)
@@ -114,6 +115,7 @@ def editTravelInfo():
     movieName = request.form.get("movieName")
     foodType = request.form.get("foodType")
     movieType = ""
+    weekDay = TimeUtil.getWeekNumByDate(travelTime)
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
     TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)

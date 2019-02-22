@@ -95,7 +95,7 @@ def addTravelInfo():
     weekDay = TimeUtil.getWeekNumByDate(travelTime)
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity)
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()
@@ -118,7 +118,7 @@ def editTravelInfo():
     weekDay = TimeUtil.getWeekNumByDate(travelTime)
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType)
+    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     return "修改成功"
@@ -362,5 +362,5 @@ def print_request_info():
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
         if(agent.find("HUAWEILYA-AL10") == -1):
-            abort(400)
+            #abort(400)
             pass

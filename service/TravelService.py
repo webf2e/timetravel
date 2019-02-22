@@ -233,7 +233,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity):
+def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -241,14 +241,14 @@ def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weatherCity) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}')"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weatherCity,weekDay) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
 
-def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType):
+def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -256,8 +256,8 @@ def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,f
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='',movieName='{}',foodType='{}',movieType='{}' where id={}"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,id)
+    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='',movieName='{}',foodType='{}',movieType='{}',weekDay='{}' where id={}"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

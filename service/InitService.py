@@ -64,7 +64,8 @@ def init():
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
         #PDFUtil.makePdfForTravel()
-        TravelService.updateWeekDay()
+        #更新travel表中所有weekDay字段为空的记录
+        #TravelService.updateWeekDay()
         pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

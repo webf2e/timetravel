@@ -64,6 +64,7 @@ def init():
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))
         #PDFUtil.makePdfForTravel()
+        TravelService.updateWeekDay()
         pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

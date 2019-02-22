@@ -2,7 +2,7 @@ import json,logging
 import os
 import mysql.connector
 from util.Global import gloVar
-from util import NetInfoUtil,LocationUtil
+from util import NetInfoUtil,LocationUtil,TimeUtil
 
 def getAllPoint():
     db = mysql.connector.connect(
@@ -388,5 +388,26 @@ def updateWeather(id,weather):
     sql = "update travel set weather = '{}' where id={}".format(weather, id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def updateWeekDay():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select id,DATE_FORMAT(travelTime,'%Y-%m-%d %H:%i:%S') from travel where weekDay = '' or weekDay is null"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    for d in data:
+        weekDay = TimeUtil.getWeekNumByDate(d[1])
+        updateSql = "update travel set weekDay = '{}' where id={}"\
+            .format(weekDay,d[0])
+        logging.warning("[sql]:{}".format(updateSql))
+        cursor.execute(updateSql)
     db.commit()
     db.close()

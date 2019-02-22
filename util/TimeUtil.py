@@ -1,4 +1,4 @@
-import datetime
+import datetime,requests,json,logging
 
 def subTime(start):
     dateDelta = (datetime.datetime.now()-start)
@@ -85,3 +85,33 @@ def getWeekNumByDate(date):
 def getCurrentDateLastYear():
     from dateutil.relativedelta import relativedelta
     return (datetime.datetime.now().date() - relativedelta(years=1)).strftime('%Y-%m-%d')
+
+#获取聚合数据万年历：
+#关于参数date：指定日期,格式为YYYY-MM-DD,如月份和日期小于10,则取个位,如:2012-1-1
+#api地址：https://www.juhe.cn/docs/api/id/177
+def getJuHeCalendar(date):
+    if date.find("-0") != -1:
+        date = date.replace("-0","-")
+    appkey = "cd2606361b6637b355cc797820c37285"
+    url = "http://v.juhe.cn/calendar/day?date={}&key={}".format(date,appkey)
+    r = requests.get(url)
+    print(r.text)
+    jsonData = json.loads(r.text)
+    if jsonData["error_code"] == 0:
+        #调用成功
+        return jsonData["result"]["data"]
+    else:
+        logging.warning("调用聚合万年历接口失败，错误信息：{}".format(jsonData["reason"]))
+    return None
+
+#redo
+def getHoliday(date):
+    jsonData = getJuHeCalendar(date)
+    if None == jsonData:
+        return ""
+    key = "holiday"
+    if key in jsonData:
+        return jsonData[key]
+    return ""
+
+

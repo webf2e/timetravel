@@ -95,7 +95,6 @@ def getJuHeCalendar(date):
     appkey = "cd2606361b6637b355cc797820c37285"
     url = "http://v.juhe.cn/calendar/day?date={}&key={}".format(date,appkey)
     r = requests.get(url)
-    print(r.text)
     jsonData = json.loads(r.text)
     if jsonData["error_code"] == 0:
         #调用成功
@@ -104,14 +103,21 @@ def getJuHeCalendar(date):
         logging.warning("调用聚合万年历接口失败，错误信息：{}".format(jsonData["reason"]))
     return None
 
-#redo
+#完善节日列表，先判断阳历是否有节日，如果没有，从聚合数据中获取阴历，再判断阴历是否有节日
+#date的时间格式：2019-01-01
 def getHoliday(date):
+    holidayList = {}
+    holidayList[""]=""
+    holidayList[""] = ""
     jsonData = getJuHeCalendar(date)
+    print(jsonData)
     if None == jsonData:
         return ""
-    key = "holiday"
+    key = "lunar"
     if key in jsonData:
-        return jsonData[key]
+        lunar = jsonData[key]
+    print(lunar)
     return ""
 
 
+print(getHoliday("2019-01-01"))

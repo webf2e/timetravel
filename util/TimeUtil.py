@@ -103,21 +103,31 @@ def getJuHeCalendar(date):
         logging.warning("调用聚合万年历接口失败，错误信息：{}".format(jsonData["reason"]))
     return None
 
+holidayList = {}
+holidayList["0101"] = "元旦"
+holidayList["0214"] = "情人节"
+holidayList["七月初七"] = "七夕节"
 #完善节日列表，先判断阳历是否有节日，如果没有，从聚合数据中获取阴历，再判断阴历是否有节日
 #date的时间格式：2019-01-01
 def getHoliday(date):
-    holidayList = {}
-    holidayList[""]=""
-    holidayList[""] = ""
+    #只有月和日的时间
+    dateMD = date.replace("-","")[4:]
+    if dateMD in holidayList:
+        return holidayList[dateMD]
+    #阳历节日判断完成，开始判断阴历节日，先获取阴历
     jsonData = getJuHeCalendar(date)
-    print(jsonData)
     if None == jsonData:
         return ""
     key = "lunar"
     if key in jsonData:
         lunar = jsonData[key]
-    print(lunar)
+    else:
+        return ""
+    print("lunar:{}".format(lunar))
+    #根据阴历判断是否在holidayList
+    if lunar in holidayList:
+        return holidayList[lunar]
     return ""
 
 
-print(getHoliday("2019-01-01"))
+print(getHoliday("2019-08-07"))

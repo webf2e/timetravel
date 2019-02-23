@@ -432,3 +432,19 @@ def updateHoliday():
         cursor.execute(updateSql)
     db.commit()
     db.close()
+
+def getWeatherForIcon():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select weather from travel where weather != '' and weather is not null group by weather"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data

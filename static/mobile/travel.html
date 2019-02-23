@@ -289,8 +289,8 @@
         var weather = "";
         if(n.weather != "None" && n.weather != ""){
             weather = "\t    \t<p>天气：";
-            weather += "<img width='24' height='24' src='http://www.tianqihoubao.com/legend/"+n.weather.split("-")[0]+".gif'/>";
-            weather += "<img width='24' height='24' src='http://www.tianqihoubao.com/legend/"+n.weather.split("-")[1]+".gif'/>";
+            weather += "<img width='24' height='24' src='/static/images/weather/"+n.weather.split("-")[0]+".gif'/>";
+            weather += "<img width='24' height='24' src='/static/images/weather/"+n.weather.split("-")[1]+".gif'/>";
             weather += "</p>\n";
         }
         var movie = "";

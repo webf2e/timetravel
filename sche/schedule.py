@@ -157,3 +157,8 @@ def updateWeatherJob():
         weather = WeatherUtil.getWeather(city,time)
         logging.warning("更新{}在{}的天气：{}".format(city,time,weather))
         TravelService.updateWeather(id,weather)
+    #下载mysql中的天气图标
+    datas = TravelService.getWeatherForIcon()
+    for data in datas:
+        weatherImgPath = os.path.join(gloVar.staticPath, "images", "weather")
+        FileUtil.downloadWeatherImg(data[0],weatherImgPath)

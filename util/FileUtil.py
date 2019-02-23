@@ -1,5 +1,5 @@
 import os,logging
-import traceback
+import traceback,requests
 from PIL import Image
 import pytesseract
 from util.Global import gloVar
@@ -236,3 +236,17 @@ def getLastLocationInFile():
     lastLocation = lastLocation.replace("lon", "longitude")
     lastLocation = lastLocation.replace("lat", "latitude")
     return lastLocation
+
+def downloadFile(url,filePath):
+    r = requests.get(url)
+    with open(filePath, "wb") as code:
+        code.write(r.content)
+
+def downloadWeatherImg(weather,filePath):
+    ws = weather.split("-")
+    for w in ws:
+        imgUrl = "http://www.tianqihoubao.com/legend/{}.gif".format(w)
+        filePathAndName = os.path.join(filePath,"{}.gif".format(w))
+        if os.path.exists(filePathAndName):
+            continue
+        downloadFile(imgUrl, filePathAndName)

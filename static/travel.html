@@ -315,6 +315,10 @@
         if(n.foodType != "None" && n.foodType != ""){
             food += "<p>类型："+n.foodType +　"</p>";
         }
+        var holiday = "";
+        if(n.holiday != ""){
+            holiday += "<p>节日："+n.holiday +　"</p>";
+        }
         var re = new RegExp("\\|","g")
         var space4 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         var content = space4 + n.content;
@@ -335,6 +339,7 @@
             "\t    \t<p>时间："+n.travelTime+"&nbsp;&nbsp;"+n.weekDay+"</p>\n" +
             "\t    \t<p>地点："+address+"</p>\n" +
             weather+
+            holiday+
             movie+
             food+
             tag+

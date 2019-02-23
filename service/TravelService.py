@@ -233,7 +233,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay):
+def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay,holiday):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -241,14 +241,14 @@ def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weatherCity,weekDay) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}')"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weatherCity,weekDay,holiday) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}','{}')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay,holiday)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
     db.close()
 
-def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay):
+def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -256,8 +256,8 @@ def updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,f
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='',movieName='{}',foodType='{}',movieType='{}',weekDay='{}' where id={}"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,id)
+    sql = "update travel set travelName = '{}',type='{}',content='{}',lon={},lat={},travelTime='{}',keyword='{}',direction='',movieName='{}',foodType='{}',movieType='{}',weekDay='{}',holiday='{}' where id={}"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday,id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
@@ -407,6 +407,27 @@ def updateWeekDay():
         weekDay = TimeUtil.getWeekNumByDate(d[1])
         updateSql = "update travel set weekDay = '{}' where id={}"\
             .format(weekDay,d[0])
+        logging.warning("[sql]:{}".format(updateSql))
+        cursor.execute(updateSql)
+    db.commit()
+    db.close()
+
+def updateHoliday():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select id,DATE_FORMAT(travelTime,'%Y-%m-%d') from travel where holiday is null"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    for d in data:
+        holiday = TimeUtil.getHoliday(d[1])
+        updateSql = "update travel set holiday = '{}' where id={}"\
+            .format(holiday,d[0])
         logging.warning("[sql]:{}".format(updateSql))
         cursor.execute(updateSql)
     db.commit()

@@ -93,9 +93,10 @@ def addTravelInfo():
     weatherCity = request.form.get("weatherCity")
     movieType = ""
     weekDay = TimeUtil.getWeekNumByDate(travelTime)
+    holiday = TimeUtil.getHoliday(travelTime.split(" ")[0])
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay)
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay,holiday)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()
@@ -116,9 +117,10 @@ def editTravelInfo():
     foodType = request.form.get("foodType")
     movieType = ""
     weekDay = TimeUtil.getWeekNumByDate(travelTime)
+    holiday = TimeUtil.getHoliday(travelTime.split(" ")[0])
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay)
+    TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     return "修改成功"

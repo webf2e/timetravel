@@ -106,7 +106,25 @@ def getJuHeCalendar(date):
 holidayList = {}
 holidayList["0101"] = "元旦"
 holidayList["0214"] = "情人节"
+holidayList["0308"] = "妇女节"
+holidayList["0401"] = "愚人节"
+holidayList["0501"] = "劳动节"
+holidayList["0504"] = "青年节"
+holidayList["0701"] = "建党节"
+holidayList["0801"] = "建军节"
+holidayList["0910"] = "教师节"
+holidayList["1001"] = "国庆节"
+holidayList["1224"] = "平安夜"
+holidayList["1225"] = "圣诞节"
+
+holidayList["腊月初八"] = "腊八节"
 holidayList["七月初七"] = "七夕节"
+holidayList["腊月卅十"] = "除夕"
+holidayList["正月初一"] = "春节"
+holidayList["正月十五"] = "元宵节"
+holidayList["五月初五"] = "端午节"
+holidayList["八月十五"] = "中秋节"
+holidayList["九月初九"] = "重阳节"
 #完善节日列表，先判断阳历是否有节日，如果没有，从聚合数据中获取阴历，再判断阴历是否有节日
 #date的时间格式：2019-01-01
 def getHoliday(date):
@@ -128,6 +146,3 @@ def getHoliday(date):
     if lunar in holidayList:
         return holidayList[lunar]
     return ""
-
-
-print(getHoliday("2019-08-07"))

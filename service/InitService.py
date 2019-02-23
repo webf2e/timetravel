@@ -66,6 +66,8 @@ def init():
         #PDFUtil.makePdfForTravel()
         #更新travel表中所有weekDay字段为空的记录
         #TravelService.updateWeekDay()
+        #更新travel表中所有holiday字段为null的记录
+        #TravelService.updateHoliday()
         pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

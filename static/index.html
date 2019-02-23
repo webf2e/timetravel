@@ -157,12 +157,7 @@
                         <div class="carousel-inner">
                         <div class="active item">
                         	<div class="gallery-holder pretty-photos">
-                    	<ul>
-                        	<li><a href="/static/images/gallery-img1.jpg" rel="prettyPhoto[gallery1]"><img src="/static/images/gallery-img1.jpg" style="width:130px;height:80px;object-fit: contain" alt="我们的画册"><div class="flower2"></div></a></li>
-                            <li><a href="/static/images/gallery-img2.jpg" rel="prettyPhoto[gallery1]"><img src="/static/images/gallery-img2.jpg" style="width:130px;height:80px;object-fit: contain" alt="我们的画册"><div class="flower2"></div></a></li>
-                            <li><a href="/static/images/gallery-img3.jpg" rel="prettyPhoto[gallery1]"><img src="/static/images/gallery-img3.jpg" style="width:130px;height:80px;object-fit: contain" alt="我们的画册"><div class="flower2"></div></a></li>
-                            <li><a href="/static/images/gallery-img4.jpg" rel="prettyPhoto[gallery1]"><img src="/static/images/gallery-img4.jpg" style="width:130px;height:80px;object-fit: contain" alt="我们的画册"><div class="flower2"></div></a></li>
-                            <li><a href="/static/images/gallery-img5.jpg" rel="prettyPhoto[gallery1]"><img src="/static/images/gallery-img5.jpg" style="width:130px;height:80px;object-fit: contain" alt="我们的画册"><div class="flower2"></div></a></li>
+                    	<ul id="gallery">
                         </ul>
                     </div>
                         </div>
@@ -205,6 +200,21 @@
         success:function(data){
             timeData = data;
             changeMeetingDay();
+        }
+    });
+    $.ajax({
+        url:"/getRandomIndexImg",
+        type:"POST",
+        success:function(data){
+            var html = "";
+            $.each(data,function(i,n){
+                html += "<li><a href='/static/gallery"+n+"' rel='prettyPhoto[gallery1]'><img src='/static/gallery"+n+"' style='width:130px;height:80px;object-fit: contain' alt='我们的画册'><div class='flower2'></div></a></li>";
+            });
+            $("#gallery").html(html);
+            var script = document.createElement("script");
+            script.src = "/static/js/lightbox.js";
+            script.id = "lbs";
+            document.body.appendChild(script);
         }
     });
     function changeMeetingDay(){

@@ -147,6 +147,14 @@
     <div class="clearfix"></div>
 </div>
 <script>
+    var id = "";
+    var isShowLastPointInMap = true;
+    if(location.href.indexOf("id=") != -1) {
+        id = location.href.split("=")[1]
+        if(id.indexOf("#") != -1){
+            id = id.split("#")[0];
+        }
+    }
     var map = new BMap.Map("travelmap");    // 创建Map实例
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
 	map.enableScrollWheelZoom(true);
@@ -155,7 +163,6 @@
             url:"/getAllPoint",
             type:"POST",
             success:function(data){
-                getNew4();
                 var lon = 0;
                 var lat = 0;
                 $.each(data,function(i,n){
@@ -171,7 +178,9 @@
                         getContentByLonLat(p.lng,p.lat);
                     }
                 });
-                map.centerAndZoom(new BMap.Point(lon, lat), 15);
+                if(isShowLastPointInMap){
+                    map.centerAndZoom(new BMap.Point(lon, lat), 15);
+                }
             }
         });
     }
@@ -194,11 +203,29 @@
             url:"/getNew4",
             type:"POST",
             success:function(data){
-                var html = ""
+                var html = "";
                 $.each(data,function(i,n){
                     html += getTravelContent(n);
                 });
                 $("#contentDiv").html(html);
+                isShowLastPointInMap = true;
+            }
+        });
+    }
+
+    function getById(){
+	    $.ajax({
+            url:"/getTravelInfoById",
+            data:"id=" + id,
+            type:"POST",
+            success:function(data){
+                var html = "";
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                    map.centerAndZoom(new BMap.Point(n.lon, n.lat), 15);
+                });
+                $("#contentDiv").html(html);
+                isShowLastPointInMap = false;
             }
         });
     }
@@ -219,7 +246,11 @@
         });
     }
     getDates();
-    getNew4();
+    if(id != ""){
+        getById();
+    }else{
+        getNew4();
+    }
     getPoints();
     function locate(lon,lat){
         map.panTo(new BMap.Point(lon, lat), 15);

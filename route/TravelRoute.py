@@ -17,6 +17,13 @@ def getTravelTimeGroup():
 def getNew4():
     return Response(TravelService.getNew4(), mimetype='application/json')
 
+@travelRoute.route('/getTravelInfoById',methods=["POST"])
+def getTravelInfoById():
+    id = request.form.get("id")
+    if id == None or id == "":
+        return Response("{}", mimetype='application/json')
+    return Response(TravelService.getTravelInfoById(id), mimetype='application/json')
+
 @travelRoute.route('/getByLonLat',methods=["POST"])
 def getByLonLat():
     lon = request.form.get("lon")

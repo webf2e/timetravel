@@ -137,6 +137,14 @@
     <div class="clearfix"></div>
 </div>
 <script>
+    var id = "";
+    var isShowLastPointInMap = true;
+    if(location.href.indexOf("id=") != -1) {
+        id = location.href.split("=")[1]
+        if(id.indexOf("#") != -1){
+            id = id.split("#")[0];
+        }
+    }
     var map = new BMap.Map("travelmap");    // 创建Map实例
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
 	map.enableScrollWheelZoom(true);
@@ -145,7 +153,6 @@
             url:"/getAllPoint",
             type:"POST",
             success:function(data){
-                getNew4();
                 var lon = 0;
                 var lat = 0;
                 $.each(data,function(i,n){
@@ -161,22 +168,24 @@
                         getContentByLonLat(p.lng,p.lat);
                     }
                 });
-                map.centerAndZoom(new BMap.Point(lon, lat), 15);
+                if(isShowLastPointInMap){
+                    map.centerAndZoom(new BMap.Point(lon, lat), 15);
+                }
             }
         });
     }
 	function getDates(){
 	    $.ajax({
-                url:"/getTravelTimeGroup",
-                type:"POST",
-                success:function(data){
-                    var html = ""
-                    $.each(data,function(i,n){
-                        html += "<li><a href=\"javascript:;\" onclick='getByDate(\""+n.ym+"\")'><h5>"+n.ym+"</h5></a></li>";
-                    });
-                    $("#dateul").html(html);
-                }
-            });
+            url:"/getTravelTimeGroup",
+            type:"POST",
+            success:function(data){
+                var html = ""
+                $.each(data,function(i,n){
+                    html += "<li><a href=\"javascript:;\" onclick='getByDate(\""+n.ym+"\")'><h5>"+n.ym+"</h5></a></li>";
+                });
+                $("#dateul").html(html);
+            }
+        });
     }
 
     function getNew4(){
@@ -184,11 +193,29 @@
             url:"/getNew4",
             type:"POST",
             success:function(data){
-                var html = ""
+                var html = "";
                 $.each(data,function(i,n){
                     html += getTravelContent(n);
                 });
                 $("#contentDiv").html(html);
+                isShowLastPointInMap = true;
+            }
+        });
+    }
+
+    function getById(){
+	    $.ajax({
+            url:"/getTravelInfoById",
+            data:"id=" + id,
+            type:"POST",
+            success:function(data){
+                var html = "";
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                    map.centerAndZoom(new BMap.Point(n.lon, n.lat), 15);
+                });
+                $("#contentDiv").html(html);
+                isShowLastPointInMap = false;
             }
         });
     }
@@ -209,7 +236,11 @@
         });
     }
     getDates();
-    getNew4();
+    if(id != ""){
+        getById();
+    }else{
+        getNew4();
+    }
     getPoints();
     function locate(lon,lat){
         map.panTo(new BMap.Point(lon, lat), 15);
@@ -221,7 +252,7 @@
             data:"date="+date,
             type:"POST",
             success:function(data){
-                var html = ""
+                var html = "";
                 var lon = 0;
                 var lat = 0;
                 $.each(data,function(i,n){
@@ -253,13 +284,13 @@
     }
     getTongji();
     function getTravelContent(n){
-        var tag = "<p>标签："
+        var tag = "<p>标签：";
         var keyword = n.keyword;
         var hasTag = false;
         if(keyword != ""){
             hasTag = true;
             if(keyword.indexOf(",") != -1){
-                var ks = keyword.split(",")
+                var ks = keyword.split(",");
                 for(var i = 0;i < ks.length;i++){
                     tag += "<code>"+ks[i]+"</code>";
                 }

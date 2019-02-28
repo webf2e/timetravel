@@ -3,7 +3,7 @@ import traceback,requests
 from PIL import Image
 import pytesseract
 from util.Global import gloVar
-import jieba
+import jieba,time
 #import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import random
@@ -250,3 +250,21 @@ def downloadWeatherImg(weather,filePath):
         if os.path.exists(filePathAndName):
             continue
         downloadFile(imgUrl, filePathAndName)
+
+def downloadWeatherImgUseLoop():
+    while True:
+        filePath = "/home/liuwenbin/Desktop/program/wi"
+        files = os.listdir(filePath)
+        for file in files:
+            if file.find("_1") != -1:
+                file = file.replace("_1", "")
+            else:
+                file = file.replace(".gif", "_1.gif")
+            if file in files:
+                continue
+            imgUrl = "http://www.tianqihoubao.com/legend/{}".format(file)
+            print("下载：{}".format(file))
+            downloadFile(imgUrl, os.path.join(filePath, file))
+        time.sleep(10)
+
+downloadWeatherImgUseLoop()

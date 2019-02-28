@@ -321,7 +321,7 @@ def getAllNullWeather():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select id,weatherCity,DATE_FORMAT(travelTime,'%Y%m%d') from travel where weather = '' or weather is null"
+    sql = "select id,weatherCity,DATE_FORMAT(travelTime,'%Y%m%d') from travel where weather = '' or weather is null or weather = 'None'"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -441,7 +441,7 @@ def getWeatherForIcon():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select weather from travel where weather != '' and weather is not null group by weather"
+    sql = "select weather from travel where weather != '' and weather is not null and weather != 'None' group by weather"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()

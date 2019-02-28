@@ -1,9 +1,10 @@
 import requests,json,logging,datetime,time,random,os
 from bs4 import BeautifulSoup
-from service import RedisService
-from util.RedisKey import redisKey
 
-#http://www.tianqihoubao.com/lishi/beijing/20190129.html
+def downloadFile(url,filePath):
+    r = requests.get(url)
+    with open(filePath, "wb") as code:
+        code.write(r.content)
 
 def getWeather(address,date):
     try:
@@ -25,9 +26,20 @@ def getWeather(address,date):
         print(e)
         return None
 
-def getWeatherCity():
+def downloadWeatherImg(weather,filePath):
+    ws = weather.split("-")
+    for w in ws:
+        imgUrl = "http://www.tianqihoubao.com/legend/{}.gif".format(w)
+        filePathAndName = os.path.join(filePath,"{}.gif".format(w))
+        if os.path.exists(filePathAndName):
+            continue
+        downloadFile(imgUrl, filePathAndName)
+
+def getWeatherImg():
+    print("in")
     domain = "http://www.tianqihoubao.com"
     url = "http://www.tianqihoubao.com/lishi/"
+    print(url)
     r = requests.get(url)
     r.encoding = 'gbk'
     soup = BeautifulSoup(r.text,"html.parser")
@@ -41,7 +53,6 @@ def getWeatherCity():
             r.encoding = "utf-8"
             soup = BeautifulSoup(r.text,"html.parser")
             dls = soup.find_all(class_="citychk")[0].find_all("dl")
-            jsonStr = "{"
             for dl in dls:
                 cityCname = dl.find_all("dt")[0].text
                 areas = dl.find_all("dd")[0].find_all("a")
@@ -52,7 +63,12 @@ def getWeatherCity():
                         finalName += areaName
                     areaEName = area["href"]
                     areaEName = areaEName[areaEName.rfind("/") + 1:areaEName.rfind(".")]
-                    jsonStr += "\"" + finalName + "\":\"" + areaEName + "\","
-            jsonStr = jsonStr[0:-1] + "}"
-            logging.warning("天气城市数据为：%s" % jsonStr)
-            RedisService.setMap(redisKey.weatherCityName,provinceCname,jsonStr)
+                    date = datetime.datetime.now()
+                    print(areaName)
+                    for i in range(1,366):
+                        nowDate = date - datetime.timedelta(days=i)
+                        nowDate = datetime.datetime.strftime(nowDate,"%Y%m%d")
+                        weather = getWeather(areaEName,nowDate)
+                        downloadWeatherImg(weather,"/home/liuwenbin/Desktop/program/wi/")
+                        time.sleep(random.randint(1, 5))
+getWeatherImg()

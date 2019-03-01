@@ -90,13 +90,15 @@ def addTravelInfo():
     keyword = request.form.get("keyword")
     movieName = request.form.get("movieName")
     foodType = request.form.get("foodType")
-    weatherCity = request.form.get("weatherCity")
+    weatherDay = request.form.get("weatherDay")
+    weatherNight = request.form.get("weatherNight")
+    weather = "{}-{}".format(weatherDay,weatherNight)
     movieType = ""
     weekDay = TimeUtil.getWeekNumByDate(travelTime)
     holiday = TimeUtil.getHoliday(travelTime.split(" ")[0])
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay,holiday)
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weather,weekDay,holiday)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()
@@ -316,15 +318,10 @@ def systemNet():
 def getServerStartTime():
     return RedisService.get(redisKey.serverStartTime)
 
-@adminRoute.route('/admin/getWeatherProvince',methods=["POST"])
-def getWeatherProvince():
-    return Response(json.dumps(RedisService.getMapByKey(redisKey.weatherCityName)),mimetype='application/json')
-
-@adminRoute.route('/admin/getWeatherCity',methods=["POST"])
-def getWeatherCity():
-    weatherProvince = request.form.get("weatherProvince")
-    print("weatherProvince:"+weatherProvince)
-    return Response(RedisService.getMapByHash(redisKey.weatherCityName,weatherProvince),mimetype='application/json')
+@adminRoute.route('/admin/getWeatherList',methods=["POST"])
+def getWeatherList():
+    weatherPath = os.path.join(gloVar.staticPath,"images/weather")
+    return Response(json.dumps(sorted(os.listdir(weatherPath))),mimetype='application/json')
 
 
 @adminRoute.route('/admin/addSpecialDay',methods=["POST"])

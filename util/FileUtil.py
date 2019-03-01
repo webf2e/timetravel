@@ -266,5 +266,3 @@ def downloadWeatherImgUseLoop():
             print("下载：{}".format(file))
             downloadFile(imgUrl, os.path.join(filePath, file))
         time.sleep(10)
-
-downloadWeatherImgUseLoop()

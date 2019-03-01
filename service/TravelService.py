@@ -233,7 +233,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay,holiday):
+def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weather,weekDay,holiday):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -241,8 +241,8 @@ def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weatherCity,weekDay,holiday) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}','{}')"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weatherCity,weekDay,holiday)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weather,weekDay,holiday) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}','{}')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weather,weekDay,holiday)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

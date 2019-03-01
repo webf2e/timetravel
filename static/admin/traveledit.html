@@ -77,10 +77,19 @@
                         <td colspan="2"><input class="form-control keyword" name="keyword" type="text"/></td>
                     </tr>
                     <tr>
-                        <td style="width: 80px">天气城市</td>
+                        <td style="width: 80px">天气</td>
+                        <td>
+                            <select class="form-control weatherDay" name="weatherDay"></select>
+                        </td>
+                        <td>
+                            <select class="form-control weatherNight" name="weatherNight"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">天气图标</td>
                         <td colspan="2">
-                            <select class="form-control weatherProvince"></select>
-                            <select class="form-control weatherCity" name="weatherCity"></select>
+                            <div class="weatherDayIcon" style="display: inline"></div>
+                            <div class="weatherNightIcon" style="display: inline"></div>
                         </td>
                     </tr>
                     <tr>
@@ -352,33 +361,28 @@
             $(".type").html(html);
         }
     });
-    $.ajax({
-        url:"/admin/getWeatherProvince",
-        dataType: 'json',
-        type:"POST",
-        success:function(data){
-            var html = "";
-            $.each(data,function(i,n){
-                html += "<option value='"+n+"'>"+n+"</option>";
-            });
-            $(".weatherProvince").html(html);
-        }
-    });
-    $(".weatherProvince").change(function(){
+    function getWeather(){
         $.ajax({
-            url:"/admin/getWeatherCity",
+            url:"/admin/getWeatherList",
             dataType: 'json',
-            data:"weatherProvince="+$(this).val(),
             type:"POST",
             success:function(data){
-                var html = "";
-                $.each(data,function(cName,eName){
-                    html += "<option value='"+eName+"'>"+cName+"</option>";
+                var weatherDay = "<option>白天天气</option>";
+                var weatherNight = "<option>夜间天气</option>";
+                $.each(data,function(i,n){
+                    n = n.replace(".gif","");
+                    if(n.indexOf("_1") == -1){
+                        weatherDay += "<option value='"+n+"'>"+n+"</option>";
+                    }else{
+                        weatherNight += "<option value='"+n+"'>"+n+"</option>";
+                    }
                 });
-                $(".weatherCity").html(html);
+                $(".weatherDay").html(weatherDay);
+                $(".weatherNight").html(weatherNight);
             }
         });
-    });
+    }
+    getWeather();
     $.ajax({
         url:"/admin/getAllTravelNames",
         dataType: 'json',
@@ -390,6 +394,14 @@
             });
             $(".name").html(html);
         }
+    });
+    $(".weatherDay").change(function(){
+        var weather = $(this).val();
+        $(".weatherDayIcon").html("<img src='/static/images/weather/"+weather+".gif'/>");
+    });
+    $(".weatherNight").change(function(){
+        var weather = $(this).val();
+        $(".weatherNightIcon").html("<img src='/static/images/weather/"+weather+".gif'/>");
     });
     function getById(){
         var id = $("#editInfoTable .name").val();

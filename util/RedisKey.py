@@ -38,5 +38,3 @@ class redisKey():
     locationTongji = "locationTongji"
     #服务器启动时间
     serverStartTime = "serverStartTime"
-    #天气城市的中英对照
-    weatherCityName = "weatherCityName"

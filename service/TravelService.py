@@ -313,22 +313,6 @@ def getAllFoodType():
     db.close()
     return data
 
-def getAllNullWeather():
-    db = mysql.connector.connect(
-        host=gloVar.dbHost,
-        user=gloVar.dbUser,
-        passwd=gloVar.dbPwd,
-        database=gloVar.dbName
-    )
-    cursor = db.cursor()
-    sql = "select id,weatherCity,DATE_FORMAT(travelTime,'%Y%m%d') from travel where weather = '' or weather is null or weather = 'None'"
-    logging.warning("[sql]:{}".format(sql))
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    db.commit()
-    db.close()
-    return data
-
 def isShowImgText(id):
     filePath = os.path.join(gloVar.galleryImgPath, str(id))
     if not os.path.exists(filePath):
@@ -377,20 +361,6 @@ def updateCountryToDistrict():
     db.commit()
     db.close()
 
-def updateWeather(id,weather):
-    db = mysql.connector.connect(
-        host=gloVar.dbHost,
-        user=gloVar.dbUser,
-        passwd=gloVar.dbPwd,
-        database=gloVar.dbName
-    )
-    cursor = db.cursor()
-    sql = "update travel set weather = '{}' where id={}".format(weather, id)
-    logging.warning("[sql]:{}".format(sql))
-    cursor.execute(sql)
-    db.commit()
-    db.close()
-
 def updateWeekDay():
     db = mysql.connector.connect(
         host=gloVar.dbHost,
@@ -432,19 +402,3 @@ def updateHoliday():
         cursor.execute(updateSql)
     db.commit()
     db.close()
-
-def getWeatherForIcon():
-    db = mysql.connector.connect(
-        host=gloVar.dbHost,
-        user=gloVar.dbUser,
-        passwd=gloVar.dbPwd,
-        database=gloVar.dbName
-    )
-    cursor = db.cursor()
-    sql = "select weather from travel where weather != '' and weather is not null and weather != 'None' group by weather"
-    logging.warning("[sql]:{}".format(sql))
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    db.commit()
-    db.close()
-    return data

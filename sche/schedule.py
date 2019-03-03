@@ -95,6 +95,8 @@ def getChatMessageFromChatImg():
 
 def checkLastLocationJob():
     jsonStr = RedisService.get(redisKey.lastLocation)
+    if None == jsonStr:
+        return
     jsonData = json.loads(json.dumps(eval(jsonStr)))
     lastLocationTime = jsonData["timestramp"] // 1000
     currentTime = int(datetime.datetime.now().timestamp())

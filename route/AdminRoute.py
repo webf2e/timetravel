@@ -3,7 +3,7 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService,RedisService,SpecialWordService
+from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService
 from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil
 import datetime
 import logging
@@ -366,6 +366,30 @@ def getSpecialDayByTime():
     time = request.form.get("time")
     return Response(SpecialWordService.getByDate(time), mimetype='application/json')
 
+@adminRoute.route('/admin/addAnniversaryDay',methods=["POST"])
+def addAnniversaryDay():
+    time = request.form.get("time")
+    content = request.form.get("content")
+    dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
+    AnniversaryService.insert(time,content,dateTime)
+    return "添加成功"
+
+@adminRoute.route('/admin/editAnniversaryDay',methods=["POST"])
+def editAnniversaryDay():
+    time = request.form.get("time")
+    content = request.form.get("content")
+    dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
+    AnniversaryService.updateByTime(time,content,dateTime)
+    return "修改成功"
+
+@adminRoute.route('/admin/getAllAnniversaryTime',methods=["POST"])
+def getAllAnniversaryTime():
+    return Response(AnniversaryService.getAllAnniversaryTime(), mimetype='application/json')
+
+@adminRoute.route('/admin/getAnniversaryByTime',methods=["POST"])
+def getAnniversaryByTime():
+    time = request.form.get("time")
+    return Response(AnniversaryService.getByDate(time), mimetype='application/json')
 
 @adminRoute.before_request
 def print_request_info():

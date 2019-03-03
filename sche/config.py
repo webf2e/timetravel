@@ -5,7 +5,7 @@ class Config(object):
             'func': 'sche.schedule:moveChatFileJob',
             'args': None,
             'trigger': 'interval',
-            'seconds': 10
+            'seconds': 3
         },
         {
             'id': 'makeBigHeartJob',

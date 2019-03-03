@@ -14,6 +14,7 @@ adminRoute = Blueprint('adminRoute', __name__)
 @adminRoute.route('/admin/upChatImg',methods=["POST"])
 def upChatImg():
     #先判断文件夹下有没有文件，如果有就等一下
+    RedisService.setWithTtl(redisKey.moveChatImgFlag,"1",30)
     for f in os.listdir(gloVar.chatDirPath):
         if(os.path.isfile(os.path.join(gloVar.chatDirPath, f))):
             return "稍等一下，暂时有文件没有转移"

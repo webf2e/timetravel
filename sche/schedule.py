@@ -10,9 +10,10 @@ import json
 import logging,shutil
 
 def moveChatFileJob():
-    logging.warning("转移聊天记录文件开始")
-    FileUtil.renameAndMove(gloVar().chatDirPath)
-    logging.warning("转移聊天记录文件结束")
+    if RedisService.isExist(redisKey.moveChatImgFlag):
+        logging.warning("转移聊天记录文件开始")
+        FileUtil.renameAndMove(gloVar().chatDirPath)
+        logging.warning("转移聊天记录文件结束")
 
 def makeBigHeartJob():
     logging.warning("开始制作首页心形图片")

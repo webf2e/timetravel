@@ -27,6 +27,8 @@ class redisKey():
     diskAlarm = "diskAlarm"
     # 从baidu鹰眼获取的末次位置缓存
     lastLocationFromBaidu = "lastLocationFromBaidu"
+    # 是否转移聊天文件，如果存在该key就转移
+    moveChatImgFlag = "moveChatImgFlag"
 
     #key类型
 

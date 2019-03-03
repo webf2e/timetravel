@@ -332,6 +332,12 @@ def addSpecialDay():
     festival = request.form.get("festival")
     dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
     SpecialWordService.insert(time,word,themeColor,festival,dateTime)
+    #清理redis
+    now = datetime.datetime.now()
+    dateStr = datetime.datetime.strftime(now, "%Y年%m月%d日")
+    redisKey = "special_{}".format(dateStr)
+    if RedisService.isExist(redisKey):
+        RedisService.delete(redisKey)
     return "添加成功"
 
 @adminRoute.route('/admin/editSpecialDay',methods=["POST"])
@@ -342,6 +348,12 @@ def editSpecialDay():
     festival = request.form.get("festival")
     dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
     SpecialWordService.updateByTime(time,word,themeColor,festival,dateTime)
+    # 清理redis
+    now = datetime.datetime.now()
+    dateStr = datetime.datetime.strftime(now, "%Y年%m月%d日")
+    redisKey = "special_{}".format(dateStr)
+    if RedisService.isExist(redisKey):
+        RedisService.delete(redisKey)
     return "修改成功"
 
 @adminRoute.route('/admin/getAllSpecialDayTime',methods=["POST"])

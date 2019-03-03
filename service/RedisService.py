@@ -1,6 +1,6 @@
 import redis
 
-host = "47.90.32.49"
+host = "127.0.0.1"
 port = 6379
 pwd = "1234asdf.redis"
 
@@ -27,6 +27,11 @@ def isExist(key):
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)
     r = redis.Redis(connection_pool=pool)
     return r.exists(key)
+
+def delete(key):
+    pool = redis.ConnectionPool(host=host, port=port, password=pwd)
+    r = redis.Redis(connection_pool=pool)
+    return r.delete(key)
 
 def setSetting(key,value):
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)

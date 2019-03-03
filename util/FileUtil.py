@@ -265,4 +265,4 @@ def downloadWeatherImgUseLoop():
             imgUrl = "http://www.tianqihoubao.com/legend/{}".format(file)
             print("下载：{}".format(file))
             downloadFile(imgUrl, os.path.join(filePath, file))
-        time.sleep(10)
+        time.sleep(1)

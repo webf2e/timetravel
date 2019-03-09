@@ -276,8 +276,8 @@
             type:"POST",
             success:function(data){
                 var html = "亲爱哒，在我们相遇的这段日子里<br/>";
-                html += "一共去了<b>"+data.travelTotalCount+"</b>个地方，";
-                html += "<b>"+data.travelHasPicCount+"</b>个地方留下照片<br/>"
+                html += "一共去了<b>"+data.travelTotalCount+"</b>个地方<br/>";
+                html += "在<b>"+data.travelHasPicCount+"</b>个地方留下照片，一共有<b>"+data.totalPicCount+"</b>张<br/>"
                 html += "其中在<b><a href='/static/travel.html?id="+data.maxPicTravelId+"'>"+data.maxPicTravelName+"</a></b>留下了<b>"+data.maxPicTravelCount+"</b>张照片<br/>"
                 html += "一共看了<b>"+data.movieCount+"</b>场电影和演出<br/>";
                 html += "我们看的最多的是<b>"+data.maxMovieType+"片</b>，看了<b>"+data.maxMovieTypeCount+"</b>场<br/>";

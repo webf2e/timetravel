@@ -1,5 +1,7 @@
 from service import TravelService
 from service import RedisService
+from util.Global import gloVar
+import os
 
 def getTravelTongji():
     tongjiMap = {}
@@ -36,5 +38,28 @@ def getTravelTongji():
     tongjiMap["maxFoodType"] = maxFoodType
     tongjiMap["maxFoodTypeCount"] = maxFoodTypeCount
     tongjiMap["foodCount"] = len(foodTypes)
+    #统计去了哪些景点
+    travelTotalCount = TravelService.getTravelTotalCount()
+    tongjiMap["travelTotalCount"] = travelTotalCount
+    #统计哪些景点留下的照片
+    travelPicPaths = os.listdir(gloVar.galleryImgPath)
+    tongjiMap["travelHasPicCount"] = len(travelPicPaths)
+    #一共有多少张图片
+    maxPicCountTravelId = 0
+    maxPicCountTravelCount = 0
+    totalPicCount = 0
+    for travelPicPath in travelPicPaths:
+        travelId = travelPicPath
+        travelPicPath = os.path.join(gloVar.galleryImgPath,travelPicPath)
+        travelPicCount = len(os.listdir(travelPicPath))
+        print("{} -> {}".format(travelId,travelPicCount))
+        totalPicCount += travelPicCount
+        if travelPicCount > maxPicCountTravelCount:
+            maxPicCountTravelCount = travelPicCount
+            maxPicCountTravelId = travelId
+    tongjiMap["totalPicCount"] = totalPicCount
+    tongjiMap["maxPicTravelId"] = maxPicCountTravelId
+    tongjiMap["maxPicTravelName"] = TravelService.getTravelNameById(maxPicCountTravelId)
+    tongjiMap["maxPicTravelCount"] = maxPicCountTravelCount
     json = str(tongjiMap).replace("'", "\"")
     RedisService.setTongji("travel", json)

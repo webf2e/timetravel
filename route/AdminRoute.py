@@ -229,6 +229,7 @@ def upGalleryImg():
         os.makedirs(filePath)
     imgPath = os.path.join(filePath, gallery.filename)
     gallery.save(imgPath)
+    TongjiUtil.getTravelTongji()
     return os.path.join("/static/gallery",id,gallery.filename)
 
 @adminRoute.route('/admin/deleteChatImg',methods=["POST"])
@@ -272,6 +273,7 @@ def deleteGalleryImg():
     path = str(request.form.get("path"))
     path = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
     os.remove(path)
+    TongjiUtil.getTravelTongji()
     return "删除成功"
 
 @adminRoute.route('/admin/system/cpu',methods=["POST"])

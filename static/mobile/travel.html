@@ -275,7 +275,11 @@
             dataType: 'json',
             type:"POST",
             success:function(data){
-                var html = "亲爱哒，在我们相遇的这段日子里<br/>一共看了<b>"+data.movieCount+"</b>场电影和演出<br/>";
+                var html = "亲爱哒，在我们相遇的这段日子里<br/>";
+                html += "一共去了<b>"+data.travelTotalCount+"</b>个地方，";
+                html += "<b>"+data.travelHasPicCount+"</b>个地方留下照片<br/>"
+                html += "其中在<b><a href='/static/travel.html?id="+data.maxPicTravelId+"'>"+data.maxPicTravelName+"</a></b>留下了<b>"+data.maxPicTravelCount+"</b>张照片<br/>"
+                html += "一共看了<b>"+data.movieCount+"</b>场电影和演出<br/>";
                 html += "我们看的最多的是<b>"+data.maxMovieType+"片</b>，看了<b>"+data.maxMovieTypeCount+"</b>场<br/>";
                 html += "我们一起吃了<b>"+data.foodCount+"</b>顿饭，有<b>"+data.maxFoodTypeCount+"</b>顿吃的<b>"+data.maxFoodType+"</b>";
                 $("#travelTongji").html(html);
@@ -347,6 +351,10 @@
             content = content.replace(re,"<br>"+space4);
         }
         content = addEmoji(content);
+        var delay = ""
+        if(n.delay >= 1){
+            delay = n.delay+"天前"
+        }
         return "<div class=\"event-box relative\">\n" +
             "\t<div class=\"story-avatar relative\">\n" +
             "\t<img onclick='locate("+n.lon+","+n.lat+")' style='width:100%;' alt=\"\" src=\""+n.indexImg+"\">\n" +
@@ -357,7 +365,7 @@
             "\t<div class=\"event-text\">\n" +
             "\t\t<h2>["+n.type+"] "+n.travelName+"</h2>\n" +
             "\t\t<div class='fenlei alert alert-info' style='margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'>\n" +
-            "\t    \t<p>时间："+n.travelTime+"&nbsp;&nbsp;"+n.weekDay+"</p>\n" +
+            "\t    \t<p>时间："+n.travelTime+"&nbsp;&nbsp;"+n.weekDay+"&nbsp;&nbsp;"+delay+"</p>\n" +
             "\t    \t<p>地点："+address+"</p>\n" +
             weather+
             holiday+

@@ -1,6 +1,8 @@
 from flask import Blueprint
 from flask import request,Response
 from service import TravelService,RedisService
+from util import TimeUtil
+import json
 
 
 travelRoute = Blueprint('travelRoute', __name__)
@@ -15,25 +17,41 @@ def getTravelTimeGroup():
 
 @travelRoute.route('/getNew4',methods=["POST"])
 def getNew4():
-    return Response(TravelService.getNew4(), mimetype='application/json')
+    travels = json.loads(TravelService.getNew4())
+    for travel in travels:
+        travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
+        travel["travelTime"] = travel["travelTime"][:-3]
+    return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getTravelInfoById',methods=["POST"])
 def getTravelInfoById():
     id = request.form.get("id")
     if id == None or id == "":
         return Response("{}", mimetype='application/json')
-    return Response(TravelService.getTravelInfoById(id), mimetype='application/json')
+    travels = json.loads(TravelService.getTravelInfoById(id))
+    for travel in travels:
+        travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
+        travel["travelTime"] = travel["travelTime"][:-3]
+    return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getByLonLat',methods=["POST"])
 def getByLonLat():
     lon = request.form.get("lon")
     lat = request.form.get("lat")
-    return Response(TravelService.getByLonLat(lon,lat), mimetype='application/json')
+    travels = json.loads(TravelService.getByLonLat(lon,lat))
+    for travel in travels:
+        travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
+        travel["travelTime"] = travel["travelTime"][:-3]
+    return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getByDate',methods=["POST"])
 def getByDate():
     date = request.form.get("date")
-    return Response(TravelService.getByDate(date), mimetype='application/json')
+    travels = json.loads(TravelService.getByDate(date))
+    for travel in travels:
+        travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
+        travel["travelTime"] = travel["travelTime"][:-3]
+    return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getTravelTongji',methods=["POST"])
 def getTravelTongji():

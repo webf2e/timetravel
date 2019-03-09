@@ -371,12 +371,8 @@
                 var weatherDay = "<option>白天天气</option>";
                 var weatherNight = "<option>夜间天气</option>";
                 $.each(data,function(i,n){
-                    n = n.replace(".gif","");
-                    if(n.indexOf("_1") == -1){
-                        weatherDay += "<option value='"+n+"'>"+n+"</option>";
-                    }else{
-                        weatherNight += "<option value='"+n+"'>"+n+"</option>";
-                    }
+                    weatherDay += "<option value='"+i+"'>"+n+"</option>";
+                    weatherNight += "<option value='"+i+"_1'>"+n+"</option>";
                 });
                 $(".weatherDay").html(weatherDay);
                 $(".weatherNight").html(weatherNight);

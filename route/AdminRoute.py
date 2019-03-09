@@ -323,8 +323,7 @@ def getServerStartTime():
 
 @adminRoute.route('/admin/getWeatherList',methods=["POST"])
 def getWeatherList():
-    weatherPath = os.path.join(gloVar.staticPath,"images/weather")
-    return Response(json.dumps(sorted(os.listdir(weatherPath))),mimetype='application/json')
+    return Response(gloVar.weatherNames,mimetype='application/json')
 
 
 @adminRoute.route('/admin/addSpecialDay',methods=["POST"])

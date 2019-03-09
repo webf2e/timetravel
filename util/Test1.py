@@ -44,5 +44,4 @@ for file in files:
         print(weather)
 
 print(finalMap)
-print(json.dumps(finalMap))
 

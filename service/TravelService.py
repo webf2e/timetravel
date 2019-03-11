@@ -38,7 +38,7 @@ def getTravelTimeGroup():
     db.close()
     return changeToJsonStr(fields, data)
 
-def getNew4():
+def getNew5():
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -46,7 +46,7 @@ def getNew4():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select * from travel ORDER BY travelTime DESC limit 4"
+    sql = "select * from travel t,travelWeather tw where t.id = tw.travelId ORDER BY t.travelTime DESC limit 5"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -63,7 +63,7 @@ def getByLonLat(lon,lat):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select * from travel where lon='{}' and lat='{}'".format(lon,lat)
+    sql = "select * from travel t,travelWeather tw where t.id = tw.travelId and lon='{}' and lat='{}'".format(lon,lat)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -97,7 +97,7 @@ def getByDate(date):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT * FROM travel where DATE_FORMAT(travelTime,'%Y年%m月') = '{}' ORDER BY travelTime desc".format(date)
+    sql = "SELECT * FROM travel t,travelWeather tw where t.id = tw.travelId and DATE_FORMAT(t.travelTime,'%Y年%m月') = '{}' ORDER BY t.travelTime desc".format(date)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -148,7 +148,7 @@ def getTravelInfoById(id):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT * FROM travel where id = {}".format(id)
+    sql = "SELECT * FROM travel t,travelWeather tw where t.id = tw.travelId and t.id = {}".format(id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -419,3 +419,20 @@ def getTravelTotalCount():
     db.commit()
     db.close()
     return data[0][0]
+
+def getAllTravels():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT * FROM travel"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields,data)

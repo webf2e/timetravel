@@ -188,9 +188,9 @@
         });
     }
 
-    function getNew4(){
+    function getNew5(){
 	    $.ajax({
-            url:"/getNew4",
+            url:"/getNew5",
             type:"POST",
             success:function(data){
                 var html = "";
@@ -239,7 +239,7 @@
     if(id != ""){
         getById();
     }else{
-        getNew4();
+        getNew5();
     }
     getPoints();
     function locate(lon,lat){

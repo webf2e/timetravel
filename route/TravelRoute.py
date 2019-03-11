@@ -15,12 +15,14 @@ def getAllPoint():
 def getTravelTimeGroup():
     return Response(TravelService.getTravelTimeGroup(), mimetype='application/json')
 
-@travelRoute.route('/getNew4',methods=["POST"])
-def getNew4():
-    travels = json.loads(TravelService.getNew4())
+@travelRoute.route('/getNew5',methods=["POST"])
+def getNew5():
+    travels = json.loads(TravelService.getNew5())
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
+        travel["id"] = travel["travelId"]
+        del travel["travelId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getTravelInfoById',methods=["POST"])
@@ -32,6 +34,8 @@ def getTravelInfoById():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
+        travel["id"] = travel["travelId"]
+        del travel["travelId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getByLonLat',methods=["POST"])
@@ -42,15 +46,20 @@ def getByLonLat():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
+        travel["id"] = travel["travelId"]
+        del travel["travelId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getByDate',methods=["POST"])
 def getByDate():
     date = request.form.get("date")
+    print(date)
     travels = json.loads(TravelService.getByDate(date))
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
+        travel["id"] = travel["travelId"]
+        del travel["travelId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getTravelTongji',methods=["POST"])

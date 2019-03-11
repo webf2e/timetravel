@@ -52,7 +52,6 @@ def getTravelTongji():
         travelId = travelPicPath
         travelPicPath = os.path.join(gloVar.galleryImgPath,travelPicPath)
         travelPicCount = len(os.listdir(travelPicPath))
-        print("{} -> {}".format(travelId,travelPicCount))
         totalPicCount += travelPicCount
         if travelPicCount > maxPicCountTravelCount:
             maxPicCountTravelCount = travelPicCount

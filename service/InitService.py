@@ -2,7 +2,7 @@ from util.Global import gloVar
 from util.RedisKey import redisKey
 import configparser
 import os,logging
-from service import TravelService,RedisService
+from service import TravelService,RedisService,TravelWeatherService
 import datetime,json
 from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil
 

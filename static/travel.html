@@ -331,10 +331,11 @@
         }
         address += n.district;
         var weather = "";
-        if(n.weather != "None" && n.weather != ""){
+        if(n.dayWeather != "None" && n.dayWeather != "" && n.nightWeather != "None" && n.nightWeather != ""){
             weather = "\t    \t<p>天气：";
-            weather += "<img width='24' height='24' src='/static/images/weather/"+n.weather.split("-")[0]+".gif'/>";
-            weather += "<img width='24' height='24' src='/static/images/weather/"+n.weather.split("-")[1]+".gif'/>";
+            weather += "<img data-toggle=\"tooltip\" data-placement=\"left\" title=\""+n.dayWeather+"\" alt='"+n.dayWeather+"' width='24' height='24' src='/static/images/weather/"+n.dayIcon+".gif'/>";
+            weather += "<img data-toggle=\"tooltip\" data-placement=\"left\" title=\""+n.nightWeather+"\" alt='"+n.nightWeather+"' width='24' height='24' src='/static/images/weather/"+n.nightIcon+".gif'/>";
+            weather += "&nbsp;&nbsp;&nbsp;&nbsp;"+n.minTemp+"℃到"+n.maxTemp+"℃";
             weather += "</p>\n";
         }
 
@@ -361,7 +362,7 @@
             content = content.replace(re,"<br>"+space4);
         }
         content = addEmoji(content);
-        var delay = ""
+        var delay = "";
         if(n.delay >= 1){
             delay = n.delay+"天前"
         }

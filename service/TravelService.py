@@ -46,7 +46,7 @@ def getNew5():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select * from travel t,travelWeather tw where t.id = tw.travelId ORDER BY t.travelTime DESC limit 5"
+    sql = "select * from travel t left join travelWeather tw on t.id = tw.travelId ORDER BY t.travelTime DESC limit 5"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -63,7 +63,7 @@ def getByLonLat(lon,lat):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select * from travel t,travelWeather tw where t.id = tw.travelId and lon='{}' and lat='{}'".format(lon,lat)
+    sql = "select * from travel t left join travelWeather tw on t.id = tw.travelId where lon='{}' and lat='{}'".format(lon,lat)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -97,7 +97,7 @@ def getByDate(date):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT * FROM travel t,travelWeather tw where t.id = tw.travelId and DATE_FORMAT(t.travelTime,'%Y年%m月') = '{}' ORDER BY t.travelTime desc".format(date)
+    sql = "SELECT * FROM travel t left join travelWeather tw on t.id = tw.travelId where DATE_FORMAT(t.travelTime,'%Y年%m月') = '{}' ORDER BY t.travelTime desc".format(date)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -148,7 +148,7 @@ def getTravelInfoById(id):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT * FROM travel t,travelWeather tw where t.id = tw.travelId and t.id = {}".format(id)
+    sql = "SELECT * FROM travel t left join travelWeather tw on t.id = tw.travelId where t.id = {}".format(id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()

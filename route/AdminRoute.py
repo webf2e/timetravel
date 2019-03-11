@@ -67,7 +67,13 @@ def getAllTravelNames():
 @adminRoute.route('/admin/getTravelInfoById',methods=["POST"])
 def getTravelInfoById():
     id = request.form.get("id")
-    return Response(TravelService.getTravelInfoById(id), mimetype='application/json')
+    travels = json.loads(TravelService.getTravelInfoById(id))
+    for travel in travels:
+        travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
+        travel["travelTime"] = travel["travelTime"][:-3]
+        travel["id"] = travel["travelId"]
+        del travel["travelId"]
+    return Response(json.dumps(travels), mimetype='application/json')
 
 @adminRoute.route('/admin/upTravelIndexImg',methods=["POST"])
 def upTravelIndexImg():
@@ -77,6 +83,18 @@ def upTravelIndexImg():
     file.save(filePath)
     FileUtil.resizeImg(filePath, 300, 260)
     TravelService.updateImgBy(id, os.path.join("/static/travelIndexImg","{}.png".format(id)))
+    return "文件上传成功"
+
+@adminRoute.route('/admin/changeWeather',methods=["POST"])
+def changeWeather():
+    id = request.form.get("id")
+    dayIcon = request.form.get("weatherDay")
+    nightIcon = request.form.get("weatherNight")
+    weatherDay = json.loads(gloVar.weatherNames)[dayIcon]
+    weatherNight = json.loads(gloVar.weatherNames)[nightIcon]
+    minTemp = request.form.get("minTemp")
+    maxTemp = request.form.get("maxTemp")
+    #判断id是否在travelWeather中(travelId)，如果在就更新，不在就添加
     return "文件上传成功"
 
 

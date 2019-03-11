@@ -78,22 +78,6 @@
                         <td colspan="2"><input class="form-control keyword" name="keyword" type="text"/></td>
                     </tr>
                     <tr>
-                        <td style="width: 80px">天气</td>
-                        <td>
-                            <select class="form-control weatherDay" name="weatherDay"></select>
-                        </td>
-                        <td>
-                            <select class="form-control weatherNight" name="weatherNight"></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 80px">天气图标</td>
-                        <td colspan="2">
-                            <div class="weatherDayIcon" style="display: inline"></div>
-                            <div class="weatherNightIcon" style="display: inline"></div>
-                        </td>
-                    </tr>
-                    <tr>
                         <td style="width: 80px">坐标</td>
                         <td>
                             <input class="form-control lon" name="lon" type="text" placeholder="经度"/>
@@ -254,6 +238,68 @@
           </div>
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              编辑天气
+            </a>
+          </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+          <div class="panel-body">
+            <form id="weatherTableForm">
+                <table id="weatherTable" class="table table-bordered" style="width: 100%">
+                    <tr>
+                        <td style="width: 80px">地点</td>
+                        <td colspan="2"><select class="form-control name" onchange="getWeatherById()"></select></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">名称</td>
+                        <td colspan="2">
+                            <input class="form-control travelName" type="text"/>
+                            <input class="form-control id" name="id" type="hidden"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">天气</td>
+                        <td>
+                            <select class="form-control weatherDay" name="weatherDay"></select>
+                        </td>
+                        <td>
+                            <select class="form-control weatherNight" name="weatherNight"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">天气图标</td>
+                        <td colspan="2">
+                            <div class="weatherDayIcon" style="display: inline"></div>
+                            <div class="weatherNightIcon" style="display: inline"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px">最高低温</td>
+                            <td>
+                                <input class="form-control minTemp" name="minTemp" type="text" placeholder="最低温度"/>
+                            </td>
+                            <td>
+                                <input class="form-control maxTemp" name="maxTemp" type="text" placeholder="最高温度"/>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="result"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn btn-primary" id="saveWeatherBtn" style="width: 100%">更新天气</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -410,8 +456,7 @@
             success:function(data){
                 data = data[0]
                 $("#editInfoTable .travelName").val(data.travelName);
-                $("#editInfoTable .type option").attr("selected",false);
-                $("#editInfoTable .type option[value='"+data.type+"']").attr("selected",true);
+                $("#editInfoTable .type").val(data.type);
                 $("#editInfoTable .movieName").val(data.movieName == "None"?"":data.movieName);
                 $("#editInfoTable .foodType").val(data.foodType == "None"?"":data.foodType);
                 $("#editInfoTable .content").val(data.content);
@@ -444,6 +489,53 @@
         });
     }
 
+    $("#saveWeatherBtn").click(function(){
+        $.ajax({
+            url:"/admin/changeWeather",
+            type: "POST",
+            data: new FormData($('#weatherTableForm')[0]),
+            async: true,
+            cashe: false,
+            contentType:false,
+            processData:false,
+            beforeSend:function(){
+                $("#weatherTable .result").html("天气更新中...");
+            },
+            success:function (returndata) {
+                $("#weatherTable .result").html("天气更新成功");
+                alert(returndata)
+            },
+        　　 error: function (returndata) {
+                $("#weatherTable .result").html("天气更新失败");
+                alert("更新失败！")
+            }
+        });
+        return false;
+    });
+    
+    function getWeatherById() {
+        var id = $("#weatherTable .name").val();
+        $.ajax({
+            url:"/admin/getTravelInfoById",
+            dataType: 'json',
+            type:"POST",
+            data:"id="+id,
+            success:function(data){
+                data = data[0];
+                $("#weatherTable .travelName").val(data.travelName);
+                if("None" != data.dayIcon){
+                    $("#weatherTable .weatherDay").val(data.dayIcon);
+                    $("#weatherTable .weatherNight").val(data.nightIcon);
+                    $("#weatherTable .weatherDayIcon").html("<img src='/static/images/weather/"+data.dayIcon+".gif'/>");
+                    $("#weatherTable .weatherNightIcon").html("<img src='/static/images/weather/"+data.nightIcon+".gif'/>");
+                    $("#weatherTable .minTemp").val(data.minTemp);
+                    $("#weatherTable .maxTemp").val(data.maxTemp);
+                    $("#weatherTable .id").val(data.id);
+                }
+            }
+        });
+    }
+
     $("#uploadImgBtn").click(function(){
         $.ajax({
             url:"/admin/upTravelIndexImg",
@@ -454,13 +546,16 @@
             contentType:false,
             processData:false,
             beforeSend:function(){
+                $(".indexImg").attr("src","");
                 $("#editImgTable .result").html("图片上传中...");
             },
             success:function (returndata) {
+                $(".indexImg").attr("src","/static/travelIndexImg/"+$("#editImgTable .name").val()+".png");
                 $("#editImgTable .result").html("图片上传成功");
                 alert(returndata)
             },
         　　 error: function (returndata) {
+                $(".indexImg").attr("src","");
                 $("#editImgTable .result").html("图片上传失败");
                 alert("上传失败！")
             }

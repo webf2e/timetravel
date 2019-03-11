@@ -3,7 +3,7 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService
+from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService
 from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil
 import datetime
 import logging
@@ -71,8 +71,8 @@ def getTravelInfoById():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
-        travel["id"] = travel["travelId"]
         del travel["travelId"]
+        del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @adminRoute.route('/admin/upTravelIndexImg',methods=["POST"])
@@ -91,11 +91,19 @@ def changeWeather():
     dayIcon = request.form.get("weatherDay")
     nightIcon = request.form.get("weatherNight")
     weatherDay = json.loads(gloVar.weatherNames)[dayIcon]
-    weatherNight = json.loads(gloVar.weatherNames)[nightIcon]
+    weatherNight = json.loads(gloVar.weatherNames)[nightIcon[:-2]]
     minTemp = request.form.get("minTemp")
     maxTemp = request.form.get("maxTemp")
+    print(id,dayIcon,nightIcon,weatherDay,weatherNight,minTemp,maxTemp)
     #判断id是否在travelWeather中(travelId)，如果在就更新，不在就添加
-    return "文件上传成功"
+    travelWeathers = TravelWeatherService.getByTravelId(id)
+    if len(travelWeathers) > 0:
+        #更新
+        TravelWeatherService.update(dayIcon, nightIcon, weatherDay, weatherNight, maxTemp, minTemp,id)
+    else:
+        #添加
+        TravelWeatherService.insert(dayIcon,nightIcon,weatherDay,weatherNight,maxTemp,minTemp,id)
+    return "天气更新成功"
 
 
 @adminRoute.route('/admin/addTravelInfo',methods=["POST"])

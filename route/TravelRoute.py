@@ -21,8 +21,8 @@ def getNew5():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
-        travel["id"] = travel["travelId"]
         del travel["travelId"]
+        del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getTravelInfoById',methods=["POST"])
@@ -34,8 +34,8 @@ def getTravelInfoById():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
-        travel["id"] = travel["travelId"]
         del travel["travelId"]
+        del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getByLonLat',methods=["POST"])
@@ -46,8 +46,8 @@ def getByLonLat():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
-        travel["id"] = travel["travelId"]
         del travel["travelId"]
+        del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getByDate',methods=["POST"])
@@ -58,8 +58,8 @@ def getByDate():
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
         travel["travelTime"] = travel["travelTime"][:-3]
-        travel["id"] = travel["travelId"]
         del travel["travelId"]
+        del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
 @travelRoute.route('/getTravelTongji',methods=["POST"])

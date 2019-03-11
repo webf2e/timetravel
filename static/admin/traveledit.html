@@ -523,6 +523,7 @@
             success:function(data){
                 data = data[0];
                 $("#weatherTable .travelName").val(data.travelName);
+                $("#weatherTable .id").val(data.id);
                 if("None" != data.dayIcon){
                     $("#weatherTable .weatherDay").val(data.dayIcon);
                     $("#weatherTable .weatherNight").val(data.nightIcon);
@@ -530,7 +531,6 @@
                     $("#weatherTable .weatherNightIcon").html("<img src='/static/images/weather/"+data.nightIcon+".gif'/>");
                     $("#weatherTable .minTemp").val(data.minTemp);
                     $("#weatherTable .maxTemp").val(data.maxTemp);
-                    $("#weatherTable .id").val(data.id);
                 }
             }
         });

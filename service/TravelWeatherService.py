@@ -31,3 +31,34 @@ def insert(dayIcon,nightIcon,dayWeather,nightWeather,maxTemp,minTemp,travelId):
     cursor.execute(sql)
     db.commit()
     db.close()
+
+def update(dayIcon,nightIcon,dayWeather,nightWeather,maxTemp,minTemp,travelId):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "update travelWeather set dayIcon = '{}',nightIcon = '{}',dayWeather='{}',nightWeather='{}',maxTemp={},minTemp={} where travelId={}"\
+        .format(dayIcon,nightIcon,dayWeather,nightWeather,maxTemp,minTemp,travelId)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def getByTravelId(travelId):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "select * from travelWeather where travelId = {}".format(travelId)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data

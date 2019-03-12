@@ -62,6 +62,7 @@ def getType():
 
 @adminRoute.route('/admin/getAllTravelNames',methods=["POST"])
 def getAllTravelNames():
+    print(TravelService.getAllTravelNames())
     return Response(TravelService.getAllTravelNames(), mimetype='application/json')
 
 @adminRoute.route('/admin/getTravelInfoById',methods=["POST"])
@@ -94,15 +95,21 @@ def changeWeather():
     weatherNight = json.loads(gloVar.weatherNames)[nightIcon[:-2]]
     minTemp = request.form.get("minTemp")
     maxTemp = request.form.get("maxTemp")
-    print(id,dayIcon,nightIcon,weatherDay,weatherNight,minTemp,maxTemp)
-    #判断id是否在travelWeather中(travelId)，如果在就更新，不在就添加
-    travelWeathers = TravelWeatherService.getByTravelId(id)
-    if len(travelWeathers) > 0:
-        #更新
-        TravelWeatherService.update(dayIcon, nightIcon, weatherDay, weatherNight, maxTemp, minTemp,id)
-    else:
-        #添加
-        TravelWeatherService.insert(dayIcon,nightIcon,weatherDay,weatherNight,maxTemp,minTemp,id)
+    # 更新相同地点和日期的其他景点的天气
+    travelInfo = json.loads(TravelService.getTravelInfoById(id))[0]
+    travelTime = travelInfo["travelTime"]
+    travelTime = travelTime.split(" ")[0]
+    travels = TravelService.getByCityAndDate(travelInfo["country"], travelInfo["province"], travelInfo["city"],travelTime)
+    travels = json.loads(travels)
+    for t in travels:
+        #判断id是否在travelWeather中(travelId)，如果在就更新，不在就添加
+        travelWeathers = TravelWeatherService.getByTravelId(t["id"])
+        if len(travelWeathers) > 0:
+            #更新
+            TravelWeatherService.update(dayIcon, nightIcon, weatherDay, weatherNight, maxTemp, minTemp,t["id"])
+        else:
+            #添加
+            TravelWeatherService.insert(dayIcon,nightIcon,weatherDay,weatherNight,maxTemp,minTemp,t["id"])
     return "天气更新成功"
 
 

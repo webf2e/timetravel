@@ -131,7 +131,7 @@ def getAllTravelNames():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT id,travelName FROM travel order by travelTime desc"
+    sql = "SELECT t.id,t.travelName,tw.dayWeather FROM travel t left join travelWeather tw on t.id = tw.travelId order by t.travelTime desc"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -436,3 +436,20 @@ def getAllTravels():
     db.commit()
     db.close()
     return changeToJsonStr(fields,data)
+
+def getByCityAndDate(country,province,city,date):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT * FROM travel where country = '{}' and province = '{}' and city = '{}' and DATE_FORMAT(travelTime,'%Y-%m-%d')='{}'".format(country,province,city,date)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields, data)

@@ -253,7 +253,7 @@
                 <table id="weatherTable" class="table table-bordered" style="width: 100%">
                     <tr>
                         <td style="width: 80px">地点</td>
-                        <td colspan="2"><select class="form-control name" onchange="getWeatherById()"></select></td>
+                        <td colspan="2"><select class="form-control wname" onchange="getWeatherById()"></select></td>
                     </tr>
                     <tr>
                         <td style="width: 80px">名称</td>
@@ -432,10 +432,18 @@
         type:"POST",
         success:function(data){
             var html = "<option value='0'>请选择地点</option>";
+            var whtml = "<option value='0'>请选择地点</option>";
             $.each(data,function(i,n){
                 html += "<option value='"+n.id+"'>"+n.travelName+"</option>";
+                if(n.dayWeather == "None"){
+                    whtml += "<option value='"+n.id+"'>"+n.travelName+"(NW)</option>";
+                }else{
+                    whtml += "<option value='"+n.id+"'>"+n.travelName+"</option>";
+                }
             });
             $(".name").html(html);
+            $(".wname").html(whtml);
+
         }
     });
     $(".weatherDay").change(function(){
@@ -514,7 +522,7 @@
     });
     
     function getWeatherById() {
-        var id = $("#weatherTable .name").val();
+        var id = $("#weatherTable .wname").val();
         $.ajax({
             url:"/admin/getTravelInfoById",
             dataType: 'json',
@@ -531,6 +539,11 @@
                     $("#weatherTable .weatherNightIcon").html("<img src='/static/images/weather/"+data.nightIcon+".gif'/>");
                     $("#weatherTable .minTemp").val(data.minTemp);
                     $("#weatherTable .maxTemp").val(data.maxTemp);
+                }else{
+                    $("#weatherTable .weatherDayIcon").html("");
+                    $("#weatherTable .weatherNightIcon").html("");
+                    $("#weatherTable .minTemp").val("");
+                    $("#weatherTable .maxTemp").val("");
                 }
             }
         });

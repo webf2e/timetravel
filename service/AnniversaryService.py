@@ -108,5 +108,8 @@ def changeToJsonStr(fields,data):
             result[column_list[i]] = str(row[i])
         finalResult += str(json.dumps(result, ensure_ascii=False)) + ","
 
-    finalResult = finalResult[0:-1] + "]"
+    if finalResult == "[":
+        finalResult = finalResult + "]"
+    else:
+        finalResult = finalResult[0:-1] + "]"
     return finalResult

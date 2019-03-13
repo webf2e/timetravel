@@ -1,5 +1,5 @@
 import json,logging
-import os
+import os,datetime
 import mysql.connector
 from util.Global import gloVar
 from util import NetInfoUtil,LocationUtil,TimeUtil
@@ -85,8 +85,10 @@ def changeToJsonStr(fields,data):
                 result["hasImg"] = str(isShowImgText(row[0]))
 
         finalResult += str(json.dumps(result, ensure_ascii=False)) + ","
-
-    finalResult = finalResult[0:-1] + "]"
+    if finalResult == "[":
+        finalResult = finalResult + "]"
+    else:
+        finalResult = finalResult[0:-1] + "]"
     return finalResult
 
 def getByDate(date):
@@ -452,4 +454,29 @@ def getByCityAndDate(country,province,city,date):
     fields = cursor.description
     db.commit()
     db.close()
+    return changeToJsonStr(fields, data)
+
+
+def getByKeyWord(yearMonth,keyWord):
+    time = datetime.datetime.now().timestamp()
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT * FROM travel t left join travelWeather tw on t.id = tw.travelId" \
+          " where DATE_FORMAT(travelTime,'%Y-%m')='{}' and " \
+          "(travelName like '%{}%' or type like '%{}%' or " \
+          "movieName like '%{}%' or movieType like '%{}%' or " \
+          "foodType like '%{}%' or content like '%{}%' or " \
+          "keyword like '%{}%' or weekDay like '%{}%' or holiday like '%{}%')".format(yearMonth,keyWord,keyWord,keyWord,keyWord,keyWord,keyWord,keyWord,keyWord,keyWord)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    print("耗时:{}".format(datetime.datetime.now().timestamp() - time))
     return changeToJsonStr(fields, data)

@@ -62,6 +62,21 @@ def getByDate():
         del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')
 
+@travelRoute.route('/getByKeyWord',methods=["POST"])
+def getByKeyWord():
+    #2019-01
+    date = request.form.get("date")
+    #keyWord
+    keyWord = request.form.get("keyWord")
+    travels = json.loads(TravelService.getByKeyWord(date,keyWord))
+    for travel in travels:
+        travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
+        travel["travelTime"] = travel["travelTime"][:-3]
+        del travel["travelId"]
+        del travel["weatherId"]
+    return Response(json.dumps(travels), mimetype='application/json')
+
+
 @travelRoute.route('/getTravelTongji',methods=["POST"])
 def getTravelTongji():
     return Response(RedisService.getTongji("travel"), mimetype='application/json')

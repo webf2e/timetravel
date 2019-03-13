@@ -3,7 +3,7 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService
+from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService,QuestionService
 from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil
 import datetime
 import logging
@@ -424,6 +424,25 @@ def getAllAnniversaryTime():
 def getAnniversaryByTime():
     time = request.form.get("time")
     return Response(AnniversaryService.getByDate(time), mimetype='application/json')
+
+@adminRoute.route('/admin/getAllQuestion',methods=["POST"])
+def getAllQuestion():
+    questions = QuestionService.getAll()
+    return Response(questions, mimetype='application/json')
+
+@adminRoute.route('/admin/updateQuestion',methods=["POST"])
+def updateQuestion():
+    id = request.form.get("id")
+    question = request.form.get("question")
+    answer = request.form.get("answer")
+    if id == "0":
+        #添加
+        QuestionService.insert(question,answer)
+        return "添加成功"
+    else:
+        #更新
+        QuestionService.update(question,answer,id)
+        return "修改成功"
 
 @adminRoute.before_request
 def print_request_info():

@@ -20,6 +20,23 @@ def getRandomQuestions():
     db.close()
     return changeToJsonStr(fields,data)
 
+def getAll():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT * FROM question order by id desc"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    fields = cursor.description
+    db.commit()
+    db.close()
+    return changeToJsonStr(fields,data)
+
 def getAnswerByIds(ids):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
@@ -59,6 +76,36 @@ def updateCorrectQuestion(id):
     )
     cursor = db.cursor()
     sql = "update question set correctTimes = correctTimes + 1,useTimes = useTimes + 1,lastUseTime='{}' where id={}".format(datetime.datetime.now(),id)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def insert(question, answer):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "insert into question(question,answer,createTime,correctTimes,errorTimes,useTimes) VALUES ('{}','{}','{}',0,0,0)"\
+        .format(question,answer,datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S"))
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def update(question, answer, id):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "update question set question = '{}',answer='{}' where id={}" \
+        .format(question, answer, id)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

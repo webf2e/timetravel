@@ -28,5 +28,5 @@ def getFile(path):
         for file in files:
             getFile(os.path.join(path,file))
 
-getFile(path)
-print(tongjiMap)
+# getFile(path)
+# print(tongjiMap)

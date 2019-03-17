@@ -124,15 +124,12 @@ def addTravelInfo():
     keyword = request.form.get("keyword")
     movieName = request.form.get("movieName")
     foodType = request.form.get("foodType")
-    weatherDay = request.form.get("weatherDay")
-    weatherNight = request.form.get("weatherNight")
-    weather = "{}-{}".format(weatherDay,weatherNight)
     movieType = ""
     weekDay = TimeUtil.getWeekNumByDate(travelTime)
     holiday = TimeUtil.getHoliday(travelTime.split(" ")[0])
     if "" != movieName:
         movieType = NetInfoUtil.getMovieType(movieName)
-    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weather,weekDay,holiday)
+    TravelService.insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()

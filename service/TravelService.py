@@ -235,7 +235,7 @@ def updateMostDirection():
     db.commit()
     db.close()
 
-def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weather,weekDay,holiday):
+def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -243,8 +243,8 @@ def insert(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weather,weekDay,holiday) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}','{}')"\
-        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weather,weekDay,holiday)
+    sql = "insert into travel(travelName,type,content,lon,lat,travelTime,keyword,direction,movieName,foodType,movieType,weekDay,holiday) VALUES ('{}','{}','{}',{},{},'{}','{}','','{}','{}','{}','{}','{}')"\
+        .format(travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()
@@ -350,11 +350,12 @@ def updateCountryToDistrict():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select id,lon,lat from travel where country = '' or country is null"
+    sql = "select * from travel where country = '' or country is null"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     for d in data:
+        print(d)
         cpcd = LocationUtil.getAddressByLonLat(d[1], d[2])
         updateSql = "update travel set country = '{}',province = '{}',city = '{}',district = '{}' where id={}"\
             .format(cpcd["country"],cpcd["province"],cpcd["city"],cpcd["district"],d[0])

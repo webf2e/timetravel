@@ -32,6 +32,6 @@ def print_request_info():
     if(urlPath.find("setting") != -1):
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
-        if(agent.find("HUAWEILYA-AL10") == -1):
+        if(agent.find("MI 9 Transparent Edition") == -1):
             abort(400)
             pass

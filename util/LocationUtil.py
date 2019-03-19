@@ -156,10 +156,12 @@ def getAddressByLonLat(lon,lat):
     jsonObj = json.loads(jsonStr)
     jsonObj = jsonObj["result"]["addressComponent"]
     result = {}
-    result["country"]=jsonObj["country"]
-    result["province"] =jsonObj["province"]
-    result["city"] =jsonObj["city"]
-    result["district"] =jsonObj["district"]
+    keys = ["country","province","city","district","street"]
+    for key in keys:
+        if key in jsonObj:
+            result[key] = jsonObj[key]
+        else:
+            result[key] = ""
     return result
 
 #orgData，上传上来的原始数据
@@ -179,8 +181,6 @@ def changeLocationData(orgData):
         dstData["lon"] = orgData["l"]
     if "r" in orgData:
         dstData["radius"] = orgData["r"]
-    if "s" in orgData:
-        dstData["street"] = orgData["s"]
     if "t" in orgData:
         dstData["time"] = orgData["t"]
         dstData["timestramp"] = int(datetime.datetime.strptime(orgData["t"],"%Y-%m-%d %H:%M:%S").timestamp() * 1000)
@@ -190,4 +190,5 @@ def changeLocationData(orgData):
         dstData["province"] = cpcdData["province"]
         dstData["city"] = cpcdData["city"]
         dstData["district"] = cpcdData["district"]
+        dstData["street"] = cpcdData["street"]
     return dstData

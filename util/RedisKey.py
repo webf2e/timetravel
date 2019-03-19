@@ -29,6 +29,8 @@ class redisKey():
     lastLocationFromBaidu = "lastLocationFromBaidu"
     # 是否转移聊天文件，如果存在该key就转移
     moveChatImgFlag = "moveChatImgFlag"
+    # 根据日期查询的轨迹
+    trackByDate = "trackByDate_"
 
     #key类型
 

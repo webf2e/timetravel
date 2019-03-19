@@ -100,6 +100,7 @@ def getTrackByHour():
                 lastHour = currentHour
             if currentHour != lastHour:
                 d["t"] = data["time"]
+                d["h"] = int(currentHour)
             lastHour = currentHour
             if "" == startTime:
                 startTime = data["time"]
@@ -116,6 +117,9 @@ def getTrackByHour():
 @locationRoute.route('/getTrackByDate', methods=["POST"])
 def getTrackByDate():
     date = request.form.get("date")
+    rk = redisKey.trackByDate+date
+    if RedisService.isExist(rk):
+        return Response(RedisService.get(rk), mimetype='application/json')
     result = {}
     startTime = ""
     endTime = ""
@@ -136,6 +140,7 @@ def getTrackByDate():
                 lastHour = currentHour
             if currentHour != lastHour:
                 d["t"] = point["create_time"]
+                d["h"] = int(currentHour)
             lastHour = currentHour
             if "" == startTime:
                 startTime = point["create_time"]
@@ -146,4 +151,6 @@ def getTrackByDate():
     result["count"] = dataCount
     result["startTime"] = startTime
     result["endTime"] = endTime
-    return Response(json.dumps(result), mimetype='application/json')
+    result = json.dumps(result)
+    RedisService.setWithTtl(rk,result,60 * 60 * 48)
+    return Response(result, mimetype='application/json')

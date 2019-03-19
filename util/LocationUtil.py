@@ -145,6 +145,8 @@ def locationTongji():
     return result
 
 def getAddressByLonLat(lon,lat):
+    keys = ["country", "province", "city", "district", "street"]
+    result = {}
     url = "http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location={},{}" \
           "&output=json&latest_admin=1&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA".format(lat,lon)
     r = requests.get(url)
@@ -152,11 +154,11 @@ def getAddressByLonLat(lon,lat):
     jsonStr = jsonStr.replace("renderReverse&&renderReverse(","")[0:-1]
     logging.warning("getAddressByLonLat:{}".format(jsonStr))
     if jsonStr.find("addressComponent") == -1:
-        return None
+        for key in keys:
+            result[key] = ""
+        return result
     jsonObj = json.loads(jsonStr)
     jsonObj = jsonObj["result"]["addressComponent"]
-    result = {}
-    keys = ["country","province","city","district","street"]
     for key in keys:
         if key in jsonObj:
             result[key] = jsonObj[key]
@@ -167,8 +169,6 @@ def getAddressByLonLat(lon,lat):
 #orgData，上传上来的原始数据
 def changeLocationData(orgData):
     dstData = {}
-    if "a" in orgData:
-        dstData["addr"] = orgData["a"]
     if "e" in orgData:
         dstData["errorCode"] = orgData["e"]
     if "h" in orgData:
@@ -181,9 +181,6 @@ def changeLocationData(orgData):
         dstData["lon"] = orgData["l"]
     if "r" in orgData:
         dstData["radius"] = orgData["r"]
-    if "t" in orgData:
-        dstData["time"] = orgData["t"]
-        dstData["timestramp"] = int(datetime.datetime.strptime(orgData["t"],"%Y-%m-%d %H:%M:%S").timestamp() * 1000)
     if "b" in orgData and "l" in orgData:
         cpcdData = getAddressByLonLat(orgData["l"],orgData["b"])
         dstData["country"] = cpcdData["country"]
@@ -191,4 +188,14 @@ def changeLocationData(orgData):
         dstData["city"] = cpcdData["city"]
         dstData["district"] = cpcdData["district"]
         dstData["street"] = cpcdData["street"]
+        addr = cpcdData["country"]
+        if cpcdData["province"] != cpcdData["city"]:
+            addr += cpcdData["province"]
+        addr += cpcdData["city"]
+        addr += cpcdData["district"]
+        addr += cpcdData["street"]
+        dstData["addr"] = addr
+    time = datetime.datetime.now()
+    dstData["time"] = datetime.datetime.strftime(time,"%Y-%m-%d %H:%M:%S")
+    dstData["timestramp"] = int(time.timestamp() * 1000)
     return dstData

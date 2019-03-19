@@ -72,3 +72,78 @@ def getLocationTongji():
     if None == data:
         return Response("{}", mimetype='application/json')
     return Response(json.dumps(eval(str(data))), mimetype='application/json')
+
+@locationRoute.route('/getTrackByHour', methods=["POST"])
+def getTrackByHour():
+    hour = request.form.get("hour")
+    files = sorted(os.listdir(gloVar.locationPath))
+    files = files[-int(hour):]
+    dataCount = 0
+    datas = []
+    result = {}
+    startTime = ""
+    endTime = ""
+    lastHour = ""
+    for file in files:
+        fileName = os.path.join(gloVar.locationPath, file)
+        fileLines = open(fileName,"r+")
+        for fileLine in fileLines:
+            fileLine = fileLine.strip()
+            if "" == fileLine:
+                continue
+            data = json.loads(json.dumps(eval(str(fileLine))))
+            d = {}
+            d["b"] = data["lat"]
+            d["l"] = data["lon"]
+            currentHour = data["time"][data["time"].find(" "):data["time"].find(":")]
+            if lastHour == "":
+                lastHour = currentHour
+            if currentHour != lastHour:
+                d["t"] = data["time"]
+            lastHour = currentHour
+            if "" == startTime:
+                startTime = data["time"]
+            endTime = data["time"]
+            datas.append(d)
+            dataCount += 1
+        fileLines.close()
+    result["data"] = datas
+    result["count"] = dataCount
+    result["startTime"] = startTime
+    result["endTime"] = endTime
+    return Response(json.dumps(result), mimetype='application/json')
+
+@locationRoute.route('/getTrackByDate', methods=["POST"])
+def getTrackByDate():
+    date = request.form.get("date")
+    result = {}
+    startTime = ""
+    endTime = ""
+    dataCount = 0
+    datas = []
+    st = int(datetime.datetime.strptime(date,"%Y-%m-%d").timestamp())
+    et = st + 86399
+    trackResult = YingYanUtil.getTrack(st,et,1,5000)
+    lastHour = ""
+    if "points" in trackResult:
+        points = trackResult["points"]
+        for point in points:
+            d = {}
+            d["b"] = point["latitude"]
+            d["l"] = point["longitude"]
+            currentHour = point["create_time"][point["create_time"].find(" "):point["create_time"].find(":")]
+            if lastHour == "":
+                lastHour = currentHour
+            if currentHour != lastHour:
+                d["t"] = point["create_time"]
+            lastHour = currentHour
+            if "" == startTime:
+                startTime = point["create_time"]
+            endTime = point["create_time"]
+            datas.append(d)
+            dataCount += 1
+    result["data"] = datas
+    result["count"] = dataCount
+    result["startTime"] = startTime
+    result["endTime"] = endTime
+    return Response(json.dumps(result), mimetype='application/json')

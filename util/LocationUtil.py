@@ -161,3 +161,33 @@ def getAddressByLonLat(lon,lat):
     result["city"] =jsonObj["city"]
     result["district"] =jsonObj["district"]
     return result
+
+#orgData，上传上来的原始数据
+def changeLocationData(orgData):
+    dstData = {}
+    if "a" in orgData:
+        dstData["addr"] = orgData["a"]
+    if "e" in orgData:
+        dstData["errorCode"] = orgData["e"]
+    if "h" in orgData:
+        dstData["height"] = orgData["h"]
+    if "b" in orgData:
+        dstData["lat"] = orgData["b"]
+    if "ld" in orgData:
+        dstData["locationDescribe"] = orgData["ld"]
+    if "l" in orgData:
+        dstData["lon"] = orgData["l"]
+    if "r" in orgData:
+        dstData["radius"] = orgData["r"]
+    if "s" in orgData:
+        dstData["street"] = orgData["s"]
+    if "t" in orgData:
+        dstData["time"] = orgData["t"]
+        dstData["timestramp"] = int(datetime.datetime.strptime(orgData["t"],"%Y-%m-%d %H:%M:%S").timestamp() * 1000)
+    if "b" in orgData and "l" in orgData:
+        cpcdData = getAddressByLonLat(orgData["l"],orgData["b"])
+        dstData["country"] = cpcdData["country"]
+        dstData["province"] = cpcdData["province"]
+        dstData["city"] = cpcdData["city"]
+        dstData["district"] = cpcdData["district"]
+    return dstData

@@ -13,8 +13,9 @@ appRoute = Blueprint('appRoute', __name__)
 @appRoute.route('/uploatLocationData',methods=["POST"])
 def uploatLocationData():
     data = request.form.get("locData")
+    print("locationData:{}".format(data))
     if("" != data and None != data):
-        jsonData = json.loads(data)
+        jsonData = LocationUtil.changeLocationData(json.loads(data))
         jsonData["dataSource"] = "local"
         #保存到文件
         fileName = jsonData["time"]

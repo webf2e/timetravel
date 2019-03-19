@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>【文斌 & 静静】爱的小窝-我在这里</title>
+<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<link href="/static/css/style.css" rel="stylesheet" type="text/css">
+<link href="/static/css/color.css" rel="stylesheet" type="text/css">
+<link href="/static/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="/static/css/countdown.css" rel="stylesheet" type="text/css">
+<link href="/static/css/prettyPhoto.css" rel="stylesheet">
+<script type="text/javascript" src="/static/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="/static/js/mobile.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.countdown.js"></script>
+<script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="/static/js/lightbox.js"></script>
+<script type="text/javascript" src="/static/js/custom.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+<style>
+    .inner, .container{
+        width: 100% !important;
+    }
+    body {
+        padding-right:0px;
+        padding-left:0px
+    }
+    .padding40px{
+        padding: 10px;
+    }
+    img{
+        max-width: none;
+    }
+    .modal {
+        align: center;
+        left: 75% !important;
+        width: 100% !important;
+    }
+    .message-center2, .message-center{
+        padding: 46px 48px 13px;
+    }
+</style>
+</head>
+	<body>
+
+<!--Background Image-->
+<img src="/static/images/bg.jpg" id="background"/>
+<!--Background Image-->
+<!--WRAPPTER START-->
+<div class="wrapepr floral-bg">
+	<!--header start-->
+    <div class="header">
+        <div class="clearfix"></div>
+        <div class="container">
+        <div class="couple-name">
+            <div class="couple-name-holder">
+                <div class="first-name resize">
+                	<h1>刘文斌</h1>
+                </div>
+                <img src="/static/images/heart3.png" style="margin-left: 10px;width:21%"/>
+                <div class="last-name resize">
+                    <h1>陈晓静</h1>
+                </div>
+            </div>
+        </div>
+        <div class="inner">
+        <div class="getting-merried">
+        	<p>爱的小窝</p>
+        </div>
+        </div>
+      </div>
+      </div>
+      <div class="clearfix"></div>
+    <!--header start-->
+    <div class="content">
+        <div class="inner">
+            <!--navigation start-->
+            <div class="navigation relative">
+            	<span class="border1 resize">
+                	<span class="border2"></span>
+                </span>
+                <ul id="nav">
+                    <li><a href="/static/index.html">首页</a></li>
+                    <li><a href="/static/travel.html">我们的旅程</a></li>
+                    <li><a href="/static/memory.html">我们的回忆</a></li>
+                    <li><a href="/static/gallery.html">我们的精彩</a></li>
+                    <li><a href="/static/privity.html">我们的默契</a></li>
+                    <li><a href="/static/location.html">我在这里</a></li>
+                </ul>
+            </div>
+            <!--navigation end-->
+            <div class="clearfix"></div>
+            <!--content start-->
+            <!--banners start-->
+            	<div class="banner relative">
+                	<img src="/static/images/banner-img.png" alt="" style="max-width: 100%">
+                    <h2>我在这里</h2>
+                	<div class="banner-pettern"></div>
+                </div>
+                <div class="clearfix"></div>
+                <!--banners end-->
+            <div class="inner padding40px resize">
+                <div class="btn-group" role="group" aria-label="...">
+                  <a href="/static/location.html" type="button" class="btn btn-default">实时位置</a>
+                  <button type="button" class="btn btn-default active">历史路线</button>
+                </div>
+                <div class="btn-group" role="group" aria-label="..." style="margin-left: 0;margin-top: 5px">
+                    <button class="btn btn-info" onclick="getTrackByHour(1)">最近1小时</button>
+                    <button class="btn btn-info" onclick="getTrackByHour(3)">最近3小时</button>
+                    <button class="btn btn-info" onclick="getTrackByHour(6)">最近6小时</button>
+                    <button id="moreTime" class="btn btn-info">更多</button>
+                </div>
+                <hr style="margin: 5px 0"/>
+                <span id="info">亲爱哒</span>
+                <div id="locationMap" style="width: 100%;height:440px"></div>
+                <div class="register" style="padding:1px 0"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!--content end-->
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+</div>
+<script>
+    var baiduIcon = new BMap.Icon('/static/images/mapheart.gif', new BMap.Size(20, 20), {
+       anchor: new BMap.Size(12, 23)
+    });
+    var localIcon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 20), {
+       anchor: new BMap.Size(12, 23)
+    });
+    var commonPointIcon = new BMap.Icon('/static/images/commonPoint.png', new BMap.Size(20, 20), {
+       anchor: new BMap.Size(12, 23)
+    });
+    var map = new BMap.Map("locationMap");    // 创建Map实例
+	map.centerAndZoom(new BMap.Point(116.404, 39.915), 16);
+	map.enableScrollWheelZoom(true);
+	map.addControl(new BMap.NavigationControl());
+
+	function getTrackByHour(hour){
+        $.ajax({
+            url:"/getTrackByHour",
+            data:"hour="+hour,
+            type:"POST",
+            success:function(data){
+                map.clearOverlays();
+                $("#info").html("亲爱哒，从"+data.startTime+"到"+data.endTime);
+                var points = [];
+                $.each(data.data,function(i,n){
+                    points.push(new BMap.Point(n.l, n.b));
+                });
+                var polyline = new BMap.Polyline(points, {strokeColor:"blue", strokeWeight:4, strokeOpacity:0.5});
+                map.addOverlay(polyline);
+                var view = map.getViewport(eval(points));
+                var mapZoom = view.zoom;
+                var centerPoint = view.center;
+                map.centerAndZoom(centerPoint,mapZoom);
+            }
+        });
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?18aa1da465cbe156fc3e7c413f9b2add";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

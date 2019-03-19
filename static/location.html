@@ -91,9 +91,15 @@
                     <div class="top-right-corner"><img src="/static/images/top-right-corner.png" alt=""></div>
                 </div>
             <div class="inner padding40px content-borders resize">
-                <button id="refreshBtn" class="btn btn-default">刷新位置</button>
-                <button id="autoRefreshBtn" class="btn btn-primary">自动刷新</button>
-                <button id="locTongjiBtn" class="btn btn-info">位置统计</button>
+                <div class="btn-group" role="group" aria-label="...">
+                  <button type="button" class="btn btn-default active">实时位置</button>
+                  <a href="/static/track.html" type="button" class="btn btn-default" >历史路线</a>
+                </div>
+                <div class="btn-group" role="group" aria-label="..." style="margin-left: 10px">
+                    <button id="refreshBtn" class="btn btn-default">刷新位置</button>
+                    <button id="autoRefreshBtn" class="btn btn-primary">自动刷新</button>
+                    <button id="locTongjiBtn" class="btn btn-info">位置统计</button>
+                </div>
                 <div id="tongji" class="alert alert-info" role="alert" style="margin-top: 10px;display:none"></div>
                 <hr style="margin: 5px 0"/>
                 亲爱的，我在这里：

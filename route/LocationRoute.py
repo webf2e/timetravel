@@ -92,6 +92,9 @@ def getTrackByHour():
             if "" == fileLine:
                 continue
             data = json.loads(json.dumps(eval(str(fileLine))))
+            if data["radius"] > 100:
+                print(data["radius"])
+                continue
             d = {}
             d["b"] = data["lat"]
             d["l"] = data["lon"]
@@ -125,13 +128,16 @@ def getTrackByDate():
     endTime = ""
     dataCount = 0
     datas = []
-    st = int(datetime.datetime.strptime(date,"%Y-%m-%d").timestamp())
+    st = int(datetime.datetime.strptime(date,"%Y%m%d").timestamp())
     et = st + 86399
     trackResult = YingYanUtil.getTrack(st,et,1,5000)
     lastHour = ""
     if "points" in trackResult:
         points = trackResult["points"]
         for point in points:
+            if point["radius"] > 100:
+                print(point["radius"])
+                continue
             d = {}
             d["b"] = point["latitude"]
             d["l"] = point["longitude"]

@@ -10,7 +10,7 @@ from service import RedisService
 
 appRoute = Blueprint('appRoute', __name__)
 
-@appRoute.route('/uploatLocationData',methods=["POST"])
+@appRoute.route('/uploadLocationData',methods=["POST"])
 def uploatLocationData():
     data = request.form.get("locData")
     print("locationData:{}".format(data))

@@ -96,11 +96,16 @@
                   <button type="button" class="btn btn-default active">历史路线</button>
                 </div>
                 <div class="btn-group" role="group" aria-label="..." style="margin-left: 10px;">
-                    <button class="btn btn-info" onclick="getTrackByHour(1)">最近1小时</button>
-                    <button class="btn btn-info" onclick="getTrackByHour(3)">最近3小时</button>
-                    <button class="btn btn-info" onclick="getTrackByHour(6)">最近6小时</button>
-                    <button id="moreTime" class="btn btn-info">更多</button>
+                    <button class="btn btn-info" onclick="getTrackByHour(1)">近1小时</button>
+                    <button class="btn btn-info" onclick="getTrackByHour(3)">近3小时</button>
+                    <button class="btn btn-info" onclick="getTrackByHour(6)">近6小时</button>
+                    <button class="btn btn-info" onclick="getTrackByHour(12)">近12小时</button>
                 </div>
+                <div class="input-group" style="margin-left: 0;display: inline">
+                  <input type="text" class="form-control" id="dateInput" style="margin-bottom:0px">
+                  <button class="btn btn-info" type="button" id="dateBtn">查询路线</button>
+                </div>
+                <div id="result"></div>
                 <hr style="margin: 5px 0"/>
                 <span id="info">亲爱哒</span>
                 <div id="locationMap" style="width: 100%;height:600px"></div>
@@ -136,13 +141,53 @@
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 17);
 	map.enableScrollWheelZoom(true);
 	map.addControl(new BMap.NavigationControl());
-
+    getTrackByHour(1);
+    var d = new Date(new Date().getTime() - 1000 * 60 * 60 * 24);
+    var date = d.getYear() + 1900 + "";
+    if(d.getMonth() < 10){
+        date += "0" + (d.getMonth() + 1)
+    }else{
+        date += "" + (d.getMonth() + 1)
+    }
+    if(d.getDate() < 10){
+        date += "0" + d.getDate()
+    }else{
+        date += "" + d.getDate()
+    }
+    $("#dateInput").val(date);
+    $("#dateBtn").click(function(){
+        $.ajax({
+            url:"/getTrackByDate",
+            data:"date="+$("#dateInput").val(),
+            type:"POST",
+            success:function(data){
+                if(data.errorMsg == ""){
+                    $("#result").html("");
+                    map.clearOverlays();
+                    $("#info").html("亲爱哒，从"+data.startTime+"到"+data.endTime);
+                    var points = [];
+                    $.each(data.data,function(i,n){
+                        points.push(new BMap.Point(n.l, n.b));
+                    });
+                    var polyline = new BMap.Polyline(points, {strokeColor:"blue", strokeWeight:4, strokeOpacity:0.5});
+                    map.addOverlay(polyline);
+                    var view = map.getViewport(eval(points));
+                    var mapZoom = view.zoom;
+                    var centerPoint = view.center;
+                    map.centerAndZoom(centerPoint,mapZoom);
+                }else{
+                    $("#result").html("<font color='red'>"+data.errorMsg+"</font>");
+                }
+            }
+        });
+    });
 	function getTrackByHour(hour){
         $.ajax({
             url:"/getTrackByHour",
             data:"hour="+hour,
             type:"POST",
             success:function(data){
+                $("#result").html("");
                 map.clearOverlays();
                 $("#info").html("亲爱哒，从"+data.startTime+"到"+data.endTime);
                 var points = [];

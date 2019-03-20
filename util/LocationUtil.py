@@ -156,14 +156,21 @@ def getAddressByLonLat(lon,lat):
     if jsonStr.find("addressComponent") == -1:
         for key in keys:
             result[key] = ""
+        result["sematic_description"] = ""
         return result
     jsonObj = json.loads(jsonStr)
-    jsonObj = jsonObj["result"]["addressComponent"]
+    resultObj = jsonObj["result"]
+    jsonObj = resultObj["addressComponent"]
     for key in keys:
         if key in jsonObj:
             result[key] = jsonObj[key]
         else:
             result[key] = ""
+
+    if "sematic_description" in resultObj:
+        result["sematic_description"] = resultObj["sematic_description"]
+    else:
+        result["sematic_description"] = ""
     return result
 
 #orgData，上传上来的原始数据
@@ -175,8 +182,6 @@ def changeLocationData(orgData):
         dstData["height"] = orgData["h"]
     if "b" in orgData:
         dstData["lat"] = orgData["b"]
-    if "ld" in orgData:
-        dstData["locationDescribe"] = orgData["ld"]
     if "l" in orgData:
         dstData["lon"] = orgData["l"]
     if "r" in orgData:
@@ -195,6 +200,10 @@ def changeLocationData(orgData):
         addr += cpcdData["district"]
         addr += cpcdData["street"]
         dstData["addr"] = addr
+        if "sematic_description" in cpcdData:
+            dstData["locationDescribe"] = cpcdData["city"]+cpcdData["district"]+cpcdData["sematic_description"]
+        else:
+            dstData["locationDescribe"] = dstData["addr"]
     time = datetime.datetime.now()
     dstData["time"] = datetime.datetime.strftime(time,"%Y-%m-%d %H:%M:%S")
     dstData["timestramp"] = int(time.timestamp() * 1000)

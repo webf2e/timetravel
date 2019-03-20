@@ -174,8 +174,16 @@ def getAddressByLonLat(lon,lat):
     return result
 
 #orgData，上传上来的原始数据
-def changeLocationData(orgData):
+def changeLocationData(dataStr):
+    #e+"_"+b+"_"+l+"_"+h+"_"+r
+    orgData = {}
     dstData = {}
+    datas = dataStr.split("_")
+    orgData["e"] = datas[0]
+    orgData["b"] = datas[1]
+    orgData["l"] = datas[2]
+    orgData["h"] = datas[3]
+    orgData["r"] = datas[4]
     if "e" in orgData:
         dstData["errorCode"] = orgData["e"]
     if "h" in orgData:

@@ -178,11 +178,11 @@ def changeLocationData(dataStr):
     #e+"_"+b+"_"+l+"_"+h+"_"+r
     dstData = {}
     datas = dataStr.split("_")
-    dstData["errorCode"] = datas[0]
-    dstData["height"] = datas[3]
-    dstData["lat"] = datas[1]
-    dstData["lon"] = datas[2]
-    dstData["radius"] = datas[4]
+    dstData["errorCode"] = int(datas[0])
+    dstData["lat"] = float(datas[1])
+    dstData["lon"] = float(datas[2])
+    dstData["height"] = float(datas[3])
+    dstData["radius"] = float(datas[4])
 
     cpcdData = getAddressByLonLat(dstData["lon"],dstData["lat"])
     dstData["country"] = cpcdData["country"]

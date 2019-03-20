@@ -176,42 +176,31 @@ def getAddressByLonLat(lon,lat):
 #orgData，上传上来的原始数据
 def changeLocationData(dataStr):
     #e+"_"+b+"_"+l+"_"+h+"_"+r
-    orgData = {}
     dstData = {}
     datas = dataStr.split("_")
-    orgData["e"] = datas[0]
-    orgData["b"] = datas[1]
-    orgData["l"] = datas[2]
-    orgData["h"] = datas[3]
-    orgData["r"] = datas[4]
-    if "e" in orgData:
-        dstData["errorCode"] = orgData["e"]
-    if "h" in orgData:
-        dstData["height"] = orgData["h"]
-    if "b" in orgData:
-        dstData["lat"] = orgData["b"]
-    if "l" in orgData:
-        dstData["lon"] = orgData["l"]
-    if "r" in orgData:
-        dstData["radius"] = orgData["r"]
-    if "b" in orgData and "l" in orgData:
-        cpcdData = getAddressByLonLat(orgData["l"],orgData["b"])
-        dstData["country"] = cpcdData["country"]
-        dstData["province"] = cpcdData["province"]
-        dstData["city"] = cpcdData["city"]
-        dstData["district"] = cpcdData["district"]
-        dstData["street"] = cpcdData["street"]
-        addr = cpcdData["country"]
-        if cpcdData["province"] != cpcdData["city"]:
-            addr += cpcdData["province"]
-        addr += cpcdData["city"]
-        addr += cpcdData["district"]
-        addr += cpcdData["street"]
-        dstData["addr"] = addr
-        if "sematic_description" in cpcdData:
-            dstData["locationDescribe"] = cpcdData["city"]+cpcdData["district"]+cpcdData["sematic_description"]
-        else:
-            dstData["locationDescribe"] = dstData["addr"]
+    dstData["errorCode"] = datas[0]
+    dstData["height"] = datas[3]
+    dstData["lat"] = datas[1]
+    dstData["lon"] = datas[2]
+    dstData["radius"] = datas[4]
+
+    cpcdData = getAddressByLonLat(dstData["lon"],dstData["lat"])
+    dstData["country"] = cpcdData["country"]
+    dstData["province"] = cpcdData["province"]
+    dstData["city"] = cpcdData["city"]
+    dstData["district"] = cpcdData["district"]
+    dstData["street"] = cpcdData["street"]
+    addr = cpcdData["country"]
+    if cpcdData["province"] != cpcdData["city"]:
+        addr += cpcdData["province"]
+    addr += cpcdData["city"]
+    addr += cpcdData["district"]
+    addr += cpcdData["street"]
+    dstData["addr"] = addr
+    if "sematic_description" in cpcdData:
+        dstData["locationDescribe"] = cpcdData["city"]+cpcdData["district"]+cpcdData["sematic_description"]
+    else:
+        dstData["locationDescribe"] = dstData["addr"]
     time = datetime.datetime.now()
     dstData["time"] = datetime.datetime.strftime(time,"%Y-%m-%d %H:%M:%S")
     dstData["timestramp"] = int(time.timestamp() * 1000)

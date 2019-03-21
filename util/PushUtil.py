@@ -26,6 +26,7 @@ def getAuthCode():
 
 def pushToSingle(title,content,touchuan,clientId=RedisService.getSetting(redisKey.cid)):
     headers = {"Content-Type": "application/json","authtoken":getAuthCode()}
+    title = "【爱的小窝】 {}".format(title)
     data = """
         {
            "message": {

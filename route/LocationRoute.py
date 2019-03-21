@@ -99,8 +99,6 @@ def getTrackByHour():
             d["b"] = data["lat"]
             d["l"] = data["lon"]
             currentHour = data["time"][data["time"].find(" "):data["time"].find(":")]
-            if lastHour == "":
-                lastHour = currentHour
             if currentHour != lastHour:
                 d["t"] = data["time"]
                 d["h"] = int(currentHour)
@@ -152,8 +150,6 @@ def getTrackByDate():
             d["b"] = point["latitude"]
             d["l"] = point["longitude"]
             currentHour = point["create_time"][point["create_time"].find(" "):point["create_time"].find(":")]
-            if lastHour == "":
-                lastHour = currentHour
             if currentHour != lastHour:
                 d["t"] = point["create_time"]
                 d["h"] = int(currentHour)

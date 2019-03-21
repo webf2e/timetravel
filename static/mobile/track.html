@@ -133,15 +133,13 @@
 </div>
 </div>
 <script>
-    var baiduIcon = new BMap.Icon('/static/images/mapheart.gif', new BMap.Size(20, 20), {
-       anchor: new BMap.Size(12, 23)
-    });
-    var localIcon = new BMap.Icon('/static/images/mapheart.png', new BMap.Size(20, 20), {
-       anchor: new BMap.Size(12, 23)
-    });
-    var commonPointIcon = new BMap.Icon('/static/images/commonPoint.png', new BMap.Size(20, 20), {
-       anchor: new BMap.Size(12, 23)
-    });
+    var pointMap = new Map();
+    for(var i = 0;i < 24;i ++){
+        var point = new BMap.Icon('/static/images/points/point'+i+'.png', new BMap.Size(26, 36), {
+           anchor: new BMap.Size(21, 30)
+        });
+        pointMap.set(i,point);
+    }
     var map = new BMap.Map("locationMap");    // 创建Map实例
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 16);
 	map.enableScrollWheelZoom(true);
@@ -173,6 +171,9 @@
                     var points = [];
                     $.each(data.data,function(i,n){
                         points.push(new BMap.Point(n.l, n.b));
+                        if(n.h != undefined){
+                            map.addOverlay(pointMap.get(n.h));
+                        }
                     });
                     var polyline = new BMap.Polyline(points, {strokeColor:"blue", strokeWeight:4, strokeOpacity:0.5});
                     map.addOverlay(polyline);
@@ -198,6 +199,9 @@
                 var points = [];
                 $.each(data.data,function(i,n){
                     points.push(new BMap.Point(n.l, n.b));
+                    if(n.h != undefined){
+                        map.addOverlay(new BMap.Marker(new BMap.Point(n.l, n.b),{icon:pointMap.get(n.h)}));
+                    }
                 });
                 var polyline = new BMap.Polyline(points, {strokeColor:"blue", strokeWeight:4, strokeOpacity:0.5});
                 map.addOverlay(polyline);

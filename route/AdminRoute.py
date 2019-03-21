@@ -41,6 +41,18 @@ def upChatImg():
         count += 1
     return '成功上传{}个文件'.format(count)
 
+@adminRoute.route('/admin/getLastChatImg',methods=["POST"])
+def getLastChatImg():
+    year = sorted(os.listdir(gloVar.chatDirPath))[-1]
+    month = sorted(os.listdir(os.path.join(gloVar.chatDirPath, year)))[-1]
+    date = sorted(os.listdir(os.path.join(gloVar.chatDirPath, year, month)))[-1]
+    pic = sorted(os.listdir(os.path.join(gloVar.chatDirPath, year, month, date)))[-1]
+    result = {}
+    result["year"] = year
+    result["month"] = month
+    result["date"] = date
+    result["pic"] = pic
+    return Response(json.dumps(result, ensure_ascii=False), mimetype='application/json')
 
 @adminRoute.route('/admin/showImages',methods=["POST"])
 def showImages():
@@ -448,5 +460,5 @@ def print_request_info():
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
         if(agent.find("MI 9 Transparent Edition") == -1):
-            abort(400)
+            #abort(400)
             pass

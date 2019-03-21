@@ -76,11 +76,12 @@
             <input id="showImageDate" class="form-control" type="text" name="date" value="" placeholder="日期">
             <input id="showDir" style="width:100%" class="btn btn-primary" type="button" value="展示图片">
             <hr/>
-            <div id="images" style="width: 100%">
+            <div id="images" style="width: 100%;">
             </div>
           </div>
         </div>
       </div>
+      <div id="lastImgDiv" style="margin-left: 10px"></div>
     </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -158,6 +159,20 @@
                 alert("删除图片失败")
             }
         });
+    }
+
+    $.ajax({
+        url:"/admin/getLastChatImg",
+        type: "POST",
+        success:function (data) {
+            var html = "<hr style='margin-bottom: 8px;margin-top: 8px'/>"+data.year+"年"+data.month+"月"+data.date+"日 "+data.pic+"<br/>";
+            html += "<img onclick='hide()' width='80%' src = '/static/chatImg/"+data.year+"/"+data.month+"/"+data.date+"/"+data.pic+"'/>"
+            $("#lastImgDiv").html(html);
+        }
+    });
+
+    function hide(){
+        $("#lastImgDiv").html("");
     }
 </script>
 </html>

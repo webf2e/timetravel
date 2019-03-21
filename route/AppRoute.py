@@ -3,7 +3,7 @@ from flask import request,Response
 import os
 from util.Global import gloVar
 from util.RedisKey import redisKey
-from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil,EmailUtil
+from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil,EmailUtil,CommonUtil
 import datetime
 import json,logging
 from service import RedisService
@@ -52,10 +52,10 @@ def uploatLocationData():
                 RedisService.setWithTtl(redisKey.lastFenceTime, str(datetime.datetime.now()), 60 * 10)
                 RedisService.set(redisKey.lastFenceState, state)
                 if (int(RedisService.getSetting(redisKey.isNeedFenceInOutNotify)) == 1 and not RedisService.isExist(redisKey.fenceNotifySlience)):
-                    PushUtil.pushToSingle("围栏有变更", str(compareState), "")
+                    PushUtil.pushToSingle("围栏有变更", CommonUtil.getTempIdAndContent(compareState)["content"], "")
                     SmsUtil.sendFenceModify(compareState)
                 else:
-                    PushUtil.pushToSingle("围栏有变更，亲爱的收不到", str(compareState), "")
+                    PushUtil.pushToSingle("围栏有变更，亲爱的收不到", CommonUtil.getTempIdAndContent(compareState)["content"], "")
 
 
     #获取最后的数据

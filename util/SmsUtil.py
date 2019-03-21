@@ -1,5 +1,6 @@
 import requests, json, logging
 from util.Global import gloVar
+from util import CommonUtil
 
 # 121001	离开你家
 # 121000	到你家附近
@@ -36,22 +37,4 @@ def sendSmsBytempId(mobile, tpl_id):
 
 
 def sendFenceModify(jsonMsg):
-    if "小可爱的家" in jsonMsg:
-        data = jsonMsg["小可爱的家"]
-        if 0 == data:
-            tempId = 120999
-        else:
-            tempId = 120997
-    elif "小可爱的公司" in jsonMsg:
-        data = jsonMsg["小可爱的公司"]
-        if 0 == data:
-            tempId = 120994
-        else:
-            tempId = 120991
-    elif "亲爱的家" in jsonMsg:
-        data = jsonMsg["亲爱的家"]
-        if 0 == data:
-            tempId = 121001
-        else:
-            tempId = 121000
-    sendSmsBytempId(gloVar.notifyMobile, tempId)
+    sendSmsBytempId(gloVar.notifyMobile, CommonUtil.getTempIdAndContent(jsonMsg)["tempId"])

@@ -6,7 +6,7 @@ from util.RedisKey import redisKey
 from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil
 import datetime
 import json,logging
-from service import RedisService
+from service import RedisService,FenceMessageService
 
 locationRoute = Blueprint('locationRoute', __name__)
 
@@ -30,10 +30,8 @@ def getLastLocation():
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])
 def visitLocationPageNotify():
-    dateTime = str(datetime.datetime.now())
     title = "我的位置页面被访问"
-    content = "访问时间：{}".format(dateTime)
-    PushUtil.pushToSingle(title,content,"")
+    PushUtil.pushToSingle(title,"","")
     return "OK"
 
 
@@ -64,6 +62,12 @@ def updateNeedNotify():
 @locationRoute.route('/getFence', methods=["POST"])
 def getFence():
     return Response(json.dumps(eval(str(gloVar.fences))), mimetype='application/json')
+
+@locationRoute.route('/getFenceMessageByDate', methods=["POST"])
+def getFenceMessageByDate():
+    date = request.form.get("date")
+    FenceMessageService.getAllByDate(date)
+    return Response(FenceMessageService.getAllByDate(date), mimetype='application/json')
 
 
 @locationRoute.route('/getLocationTongji', methods=["POST"])

@@ -6,7 +6,7 @@ from util.RedisKey import redisKey
 from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil,EmailUtil,CommonUtil
 import datetime
 import json,logging
-from service import RedisService
+from service import RedisService,FenceMessageService
 
 appRoute = Blueprint('appRoute', __name__)
 
@@ -49,13 +49,17 @@ def uploatLocationData():
             compareState = LocationUtil.compareState(lastState, state)
             #状态有更新
             if(len(compareState) > 0):
-                RedisService.setWithTtl(redisKey.lastFenceTime, str(datetime.datetime.now()), 60 * 10)
+                RedisService.setWithTtl(redisKey.lastFenceTime, str(datetime.datetime.now()), 60 * 15)
                 RedisService.set(redisKey.lastFenceState, state)
+                jsonMsg = CommonUtil.getTempIdAndContent(compareState)
                 if (int(RedisService.getSetting(redisKey.isNeedFenceInOutNotify)) == 1 and not RedisService.isExist(redisKey.fenceNotifySlience)):
-                    PushUtil.pushToSingle("围栏有变更", CommonUtil.getTempIdAndContent(compareState)["content"], "")
-                    SmsUtil.sendFenceModify(compareState)
+                    PushUtil.pushToSingle("围栏有变更", jsonMsg["content"], "")
+                    SmsUtil.sendSmsBytempId(gloVar.notifyMobile, jsonMsg["tempId"])
                 else:
-                    PushUtil.pushToSingle("围栏有变更，亲爱的收不到", CommonUtil.getTempIdAndContent(compareState)["content"], "")
+                    PushUtil.pushToSingle("围栏有变更，亲爱的收不到", jsonMsg["content"], "")
+                #保存到数据库
+                time = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")
+                FenceMessageService.insert(jsonMsg["content"],time,lon,lat)
 
 
     #获取最后的数据
@@ -78,6 +82,7 @@ def pushToApppos():
 def updateCid():
     cid = request.form.get("cid")
     if None != cid:
+        logging.warning("cid:{}".format(cid))
         RedisService.setSetting(redisKey.cid, cid)
     return "OK"
 

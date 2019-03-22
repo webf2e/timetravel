@@ -34,7 +34,3 @@ def sendSmsBytempId(mobile, tpl_id):
     else:
         # 请求失败
         logging.warning("request sendsms error")
-
-
-def sendFenceModify(jsonMsg):
-    sendSmsBytempId(gloVar.notifyMobile, CommonUtil.getTempIdAndContent(jsonMsg)["tempId"])

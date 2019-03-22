@@ -1,7 +1,7 @@
 import requests
 import logging
 import hashlib
-import json
+import json,datetime
 from util import TimeUtil
 from service import RedisService
 from util.RedisKey import redisKey
@@ -26,7 +26,9 @@ def getAuthCode():
 
 def pushToSingle(title,content,touchuan,clientId=RedisService.getSetting(redisKey.cid)):
     headers = {"Content-Type": "application/json","authtoken":getAuthCode()}
+    time = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")
     title = "【爱的小窝】 {}".format(title)
+    content = "{}。消息时间：{}".format(content,time)
     data = """
         {
            "message": {

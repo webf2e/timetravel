@@ -211,6 +211,7 @@
 	if(navigator.userAgent.indexOf("MI 9 Transparent Edition") == -1){
         $.ajax({
             url:"/visitLocationPageNotify",
+            data:"type=m&page=l",
             type:"POST",
             success:function(data){
             }

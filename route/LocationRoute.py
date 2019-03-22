@@ -30,8 +30,20 @@ def getLastLocation():
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])
 def visitLocationPageNotify():
+    type = request.form.get("type")
+    page = request.form.get("page")
+    if type == "m":
+        type = "手机"
+    else:
+        type = "PC"
+    if page == "l":
+        page = "Location"
+    else:
+        page = "Track"
     title = "我的位置页面被访问"
-    PushUtil.pushToSingle(title,"","")
+    content = "{}访问{}页面".format(type,page)
+    logging.warning(content)
+    PushUtil.pushToSingle(title,content,"")
     return "OK"
 
 

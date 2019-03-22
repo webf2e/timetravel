@@ -43,7 +43,8 @@ def visitLocationPageNotify():
     title = "我的位置页面被访问"
     content = "{}访问{}页面".format(type,page)
     logging.warning(content)
-    PushUtil.pushToSingle(title,content,"")
+    if gloVar.isSendPageVisitMsg == "1":
+        PushUtil.pushToSingle(title, content, "")
     return "OK"
 
 

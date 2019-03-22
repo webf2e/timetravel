@@ -120,11 +120,3 @@ def resizeByPercent(img, percent):
 def getWHPercent(imgPath):
     image = Image.open(imgPath)
     return round(image.size[0] / image.size[1], 2)
-
-path = "/home/liuwenbin/PycharmProjects/timetravel/static/images/points"
-
-import os
-files = os.listdir(path)
-for file in files:
-    p = os.path.join(path,file)
-    resizeByPercent(Image.open(p),1 / 5).save(p)

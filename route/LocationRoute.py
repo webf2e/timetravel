@@ -66,7 +66,6 @@ def getFence():
 @locationRoute.route('/getFenceMessageByDate', methods=["POST"])
 def getFenceMessageByDate():
     date = request.form.get("date")
-    FenceMessageService.getAllByDate(date)
     return Response(FenceMessageService.getAllByDate(date), mimetype='application/json')
 
 

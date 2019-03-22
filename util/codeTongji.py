@@ -1,4 +1,4 @@
-import os
+import os,json
 
 path = "/home/liuwenbin/PycharmProjects/timetravel"
 
@@ -27,6 +27,3 @@ def getFile(path):
         files = os.listdir(path)
         for file in files:
             getFile(os.path.join(path,file))
-
-# getFile(path)
-# print(tongjiMap)

@@ -21,6 +21,8 @@ def getLastLocation():
         if int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"] < 60:
             return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
         else:
+            #清理redisKey
+            RedisService.delete(redisKey.lastLocationFromBaidu)
             return Response(json.dumps(eval(str(RedisService.get(redisKey.lastLocation)))), mimetype='application/json')
     except Exception as e:
         logging.warning(e)

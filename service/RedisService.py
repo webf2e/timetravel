@@ -31,7 +31,9 @@ def isExist(key):
 def delete(key):
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)
     r = redis.Redis(connection_pool=pool)
-    return r.delete(key)
+    if r.exists(key):
+        return r.delete(key)
+    return 0
 
 def setSetting(key,value):
     pool = redis.ConnectionPool(host=host, port=port, password=pwd)

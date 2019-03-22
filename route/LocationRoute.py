@@ -168,5 +168,6 @@ def getTrackByDate():
     result["startTime"] = startTime
     result["endTime"] = endTime
     result = json.dumps(result)
-    RedisService.setWithTtl(rk,result,60 * 60 * 48)
+    #保留10天
+    RedisService.setWithTtl(rk,result,60 * 60 * 24 * 10)
     return Response(result, mimetype='application/json')

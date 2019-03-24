@@ -368,6 +368,10 @@
             $("#tongji").hide();
             $("#notify").hide();
         }
+        for(var i = 0;i < commonPoints.length;i++){
+            map.removeOverlay(commonPoints[i]);
+        }
+        commonPoints = [];
     });
     function moveToPoint(lon,lat){
         map.panTo(new BMap.Point(lon, lat));

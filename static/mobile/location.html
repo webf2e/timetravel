@@ -142,6 +142,13 @@
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 16);
 	map.enableScrollWheelZoom(true);
 	map.addControl(new BMap.NavigationControl());
+	map.addControl(new BMap.MapTypeControl({
+		mapTypes:[
+            BMAP_NORMAL_MAP,
+            BMAP_SATELLITE_MAP,
+            BMAP_HYBRID_MAP
+        ]})
+    );
 	getPoints();
 	var currentPoint = null;
 	function getPoints(){

@@ -2,6 +2,7 @@ from util.Global import gloVar
 import datetime,os,json,logging
 from util import TimeUtil
 import requests,json
+from math import *
 
 def isInPoly(aLon, aLat, pointList):
     '''
@@ -205,3 +206,29 @@ def changeLocationData(dataStr):
     dstData["time"] = datetime.datetime.strftime(time,"%Y-%m-%d %H:%M:%S")
     dstData["timestramp"] = int(time.timestamp() * 1000)
     return dstData
+
+
+def rad(d):
+    return d * pi / 180.0
+
+
+def getDistance(lon_a, lat_a, lon_b, lat_b):
+    if abs(lon_a - lon_b) < 0.000001 and abs(lat_a - lat_b) < 0.000001:
+        return 0
+    re = 6378140  # 赤道半径 (m)
+    rp = 6356755  # 极半径 (m)
+    oblateness = (re - rp) / re  # 地球扁率
+    rad_lat_a = radians(lat_a)
+    rad_lon_a = radians(lon_a)
+    rad_lat_b = radians(lat_b)
+    rad_lon_b = radians(lon_b)
+    atan_a = atan(rp / re * tan(rad_lat_a))
+    atan_b = atan(rp / re * tan(rad_lat_b))
+    tmp = acos(sin(atan_a) * sin(atan_b) + cos(atan_a) * cos(atan_b) * cos(rad_lon_a - rad_lon_b))
+    if tmp == 0:
+        return 0
+    c1 = (sin(tmp) - tmp) * (sin(atan_a) + sin(atan_b)) ** 2 / cos(tmp / 2) ** 2
+    c2 = (sin(tmp) + tmp) * (sin(atan_a) - sin(atan_b)) ** 2 / sin(tmp / 2) ** 2
+    dr = oblateness / 8 * (c1 - c2)
+    distance = re * (tmp + dr)
+    return distance

@@ -17,6 +17,19 @@ def uploatLocationData():
     if("" != data and None != data):
         jsonData = LocationUtil.changeLocationData(data)
         jsonData["dataSource"] = "local"
+        #进行校验
+        location = RedisService.get(redisKey.lastLocation)
+        if None != location:
+            l = json.loads(json.dumps(eval(location)))
+            timeDelay = (jsonData["timestramp"] - l["timestramp"]) // 1000
+            distance = int(LocationUtil.getDistance(jsonData["lon"], jsonData["lat"], l["lon"], l["lat"]))
+            if timeDelay <= 0:
+                return "{} {} {}".format(l["time"], "时间差小于等于0丢弃", RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
+            speed = int((distance / timeDelay))
+            logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒".format(timeDelay, distance, speed))
+            #最大400km/h
+            if speed > 111:
+                return "{} {} {}".format(l["time"], "速度过大，丢弃",RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
         #保存到文件
         fileName = jsonData["time"]
         fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"
@@ -31,35 +44,35 @@ def uploatLocationData():
         except Exception as e:
             logging.warning(e)
 
-    #围栏判断，定位半径精度小于80时开始进行判断。
-    if float(jsonData["radius"]) < 50:
-        if not RedisService.isExist(redisKey.lastFenceTime):
-            lon = float(jsonData["lon"])
-            lat = float(jsonData["lat"])
-            state = LocationUtil.getFenceState(lon,lat)
-            #从redis中获取上次围栏状态，判断是否要报警
-            lastState = RedisService.get(redisKey.lastFenceState)
-            if None == lastState:
-                RedisService.set(redisKey.lastFenceState, state)
-                lastState = state
-            else:
-                lastState = lastState.replace("'","\"")
-                lastState = json.loads(lastState)
-            #比较当前状态和历史状态
-            compareState = LocationUtil.compareState(lastState, state)
-            #状态有更新
-            if(len(compareState) > 0):
-                RedisService.setWithTtl(redisKey.lastFenceTime, str(datetime.datetime.now()), 60 * 15)
-                RedisService.set(redisKey.lastFenceState, state)
-                jsonMsg = CommonUtil.getTempIdAndContent(compareState)
-                if (int(RedisService.getSetting(redisKey.isNeedFenceInOutNotify)) == 1 and not RedisService.isExist(redisKey.fenceNotifySlience)):
-                    PushUtil.pushToSingle("围栏有变更", jsonMsg["content"], "")
-                    SmsUtil.sendSmsBytempId(gloVar.notifyMobile, jsonMsg["tempId"])
+        #围栏判断，定位半径精度小于50时开始进行判断。
+        if float(jsonData["radius"]) < 50:
+            if not RedisService.isExist(redisKey.lastFenceTime):
+                lon = float(jsonData["lon"])
+                lat = float(jsonData["lat"])
+                state = LocationUtil.getFenceState(lon,lat)
+                #从redis中获取上次围栏状态，判断是否要报警
+                lastState = RedisService.get(redisKey.lastFenceState)
+                if None == lastState:
+                    RedisService.set(redisKey.lastFenceState, state)
+                    lastState = state
                 else:
-                    PushUtil.pushToSingle("围栏有变更，亲爱的收不到", jsonMsg["content"], "")
-                #保存到数据库
-                time = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")
-                FenceMessageService.insert(jsonMsg["content"],time,lon,lat)
+                    lastState = lastState.replace("'","\"")
+                    lastState = json.loads(lastState)
+                #比较当前状态和历史状态
+                compareState = LocationUtil.compareState(lastState, state)
+                #状态有更新
+                if(len(compareState) > 0):
+                    RedisService.setWithTtl(redisKey.lastFenceTime, str(datetime.datetime.now()), 60 * 15)
+                    RedisService.set(redisKey.lastFenceState, state)
+                    jsonMsg = CommonUtil.getTempIdAndContent(compareState)
+                    if (int(RedisService.getSetting(redisKey.isNeedFenceInOutNotify)) == 1 and not RedisService.isExist(redisKey.fenceNotifySlience)):
+                        PushUtil.pushToSingle("围栏有变更", jsonMsg["content"], "")
+                        SmsUtil.sendSmsBytempId(gloVar.notifyMobile, jsonMsg["tempId"])
+                    else:
+                        PushUtil.pushToSingle("围栏有变更，亲爱的收不到", jsonMsg["content"], "")
+                    #保存到数据库
+                    time = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")
+                    FenceMessageService.insert(jsonMsg["content"],time,lon,lat)
 
 
     #获取最后的数据

@@ -1,8 +1,9 @@
-from flask import Blueprint,Response
-import json,os
+from flask import Blueprint,Response,request
+import json,os,datetime
 from util.Global import gloVar
-from util import TimeUtil
+from util import TimeUtil,PushUtil
 from random import choice
+from service import MessageService
 
 indexRoute = Blueprint('indexRoute', __name__)
 
@@ -22,3 +23,17 @@ def getRandomIndexImg():
         imgPath = os.path.join(path,choice(os.listdir(path)))
         imgDict[galleryPath] = imgPath.replace(gloVar.galleryImgPath,"")
     return Response(json.dumps(imgDict), mimetype='application/json')
+
+
+@indexRoute.route('/getNew3Message',methods=["POST"])
+def getNew3Message():
+    return Response(MessageService.getNew3(), mimetype='application/json')
+
+
+@indexRoute.route('/addMessage',methods=["POST"])
+def addMessage():
+    message = request.form.get("msg")
+    dateTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
+    PushUtil.pushToSingle("有新的留言",message,"")
+    MessageService.insert(message,dateTime)
+    return "OK"

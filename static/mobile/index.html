@@ -169,17 +169,45 @@
                 <!--Gallery start-->
                 <div class="gallery relative">
                 	<h3>我们的画册</h3>
-                        <div id="myCarousel2" class="carousel slide">
+                    <div id="myCarousel2" class="carousel slide">
                         <!-- Carousel items -->
                         <div class="carousel-inner">
-                        <div class="active item">
-                        	<div class="gallery-holder pretty-photos">
-                    	<ul id="gallery">
-                        </ul>
+                            <div class="active item">
+                                <div class="gallery-holder pretty-photos">
+                                    <ul id="gallery">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="gallery relative">
+                    <h3 onclick="gotoMessage()">留言板</h3>
+                    <div id="myCarousel2" class="carousel slide">
+                    <!-- Carousel items -->
+                        <div class="carousel-inner" style="text-align: left">
+                            <div id="lastestMessage" style="line-height:20px"></div>
+                            <div class="active item" id="message" style="margin-top: 10px">
+                                <table style="width:100%" border="0">
+                                    <tr>
+                                        <td>
+                                            亲爱哒，在这里可以写下想对我说的话哦<br>
+                                            <font size="1">*发送成功后就不能再修改了，请仔细填写后再发送哦</font>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><textarea class="form-control" style="width:95%;margin-bottom:5px;margin-top: 5px" rows="5"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-default">发送</button>
+                                            <span style="margin-left:10px"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                        </div>
-                        </div>
+                    </div>
                     <span class="dot-left"></span>
                     <span class="dot-right"></span>
                     <div class="flower"><img src="/static/images/flower2.png" alt=""></div>
@@ -232,6 +260,48 @@
         }
     }
     setInterval("changeMeetingDay()",3000);
+    $("#message button").click(function(){
+        var msg = $("#message textarea").val();
+        if("" == msg){
+            $("#message span").html("亲爱哒，请填写想对我说的话后，再发送哦");
+            return false;
+        }
+        $.ajax({
+            url:"/addMessage",
+            data:"msg="+msg,
+            type:"POST",
+            beforeSend:function(){
+                $("#message span").html("正在发送哦，请耐心等一下");
+            },
+            success:function(data){
+                initMessage();
+                $("#message span").html("发送成功啦，你的小可爱已经收到留言");
+            },
+            error:function(){
+                $("#message span").html("发送失败啦，亲爱哒。请联系你的小可爱");
+            }
+        });
+    });
+    function initMessage(){
+        $.ajax({
+            url:"/getNew3Message",
+            type:"POST",
+            success:function(data){
+                var html = "";
+                var space="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                $.each(data,function(i,n){
+                    html += "<div class=\"alert alert-pink\" role=\"alert\" style='margin-bottom:5px'>";
+                    html += "<b>"+n.dateTime+" 留言: </b><br/>"+space+n.message+"</span>";
+                    html += "</div>";
+                });
+                $("#lastestMessage").html(html);
+            }
+        });
+    }
+    initMessage();
+    function gotoMessage(){
+        location.href="/static/message.html";
+    }
 </script>
 <script>
 var _hmt = _hmt || [];

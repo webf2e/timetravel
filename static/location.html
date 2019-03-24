@@ -99,8 +99,10 @@
                     <button id="refreshBtn" class="btn btn-default">刷新位置</button>
                     <button id="autoRefreshBtn" class="btn btn-primary">自动刷新</button>
                     <button id="locTongjiBtn" class="btn btn-info">位置统计</button>
+                    <button id="notifyBtn" class="btn btn-info">消息通知</button>
                 </div>
                 <div id="tongji" class="alert alert-info" role="alert" style="margin-top: 10px;display:none"></div>
+                <div id="notify" class="alert alert-info" role="alert" style="margin-top: 10px;display:none"></div>
                 <hr style="margin: 5px 0"/>
                 亲爱的，我在这里：
                 <div id="locationMap" style="width: 100%;height:600px"></div>
@@ -133,6 +135,18 @@
     var commonPointIcon = new BMap.Icon('/static/images/commonPoint.png', new BMap.Size(20, 20), {
        anchor: new BMap.Size(12, 23)
     });
+    var d = new Date();
+    var date = d.getYear() + 1900 + "";
+    if(d.getMonth() < 10){
+        date += "0" + (d.getMonth() + 1)
+    }else{
+        date += "" + (d.getMonth() + 1)
+    }
+    if(d.getDate() < 10){
+        date += "0" + d.getDate()
+    }else{
+        date += "" + d.getDate()
+    }
     var map = new BMap.Map("locationMap");    // 创建Map实例
 	map.centerAndZoom(new BMap.Point(116.404, 39.915), 17);
 	map.enableScrollWheelZoom(true);
@@ -292,6 +306,7 @@
                 type:"POST",
                 success:function(data){
                     $("#tongji").show();
+                    $("#notify").hide();
                     var time = data["tongjiTime"];
                     time = time.split(" ")[1];
                     time = time.substr(0,time.length-3);
@@ -319,12 +334,40 @@
             });
         }else{
             $("#tongji").hide();
+            $("#notify").hide();
             for(var i = 0;i < commonPoints.length;i++){
                 map.removeOverlay(commonPoints[i]);
             }
             commonPoints = [];
         }
-
+    });
+    $("#notifyBtn").click(function(){
+        if($("#notify").css("display") == "none"){
+            $.ajax({
+                url:"/getFenceMessageByDate",
+                data:"date="+date,
+                type:"POST",
+                success:function(data){
+                    $("#tongji").hide();
+                    $("#notify").show();
+                    var html = "";
+                    if(data.length != 0){
+                        html += "今天收到了以下通知：<br/>";
+                        var index = 1;
+                        $.each(data,function(i,n){
+                            html += (index++)+". "+n.messageTime+"，小可爱"+n.message;
+                            html += "<br>";
+                        });
+                    }else{
+                        html = "今天暂时没有收到通知"
+                    }
+                    $("#notify").html(html);
+                }
+            });
+        }else{
+            $("#tongji").hide();
+            $("#notify").hide();
+        }
     });
     function moveToPoint(lon,lat){
         map.panTo(new BMap.Point(lon, lat));

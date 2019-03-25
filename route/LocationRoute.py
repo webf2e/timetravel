@@ -147,10 +147,11 @@ def getTrackByDate():
     if int(date) > today:
         result["errorMsg"] = "只能输入今天或今天前的日期哦"
         return Response(json.dumps(result), mimetype='application/json')
-
-    rk = redisKey.trackByDate+date
+    rk = redisKey.trackByDate + date
     if RedisService.isExist(rk):
+        logging.warning("从缓存中获取{}的轨迹".format(date))
         return Response(RedisService.get(rk), mimetype='application/json')
+    logging.warning("从百度鹰眼中获取{}的轨迹".format(date))
     startTime = ""
     endTime = ""
     dataCount = 0
@@ -183,6 +184,10 @@ def getTrackByDate():
     result["startTime"] = startTime
     result["endTime"] = endTime
     result = json.dumps(result)
-    #保留10天
-    RedisService.setWithTtl(rk,result,60 * 60 * 24 * 10)
+    if int(date) != today:
+        # 保留10天
+        RedisService.setWithTtl(rk,result,60 * 60 * 24 * 10)
+    else:
+        #今天保留30s
+        RedisService.setWithTtl(rk, result, 30)
     return Response(result, mimetype='application/json')

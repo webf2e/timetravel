@@ -120,3 +120,10 @@ def resizeByPercent(img, percent):
 def getWHPercent(imgPath):
     image = Image.open(imgPath)
     return round(image.size[0] / image.size[1], 2)
+
+'''
+压缩图片质量
+'''
+def compress(inImgName,outImgName):
+    image = Image.open(inImgName)
+    image.save(outImgName, quality=20)

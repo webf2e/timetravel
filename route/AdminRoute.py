@@ -4,7 +4,7 @@ import os,oss2
 from util.Global import gloVar
 import json
 from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService,QuestionService
-from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil
+from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil,ImgUtil
 import datetime
 import logging
 from util.RedisKey import redisKey
@@ -266,11 +266,13 @@ def downloadOSSFile():
 def upGalleryImg():
     id = str(request.form.get("id"))
     gallery = request.files["file"]
-    filePath = os.path.join(gloVar.galleryImgPath, id)
+    filePath = os.path.join(gloVar.galleryOriginImgPath, id)
     if not os.path.exists(filePath):
         os.makedirs(filePath)
     imgPath = os.path.join(filePath, gallery.filename)
     gallery.save(imgPath)
+    #将原始图片保存到缩略图中
+
     TongjiUtil.getTravelTongji()
     return os.path.join("/static/gallery",id,gallery.filename)
 

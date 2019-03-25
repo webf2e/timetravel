@@ -1,4 +1,5 @@
 from PIL import Image, ImageFilter
+import os
 
 #"/home/liuwenbin/Desktop/1.png"
 '''
@@ -126,4 +127,7 @@ def getWHPercent(imgPath):
 '''
 def compress(inImgName,outImgName):
     image = Image.open(inImgName)
+    parentPath = outImgName[:outImgName.rfind("/")]
+    if not os.path.exists(parentPath):
+        os.mkdir(parentPath)
     image.save(outImgName, quality=20)

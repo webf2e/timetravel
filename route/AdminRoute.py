@@ -289,7 +289,9 @@ def deleteChatImg():
 def rotateImg():
     path = str(request.form.get("path"))
     absPath = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
+    originAbsPath = os.path.join(gloVar.galleryOriginImgPath, path.replace("/static/gallery/", ""))
     FileUtil.rotateImg(absPath)
+    FileUtil.rotateImg(originAbsPath)
     return path
 
 @adminRoute.route('/admin/getGalleryByIdAndPage',methods=["POST"])
@@ -318,7 +320,9 @@ def getGalleryByIdAndPage():
 def deleteGalleryImg():
     path = str(request.form.get("path"))
     path = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
+    originPath = os.path.join(gloVar.galleryOriginImgPath, path.replace("/static/gallery/", ""))
     os.remove(path)
+    os.remove(originPath)
     TongjiUtil.getTravelTongji()
     return "删除成功"
 

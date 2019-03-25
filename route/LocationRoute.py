@@ -138,14 +138,14 @@ def getTrackByDate():
     date = request.form.get("date")
     result = {}
     #校验
-    yestoday = int(datetime.datetime.strftime(datetime.datetime.today() - datetime.timedelta(days=1), "%Y%m%d"))
+    today = int(datetime.datetime.strftime(datetime.datetime.today(), "%Y%m%d"))
     try:
         st = int(datetime.datetime.strptime(date, "%Y%m%d").timestamp())
     except:
-        result["errorMsg"] = "输入的时间格式不正确，正确格式：{}".format(yestoday)
+        result["errorMsg"] = "输入的时间格式不正确，正确格式：{}".format(today)
         return Response(json.dumps(result), mimetype='application/json')
-    if int(date) > yestoday:
-        result["errorMsg"] = "只能输入昨天或昨天前的日期哦"
+    if int(date) > today:
+        result["errorMsg"] = "只能输入今天或今天前的日期哦"
         return Response(json.dumps(result), mimetype='application/json')
 
     rk = redisKey.trackByDate+date

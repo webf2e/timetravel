@@ -20,7 +20,7 @@
 </head>
 <body>
 	<div id="container"></div>
-	<div id="r-result" style="display:none">
+	<div id="r-result">
 		<input type="button"  onclick="openHeatmap();" value="显示热力图"/><input type="button"  onclick="closeHeatmap();" value="关闭热力图"/>
 	</div>
 </body>
@@ -55,7 +55,7 @@
         其中 key 表示插值的位置, 0~1.
             value 为颜色值.
      */
-    heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":15,"visible":true});
+    heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":15,"visible":false});
     map.addOverlay(heatmapOverlay);
     heatmapOverlay.setDataSet({data:points,max:20});
 	
@@ -67,22 +67,6 @@
     function isSupportCanvas(){
         var elem = document.createElement('canvas');
         return !!(elem.getContext && elem.getContext('2d'));
-    }
- 
-    function setGradient(){
-        /*格式如下所示:
-        {
-            0:'rgb(102, 255, 0)',
-            .5:'rgb(255, 170, 0)',
-            1:'rgb(255, 0, 0)'
-        }*/
-        var gradient = {};
-        var colors = document.querySelectorAll("input[type='color']");
-        colors = [].slice.call(colors,0);
-        colors.forEach(function(ele){
-            gradient[ele.getAttribute("data-key")] = ele.value;
-        });
-        heatmapOverlay.setOptions({"gradient":gradient});
     }
  
     function openHeatmap(){

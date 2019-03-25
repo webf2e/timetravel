@@ -89,7 +89,7 @@ def getLocationTongji():
     data = RedisService.get(redisKey.locationTongji)
     if None == data:
         return Response("{}", mimetype='application/json')
-    return Response(json.dumps(eval(str(data))), mimetype='application/json')
+    return Response(data, mimetype='application/json')
 
 @locationRoute.route('/getTrackByHour', methods=["POST"])
 def getTrackByHour():

@@ -1,4 +1,4 @@
-from util import FileUtil,OcrUtil,SmsUtil,PushUtil,LocationUtil,WeatherUtil
+from util import FileUtil,OcrUtil,SmsUtil,PushUtil,TongjiUtil
 from util.Global import gloVar
 from util.RedisKey import redisKey
 from service import ChatService,RedisService,TravelService
@@ -114,8 +114,7 @@ def checkLastLocationJob():
                 SmsUtil.sendSmsBytempId("15210650960",121042)
 
 def locationTongjiJob():
-    data = LocationUtil.locationTongji()
-    RedisService.set(redisKey.locationTongji, str(data))
+    TongjiUtil.locationTongji()
 
 def setFenceNotifySlienceJob():
     RedisService.setWithTtl(redisKey.fenceNotifySlience, "1", 60 * 60 * 7)

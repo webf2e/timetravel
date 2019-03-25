@@ -20,6 +20,7 @@
 <script type="text/javascript" src="/static/js/custom.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
 <style>
@@ -158,6 +159,8 @@
             BMAP_HYBRID_MAP
         ]})
     );
+	heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":15,"visible":false});
+    map.addOverlay(heatmapOverlay);
 	getPoints();
 	var currentPoint = null;
 	function getPoints(){
@@ -329,12 +332,15 @@
                             p.openInfoWindow(infoWindow);
                         });
                     });
+                    heatmapOverlay.setDataSet({data:data["points"],max:20});
+                    openHeatmap();
                     $("#tongji").html(html);
                 }
             });
         }else{
             $("#tongji").hide();
             $("#notify").hide();
+            closeHeatmap();
             for(var i = 0;i < commonPoints.length;i++){
                 map.removeOverlay(commonPoints[i]);
             }
@@ -350,6 +356,7 @@
                 success:function(data){
                     $("#tongji").hide();
                     $("#notify").show();
+                    closeHeatmap();
                     var html = "";
                     if(data.length != 0){
                         html += "今天收到了以下通知：<br/>";
@@ -367,6 +374,7 @@
         }else{
             $("#tongji").hide();
             $("#notify").hide();
+            closeHeatmap();
         }
         for(var i = 0;i < commonPoints.length;i++){
             map.removeOverlay(commonPoints[i]);
@@ -390,6 +398,17 @@
         var min = parseInt(time / 60);
         result += min + "分";
         return result
+    }
+    function isSupportCanvas(){
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    }
+    function openHeatmap(){
+        heatmapOverlay.show();
+    }
+
+    function closeHeatmap(){
+        heatmapOverlay.hide();
     }
 </script>
 <script>

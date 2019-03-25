@@ -266,13 +266,15 @@ def downloadOSSFile():
 def upGalleryImg():
     id = str(request.form.get("id"))
     gallery = request.files["file"]
-    filePath = os.path.join(gloVar.galleryOriginImgPath, id)
-    if not os.path.exists(filePath):
-        os.makedirs(filePath)
+    originFilePath = os.path.join(gloVar.galleryOriginImgPath, id)
+    filePath = os.path.join(gloVar.galleryImgPath, id)
+    if not os.path.exists(originFilePath):
+        os.makedirs(originFilePath)
+    originImgPath = os.path.join(originFilePath, gallery.filename)
     imgPath = os.path.join(filePath, gallery.filename)
-    gallery.save(imgPath)
+    gallery.save(originImgPath)
     #将原始图片保存到缩略图中
-
+    ImgUtil.compress(originImgPath,imgPath)
     TongjiUtil.getTravelTongji()
     return os.path.join("/static/gallery",id,gallery.filename)
 

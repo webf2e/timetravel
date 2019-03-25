@@ -17,6 +17,8 @@ def init():
     gloVar.chatDirPath = conf.get('ChatConfig', 'dirPath')
     gloVar.travelIndexImgPath = conf.get('TravelConfig', 'indexImgPath')
     gloVar.galleryImgPath = conf.get('GalleryConfig', 'galleryImgPath')
+    gloVar.galleryOriginImgPath = conf.get('GalleryConfig', 'galleryOriginImgPath')
+    print(gloVar.galleryOriginImgPath)
     gloVar.dbHost = conf.get('MysqlConfig', 'host')
     gloVar.dbUser = conf.get('MysqlConfig', 'user')
     gloVar.dbPwd = conf.get('MysqlConfig', 'password')

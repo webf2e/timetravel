@@ -6,6 +6,7 @@ class gloVar():
     chatDirPath = ""
     travelIndexImgPath = ""
     galleryImgPath = ""
+    galleryOriginImgPath = ""
     monthImgMap = {}
     wordCloudFontPath = ""
     staticPath = ""

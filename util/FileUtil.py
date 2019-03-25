@@ -94,12 +94,12 @@ def makeHeartImg():
     multiple = 3
     totalImgCount = 47
     imgList = []
-    travelIds = os.listdir(gloVar.galleryImgPath)
+    travelIds = os.listdir(gloVar.galleryOriginImgPath)
     flag = True
     while flag:
         for travelId in travelIds:
-            img = random.sample(os.listdir(os.path.join(gloVar.galleryImgPath, travelId)), 1)
-            img = os.path.join(gloVar.galleryImgPath, travelId, img[0])
+            img = random.sample(os.listdir(os.path.join(gloVar.galleryOriginImgPath, travelId)), 1)
+            img = os.path.join(gloVar.galleryOriginImgPath, travelId, img[0])
             if img not in imgList:
                 imgList.append(img)
                 if len(imgList) == totalImgCount:

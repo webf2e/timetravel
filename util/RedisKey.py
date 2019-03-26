@@ -42,3 +42,5 @@ class redisKey():
     locationTongji = "locationTongji"
     #服务器启动时间
     serverStartTime = "serverStartTime"
+    # webssh监控信息
+    websshCheckData = "websshCheckData"

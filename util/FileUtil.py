@@ -266,3 +266,6 @@ def downloadWeatherImgUseLoop():
             print("下载：{}".format(file))
             downloadFile(imgUrl, os.path.join(filePath, file))
         time.sleep(1)
+
+def getFileSize(filePath):
+    return os.path.getsize(filePath)

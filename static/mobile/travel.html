@@ -110,9 +110,12 @@
                             <!--heading start-->
                             <div id="travelmap" style="border: 1px solid #000;width: 100%;height :300px"></div>
                         </div>
-                        内容搜索：
-                        <input class="form-control" id="searchBtn">
-                        <button>搜索</button>
+                        <div>内容搜索：
+                            <select id="searchSelect" class="form-control">
+                            </select>
+                            <input class="form-control" id="searchBtn">
+                            <button>搜索</button>
+                        </div>
                     </div>
                     <div class="leftbar" >
                         <div id="travelTongji" class="alert alert-info" role="alert"></div>
@@ -182,11 +185,14 @@
             url:"/getTravelTimeGroup",
             type:"POST",
             success:function(data){
-                var html = ""
+                var html = "";
+                var searchSelectOption = "";
                 $.each(data,function(i,n){
                     html += "<li><a href=\"javascript:;\" onclick='getByDate(\""+n.ym+"\")'><h5>"+n.ym+"</h5></a></li>";
+                    searchSelectOption += "<option value='"+n.ym.replace("年","").replace("月","")+"'>"+n.ym+"</option>";
                 });
                 $("#dateul").html(html);
+                $("#searchSelect").html(searchSelectOption);
             }
         });
     }

@@ -27,7 +27,9 @@ def init():
     gloVar.systemTongjiPath = conf.get('systemConfig', 'systemTongjiPath')
     gloVar.locationPath = conf.get('locationConfig', 'locationPath')
     gloVar.loggingFilePath = conf.get('loggingConfig', 'loggingFilePath')
+    gloVar.websshLogPath = conf.get('loggingConfig', 'websshLogPath')
     gloVar.isSendPageVisitMsg = conf.get('commonConfig', 'isSendPageVisitMsg')
+
     #更新最XX的位置信息
     TravelService.updateMostDirection()
     #初始化围栏数据

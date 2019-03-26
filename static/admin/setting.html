@@ -39,6 +39,9 @@
     </table>
     <table id="sysTable" style="width: 100%;" class="table table-bordered">
         <tr>
+            <td colspan="3">项目操作</td>
+        </tr>
+        <tr>
             <td id="pidTd" colspan="3"></td>
         </tr>
         <tr id="operateTd">
@@ -48,6 +51,9 @@
         </tr>
     </table>
     <table id="websshTable" style="width: 100%;" class="table table-bordered">
+        <tr>
+            <td colspan="3">WebSSH操作</td>
+        </tr>
         <tr>
             <td id="websshPidTd" colspan="3"></td>
         </tr>
@@ -218,7 +224,7 @@
                 var html = "<td><div class='switch'><input id='websshState' type='checkbox'/></div></td>";
                 if("True" == data){
                     //启动状态
-                    html += "<td><button class='btn btn-warning' onclick='restartWebssh()'>重启Webssh</button></td><td>"
+                    html += "<td><button class='btn btn-warning' onclick='restartWebssh()'>重启WebSSH</button></td><td>"
                 }else{
                     html += "<td colspan='2'>"
                 }

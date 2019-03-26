@@ -3,6 +3,7 @@ route/
 sche/
 service/
 util/
+static/
 static/admin/
 static/css/
 static/fonts/

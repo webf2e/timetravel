@@ -47,6 +47,16 @@
             <td id="operateResult" colspan="3"></td>
         </tr>
     </table>
+    <table id="websshTable" style="width: 100%;" class="table table-bordered">
+        <tr>
+            <td id="websshPidTd" colspan="3"></td>
+        </tr>
+        <tr id="websshOperateTd">
+        </tr>
+        <tr>
+            <td id="websshOperateResult" colspan="3"></td>
+        </tr>
+    </table>
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
@@ -108,7 +118,7 @@
             type:"POST",
             success:function(data){
                 $("#pidTd").html("当前PID为：" + data);
-            },
+            }
         });
     }
     getPid();
@@ -187,6 +197,94 @@
         if(checkTime < 5){
             refresh();
             setTimeout("check()",1000);
+        }
+    }
+
+    function getWebsshPid(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/webssh/getPid",
+            type:"POST",
+            success:function(data){
+                $("#websshPidTd").html("当前PID为：" + data);
+            }
+        });
+    }
+    getWebsshPid();
+    function getWebsshState(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/webssh/isStarted",
+            type:"POST",
+            success:function(data){
+                var html = "<td><div class='switch'><input id='websshState' type='checkbox'/></div></td>";
+                if("True" == data){
+                    //启动状态
+                    html += "<td><button class='btn btn-warning' onclick='restartWebssh()'>重启Webssh</button></td><td>"
+                }else{
+                    html += "<td colspan='2'>"
+                }
+                html += "<button class='btn btn-primary' onclick='refreshWebssh()'>刷新状态</button></td>";
+                $("#websshOperateTd").html(html);
+                if("True" == data){
+                    //启动状态
+                    $("#websshState").bootstrapSwitch('state', true, false);
+                }else{
+                    //停用状态
+                    $("#websshState").bootstrapSwitch('state', false, false);
+                }
+                $("#websshState").on('switchChange.bootstrapSwitch', function(event, state) {
+                    if(state){
+                        //调用启动
+                        startWebssh()
+                    }else{
+                        //调用停用
+                        stopWebssh()
+                    }
+                });
+            }
+        });
+    }
+    getWebsshState();
+    function startWebssh(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/webssh/start",
+            type:"POST",
+            success:function(data){
+                $("#websshOperateResult").html("启动结果："+data);
+                refreshWebssh();
+            }
+        });
+    }
+    function refreshWebssh(){
+        getWebsshPid();
+        getWebsshState()
+    }
+    function stopWebssh(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/webssh/stop",
+            type:"POST",
+            success:function(data){
+                $("#websshOperateResult").html("停止结果："+data);
+                refreshWebssh();
+            }
+        });
+    }
+    var checkWebsshTime = 0;
+    function restartWebssh(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/webssh/restart",
+            type:"POST",
+            success:function(data){
+                $("#websshOperateResult").html("重启结果："+data);
+                checkWebsshTime = 0;
+                checkWebssh();
+            }
+        });
+    }
+    function checkWebssh(){
+        checkWebsshTime ++;
+        if(checkWebsshTime < 5){
+            refreshWebssh();
+            setTimeout("checkWebssh()",1000);
         }
     }
 </script>

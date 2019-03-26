@@ -80,7 +80,3 @@ def getByKeyWord():
 @travelRoute.route('/getTravelTongji',methods=["POST"])
 def getTravelTongji():
     return Response(RedisService.getTongji("travel"), mimetype='application/json')
-
-@travelRoute.route('/test',methods=["POST"])
-def test():
-    return Response("{\"test\":1}", mimetype='application/json')

@@ -160,6 +160,14 @@ def locationTongji():
     result["data"] = addrMap
     result["tongjiTime"] = tongjiEndTime
     #处理热力图数据
-    result["points"] = list(heatMapPoint.values())
+    #去掉出现次数为1次的点。
+    heatMapList = list(heatMapPoint.values())
+    tempList = []
+    tempList += heatMapList
+    for poi in tempList:
+        if poi["count"] < 2:
+            heatMapList.remove(poi)
+
+    result["points"] = heatMapList
     logging.warning("位置统计结果：{}".format(result))
     RedisService.set(redisKey.locationTongji, json.dumps(result))

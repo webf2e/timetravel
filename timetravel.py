@@ -12,6 +12,7 @@ from route.AppRoute import appRoute
 from route.SpecialDayRoute import specialDayRoute
 from route.AnniversaryRoute import anniversaryRoute
 from route.MessageRoute import messageRoute
+from route.ServerRoute import serverRoute
 from service import InitService
 from datetime import timedelta
 from flask_apscheduler import APScheduler
@@ -34,6 +35,7 @@ app.register_blueprint(settingRoute)
 app.register_blueprint(specialDayRoute)
 app.register_blueprint(anniversaryRoute)
 app.register_blueprint(messageRoute)
+app.register_blueprint(serverRoute)
 
 @app.route('/')
 def login():

@@ -149,26 +149,3 @@ def delOtherLogJob():
             f = open(os.path.join(logDir,file), "w+")
             f.truncate()
             f.close()
-
-def checkWebSshLogJob():
-    result = {}
-    fileSize = FileUtil.getFileSize(gloVar.websshLogPath)
-    if not RedisService.isExist(redisKey.websshCheckData):
-        result["fileSize"] = fileSize
-        result["content"] = ""
-        RedisService.set(redisKey.websshCheckData, json.dumps(result))
-    else:
-        lastResult = json.loads(RedisService.get(redisKey.websshCheckData))
-        if fileSize != lastResult["fileSize"]:
-            content = ""
-            lines = open(gloVar.websshLogPath,"r+")
-            for line in lines:
-                if line.find("Connected from") != -1:
-                    content = line
-            lines.close()
-            if "" != content and content != lastResult["content"]:
-                #有人访问
-                PushUtil.pushToSingle("服务器被访问","通过webssh访问","")
-                result["fileSize"] = fileSize
-                result["content"] = content
-                RedisService.set(redisKey.websshCheckData, json.dumps(result))

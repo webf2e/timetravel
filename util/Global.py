@@ -16,7 +16,6 @@ class gloVar():
     notifyMobile = ""
     loggingFilePath = ""
     isSendPageVisitMsg = ""
-    websshLogPath = ""
     weatherNames = """
     {
         "big_rainstorm": "大暴雨",

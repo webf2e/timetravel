@@ -84,13 +84,6 @@ class Config(object):
                 'minute':'10',
                 'second': '0'
             }
-        },
-        {
-            'id': 'checkWebSshLogJob',
-            'func': 'sche.schedule:checkWebSshLogJob',
-            'args': None,
-            'trigger': 'interval',
-            'seconds': 10
         }
     ]
 

@@ -63,6 +63,27 @@
             <td id="websshOperateResult" colspan="3"></td>
         </tr>
     </table>
+
+    <table id="deployTable" style="width: 100%;" class="table table-bordered">
+        <tr>
+            <td colspan="3">部署操作</td>
+        </tr>
+        <tr>
+            <td><button class="btn btn-primary" id="getGitLogBtn">获取git最新记录</button></td>
+            <td><button class="btn btn-primary" id="gitPullBtn">git pull</button></td>
+            <td><button class="btn btn-primary" id="fileDeployBtn">文件部署</button></td>
+        </tr>
+        <tr>
+            <td colspan="3" id="stepResult"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><button id="autoDeployBtn" class="btn btn-warning" style="width: 100%">一键部署</button></td>
+            <td><div class='switch'><input id='isRestartCheckbox' type='checkbox'/></div></td>
+        </tr>
+        <tr>
+            <td colspan="3" id="autoDeployResult"></td>
+        </tr>
+    </table>
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
@@ -293,5 +314,97 @@
             setTimeout("checkWebssh()",1000);
         }
     }
+    $("[type='checkbox']").bootstrapSwitch();
+    var isRestartInAutoDeploy = "True";
+    $("#isRestartCheckbox").bootstrapSwitch('state', true, false);
+    $("#isRestartCheckbox").on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            isRestartInAutoDeploy = "True";
+        }else{
+            isRestartInAutoDeploy = "False";
+        }
+    });
+    $("#getGitLogBtn").click(function(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/git/log",
+            type:"POST",
+            beforeSend:function(){
+                $("#stepResult").html("正在获取...");
+            },
+            success:function(data){
+                var html = "更新时间：" + data.date+"<br>";
+                html += "更新内容：" + data.commit;
+                $("#stepResult").html(html);
+            },
+            error:function(){
+                $("#stepResult").html("请求服务器失败");
+            }
+        });
+    });
+    $("#gitPullBtn").click(function(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/git/pull",
+            type:"POST",
+            beforeSend:function(){
+                $("#stepResult").html("正在拉取...");
+            },
+            success:function(data){
+                if("OK" == data){
+                    $("#stepResult").html("git拉取成功");
+                }else{
+                    $("#stepResult").html("<span style='color: red'>git拉取失败，请登录服务器查找原因</span>");
+                }
+            },
+            error:function(){
+                $("#stepResult").html("请求服务器失败");
+            }
+        });
+    });
+    $("#fileDeployBtn").click(function(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/git/moveFiles",
+            type:"POST",
+            beforeSend:function(){
+                $("#stepResult").html("正在部署文件...");
+            },
+            success:function(data){
+                if("" == data.error){
+                    $("#stepResult").html("一共部署了"+data.count+"个文件");
+                }else{
+                    $("#stepResult").html("<span style='color: red'>"+data.error+"</span>");
+                }
+            },
+            error:function(){
+                $("#stepResult").html("请求服务器失败");
+            }
+        });
+    });
+    $("#autoDeployBtn").click(function(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/git/autoDeploy",
+            type:"POST",
+            data:"isRestart=" + isRestartInAutoDeploy,
+            beforeSend:function(){
+                $("#autoDeployResult").html("正在自动部署，请稍等");
+            },
+            success:function(data){
+                if("" == data.error){
+                    var html = "更新时间：" + data.date+"<br>";
+                    html += "更新内容：" + data.commit+"<br>";
+                    html += "一共部署了"+data.count+"个文件<br>";
+                    if(data.isRestart != undefined && data.isRestart == "True"){
+                        html += "服务重启<br>";
+                    }
+                    html += data.check;
+                    $("#autoDeployResult").html(html);
+                }else{
+                    $("#autoDeployResult").html("<span style='color: red'>"+data.error+"</span>");
+                }
+            },
+            error:function(){
+                $("#autoDeployResult").html("请求服务器失败");
+            }
+        });
+    });
 </script>
 </html>

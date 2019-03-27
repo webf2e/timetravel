@@ -166,6 +166,8 @@ def getTravelNameById(id):
         passwd=gloVar.dbPwd,
         database=gloVar.dbName
     )
+    if id == 0:
+        return ""
     cursor = db.cursor()
     sql = "SELECT travelName FROM travel where id = {}".format(id)
     logging.warning("[sql]:{}".format(sql))

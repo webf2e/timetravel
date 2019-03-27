@@ -461,6 +461,24 @@ def updateQuestion():
         QuestionService.update(question,answer,id)
         return "修改成功"
 
+@adminRoute.route('/admin/compressGallery',methods=["POST"])
+def compressGallery():
+    id = str(request.form.get("id"))
+    #查看有没有origin目录
+    originPath = os.path.join(gloVar.galleryOriginImgPath,id)
+    galleryPath = os.path.join(gloVar.galleryImgPath,id)
+    if not os.path.exists(originPath):
+        return "该地点没有原始图片"
+    if not os.path.exists(galleryPath):
+        os.mkdir(galleryPath)
+    originImgs = os.listdir(originPath)
+    for originImg in originImgs:
+        try:
+            ImgUtil.compress(os.path.join(originPath, originImg), os.path.join(galleryPath, originImg))
+        except Exception as e:
+            print("ERROR:{}".format(e))
+    return "压缩成功"
+
 @adminRoute.before_request
 def print_request_info():
     urlPath = str(request.path)

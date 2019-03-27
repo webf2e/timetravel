@@ -117,6 +117,32 @@
           </div>
         </div>
       </div>
+
+
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              压缩图片
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <table id="compressImgTable" class="table table-bordered" style="width: 100%">
+                <tr>
+                    <td style="width: 80px">地点</td>
+                    <td colspan="2"><select id="compressTravelSelect" class="form-control name" onchange="getCompressImg()"></select></td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                        <button id="compressImgBtn" style="width: 100%" class="btn btn-primary">压缩图片</button>
+                    </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -255,6 +281,19 @@
             },
         　　 error: function (returndata) {
                 alert("旋转失败！")
+            }
+        });
+    });
+    $("#compressImgBtn").click(function(){
+        $.ajax({
+            url:"/admin/compressGallery",
+            type: "POST",
+            data: "id="+$("#compressTravelSelect").val(),
+            success:function (data) {
+                alert(data);
+            },
+        　　 error: function (returndata) {
+                alert("压缩失败！");
             }
         });
     });

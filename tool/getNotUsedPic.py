@@ -13,7 +13,7 @@ def getContent(path):
                 content += line
             fileContentMap[path] = content
         elif path.lower().endswith("gif") or path.lower().endswith("png") or path.lower().endswith("jpg") or path.lower().endswith("jpeg"):
-            imgs[path[path.rfind("/") + 1:]] = path
+            imgs[path] = path[path.rfind("/") + 1:]
 
     else:
         files = os.listdir(path)
@@ -28,6 +28,7 @@ for imgPath,imgName in imgs.items():
             isUse = True
             break
     if isUse:
-        print("图片{}在{}文件中使用".format(imgPath,filePath))
+        #print("图片{}在{}文件中使用".format(imgPath,filePath))
+        pass
     else:
         print("图片{}没有被使用".format(imgPath))

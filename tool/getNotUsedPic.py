@@ -3,7 +3,7 @@ import os
 path = "../"
 
 fileContentMap = {}
-imgs = []
+imgs = {}
 def getContent(path):
     if os.path.isfile(path):
         if path.endswith("html") or path.endswith("js") or path.endswith("css") or path.endswith("py"):
@@ -13,7 +13,7 @@ def getContent(path):
                 content += line
             fileContentMap[path] = content
         elif path.lower().endswith("gif") or path.lower().endswith("png") or path.lower().endswith("jpg") or path.lower().endswith("jpeg"):
-            imgs.append(path[path.rfind("/") + 1:])
+            imgs[path[path.rfind("/") + 1:]] = path
 
     else:
         files = os.listdir(path)
@@ -21,4 +21,13 @@ def getContent(path):
             getContent(os.path.join(path,file))
 
 getContent(path)
-print(imgs)
+for imgPath,imgName in imgs.items():
+    isUse = False
+    for filePath,content in fileContentMap.items():
+        if content.find(imgName) != -1:
+            isUse = True
+            break
+    if isUse:
+        print("图片{}在{}文件中使用".format(imgPath,filePath))
+    else:
+        print("图片{}没有被使用".format(imgPath))

@@ -83,7 +83,6 @@ def getTravelInfoById():
     travels = json.loads(TravelService.getTravelInfoById(id))
     for travel in travels:
         travel["delay"] = TimeUtil.subDay(travel["travelTime"]) - 1
-        travel["travelTime"] = travel["travelTime"][:-3]
         del travel["travelId"]
         del travel["weatherId"]
     return Response(json.dumps(travels), mimetype='application/json')

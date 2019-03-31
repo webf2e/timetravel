@@ -67,6 +67,7 @@ def getAddressByLonLat(lon,lat):
     result = {}
     url = "http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location={},{}" \
           "&output=json&latest_admin=1&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA".format(lat,lon)
+    print("locationUrl:{}".format(url))
     r = requests.get(url)
     jsonStr = r.text
     jsonStr = jsonStr.replace("renderReverse&&renderReverse(","")[0:-1]

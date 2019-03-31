@@ -168,6 +168,7 @@ def editTravelInfo():
     TravelService.updateById(id,travelName,type,content,lon,lat,travelTime,keyword,movieName,foodType,movieType,weekDay,holiday)
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
+    TravelService.updateCountryToDistrict()
     return "修改成功"
 
 @adminRoute.route('/admin/tongji/getChatImageCount',methods=["POST"])

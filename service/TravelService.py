@@ -352,13 +352,13 @@ def updateCountryToDistrict():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "select lon,lat from travel where country = '' or country is null"
+    sql = "select id,lon,lat from travel where country = '' or country is null"
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
     for d in data:
         print(d)
-        cpcd = LocationUtil.getAddressByLonLat(d[0], d[1])
+        cpcd = LocationUtil.getAddressByLonLat(d[1], d[2])
         updateSql = "update travel set country = '{}',province = '{}',city = '{}',district = '{}' where id={}"\
             .format(cpcd["country"],cpcd["province"],cpcd["city"],cpcd["district"],d[0])
         logging.warning("[sql]:{}".format(updateSql))

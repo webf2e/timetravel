@@ -90,6 +90,7 @@ def getAddressByLonLat(lon,lat):
         result["sematic_description"] = resultObj["sematic_description"]
     else:
         result["sematic_description"] = ""
+    print("locationResult:{}".format(result))
     return result
 
 #orgData，上传上来的原始数据

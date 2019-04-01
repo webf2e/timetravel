@@ -2,6 +2,7 @@ import json,logging
 import os,datetime
 import mysql.connector
 from util.Global import gloVar
+from service import TravelTrackService
 from util import NetInfoUtil,LocationUtil,TimeUtil,YingYanUtil
 
 def getAllPoint():
@@ -409,32 +410,18 @@ def updateHoliday():
     db.close()
 
 def updateTrack(date):
-    db = mysql.connector.connect(
-        host=gloVar.dbHost,
-        user=gloVar.dbUser,
-        passwd=gloVar.dbPwd,
-        database=gloVar.dbName
-    )
-    cursor = db.cursor()
-    #更新单个
+    #获取轨迹数据
     st = int(datetime.datetime.strptime(date, "%Y-%m-%d").timestamp())
     et = st + 86399
     trackResult = json.dumps(YingYanUtil.getTrack(st, et, 1, 5000))
     #添加或更新track
-    sql = "select trackId from travelTrack where DATE_FORMAT(travelTime,'%Y-%m-%d') = '{}'".format(date)
-    logging.warning("[sql]:{}".format(sql))
-    cursor.execute(sql)
-    data = cursor.fetchall()
+    data = TravelTrackService.getTrackIdByDate(date)
     if len(data) == 0:
         #新增
-        sql = "insert into travelTrack(track,travelTime) values('{}','{}')".format(trackResult,date)
+        TravelTrackService.insert(trackResult,date)
     else:
         #更新
-        sql = "update travelTrack set track = '{}' where trackId = {}".format(trackResult, data[0][0])
-    logging.warning("[sql]:{}".format(sql))
-    cursor.execute(sql)
-    db.commit()
-    db.close()
+        TravelTrackService.updateByTrackId(trackResult, data[0][0])
 
 def updateAllTrack():
     db = mysql.connector.connect(

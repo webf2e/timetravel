@@ -65,7 +65,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3"><img id="galleryImg" style="width:100%" ondblclick="rotateImg()"/></td>
+                    <td colspan="3"><img id="galleryImg" style="width:100%"/></td>
                 </tr>
                 <tr>
                     <td colspan="3" id="upResult"></td>
@@ -101,10 +101,13 @@
                 <tr>
                     <td colspan="3" align="center">
                         <div class="btn-group btn-group-lg" role="group">
-                            <button id="prePageBtn" type="button" class="btn btn-default">上一张</button>
-                            <button id="nextPageBtn" type="button" class="btn btn-default">下一张</button>
-                            <button id="rotateImgBtn" type="button" class="btn btn-warning">旋转</button>
-                            <button id="deleteImgBtn" type="button" class="btn btn-danger">删除</button>
+                            <button id="prePageBtn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+                            <button id="nextPageBtn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+                            <button type="button" class="btn btn-warning" onclick="rotateImg(-90)"><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span></button>
+                            <button type="button" class="btn btn-warning" onclick="rotateImg(90)"><span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span></button>
+                        </div>
+                        <div class="btn-group btn-group-lg" role="group">
+                            <button id="deleteImgBtn" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
                         </div>
                     </td>
                 </tr>
@@ -200,8 +203,8 @@
         });
     });
 
-    function rotateImg(){
-        var path = $("#galleryImg").attr("src");
+    function rotateImg(degree){
+        var path = $("#showGalleryImg").attr("src");
         if("" == path){
             alert("获取不到图片路径");
             return false;
@@ -210,9 +213,9 @@
         $.ajax({
             url:"/admin/rotateImg",
             type: "POST",
-            data: "path="+path,
+            data: "path="+path+"&degree="+degree,
             success:function (returndata) {
-                $("#galleryImg").attr("src",returndata+"?t="+Math.random());
+                $("#showGalleryImg").attr("src",returndata+"?t="+Math.random());
             },
         　　 error: function (returndata) {
                 alert("旋转失败！")
@@ -245,28 +248,17 @@
 
     $("#prePageBtn").click(function(){
         var id = $("#travelSelect").val();
-        getGalleryImgById(id,$("#currentPage").html() - 1)
+        getGalleryImgById(id,$("#currentPage").html() * 1 - 1)
     });
     $("#nextPageBtn").click(function(){
         var id = $("#travelSelect").val();
-        getGalleryImgById(id,$("#currentPage").html() + 1)
-    });
-    $("#rotateImgBtn").click(function(){
-        var path = $("#showGalleryImg").attr("src");
-        path = path.split("?")[0];
-        $.ajax({
-            url:"/admin/rotateImg",
-            type: "POST",
-            data: "path="+path,
-            success:function (returndata) {
-                $("#showGalleryImg").attr("src",returndata+"?t="+Math.random());
-            },
-        　　 error: function (returndata) {
-                alert("旋转失败！")
-            }
-        });
+        getGalleryImgById(id,$("#currentPage").html() * 1 + 1)
     });
     $("#deleteImgBtn").click(function(){
+        var isDelete = confirm("确定删除?");
+        if(!isDelete){
+            return false;
+        }
         var path = $("#showGalleryImg").attr("src");
         path = path.split("?")[0];
         $.ajax({
@@ -280,7 +272,7 @@
                 getGalleryImgById(id,$("#currentPage").html())
             },
         　　 error: function (returndata) {
-                alert("旋转失败！")
+                alert("删除失败！")
             }
         });
     });

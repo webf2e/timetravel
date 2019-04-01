@@ -71,6 +71,14 @@ def rotateImg(path):
     out = im.transpose(Image.ROTATE_90)
     out.save(path)
 
+def rotateImgByDegree(path,degree):
+    im = Image.open(path)
+    if degree == 90:
+        out = im.transpose(Image.ROTATE_90)
+    else:
+        out = im.transpose(Image.ROTATE_270)
+    out.save(path)
+
 def makeCloudWord(w,imgPath):
     cut = jieba.cut(w)
     words = ' '.join(cut)

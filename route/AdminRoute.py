@@ -288,10 +288,11 @@ def deleteChatImg():
 @adminRoute.route('/admin/rotateImg',methods=["POST"])
 def rotateImg():
     path = str(request.form.get("path"))
+    degree = int(request.form.get("degree"))
     absPath = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
     originAbsPath = os.path.join(gloVar.galleryOriginImgPath, path.replace("/static/gallery/", ""))
-    FileUtil.rotateImg(absPath)
-    FileUtil.rotateImg(originAbsPath)
+    FileUtil.rotateImgByDegree(absPath,degree)
+    FileUtil.rotateImgByDegree(originAbsPath,degree)
     return path
 
 @adminRoute.route('/admin/getGalleryByIdAndPage',methods=["POST"])
@@ -319,10 +320,17 @@ def getGalleryByIdAndPage():
 @adminRoute.route('/admin/deleteGalleryImg',methods=["POST"])
 def deleteGalleryImg():
     path = str(request.form.get("path"))
-    path = os.path.join(gloVar.galleryImgPath, path.replace("/static/gallery/", ""))
-    originPath = os.path.join(gloVar.galleryOriginImgPath, path.replace("/static/gallery/", ""))
-    os.remove(path)
-    os.remove(originPath)
+    realPath = path.replace("/static/gallery/", "")
+    smallPath = os.path.join(gloVar.galleryImgPath, realPath)
+    originPath = os.path.join(gloVar.galleryOriginImgPath, realPath)
+    try:
+        os.remove(smallPath)
+    except Exception as e:
+        print(e)
+    try:
+        os.remove(originPath)
+    except Exception as e:
+        print(e)
     TongjiUtil.getTravelTongji()
     return "删除成功"
 

@@ -200,7 +200,7 @@ def getTravelTrack():
     #校验
     today = int(datetime.datetime.strftime(datetime.datetime.today(), "%Y%m%d"))
     try:
-        int(datetime.datetime.strptime(date, "%Y%m%d").timestamp())
+        st = int(datetime.datetime.strptime(date, "%Y%m%d").timestamp())
     except:
         result["errorMsg"] = "输入的时间格式不正确，正确格式：{}".format(today)
         return Response(json.dumps(result), mimetype='application/json')
@@ -213,10 +213,15 @@ def getTravelTrack():
         return Response(RedisService.get(rk), mimetype='application/json')
     logging.warning("从数据库中获取{}的轨迹".format(date))
     trackResult = TravelTrackService.getTrackByDate(date)
+    #数据库中也没有，当成普通的时间处理，设置ttl
+    hasTTL = False
     if len(trackResult) == 0:
-        result["errorMsg"] = "不存在该日期的地点"
-        return Response(json.dumps(result), mimetype='application/json')
-    trackResult = json.loads(trackResult[0][0])
+        hasTTL = True
+        et = st + 86399
+        trackResult = YingYanUtil.getTrack(st, et, 1, 5000)
+        logging.warning("数据库中没有，从百度鹰眼中获取{}的轨迹".format(date))
+    else:
+        trackResult = json.loads(trackResult[0][0])
     dataCount = 0
     datas = []
     lastHour = ""
@@ -247,5 +252,13 @@ def getTravelTrack():
     result["startTime"] = startTime
     result["endTime"] = endTime
     result = json.dumps(result)
-    RedisService.set(rk,result)
+    if hasTTL:
+        if int(date) != today:
+            # 保留30天
+            RedisService.setWithTtl(rk, result, 60 * 60 * 24 * 30)
+        else:
+            # 今天保留30s
+            RedisService.setWithTtl(rk, result, 30)
+    else:
+        RedisService.set(rk,result)
     return Response(result, mimetype='application/json')

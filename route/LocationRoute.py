@@ -6,7 +6,7 @@ from util.RedisKey import redisKey
 from util import YingYanUtil,LocationUtil,PushUtil,SmsUtil
 import datetime
 import json,logging
-from service import RedisService,FenceMessageService
+from service import RedisService,FenceMessageService,TravelTrackService
 
 locationRoute = Blueprint('locationRoute', __name__)
 
@@ -185,9 +185,67 @@ def getTrackByDate():
     result["endTime"] = endTime
     result = json.dumps(result)
     if int(date) != today:
-        # 保留10天
-        RedisService.setWithTtl(rk,result,60 * 60 * 24 * 10)
+        # 保留30天
+        RedisService.setWithTtl(rk,result,60 * 60 * 24 * 30)
     else:
         #今天保留30s
         RedisService.setWithTtl(rk, result, 30)
+    return Response(result, mimetype='application/json')
+
+
+@locationRoute.route('/getTravelTrack', methods=["POST"])
+def getTravelTrack():
+    date = request.form.get("date")
+    result = {}
+    #校验
+    today = int(datetime.datetime.strftime(datetime.datetime.today(), "%Y%m%d"))
+    try:
+        int(datetime.datetime.strptime(date, "%Y%m%d").timestamp())
+    except:
+        result["errorMsg"] = "输入的时间格式不正确，正确格式：{}".format(today)
+        return Response(json.dumps(result), mimetype='application/json')
+    if int(date) > today:
+        result["errorMsg"] = "只能输入今天或今天前的日期哦"
+        return Response(json.dumps(result), mimetype='application/json')
+    rk = redisKey.trackByDate + date
+    if RedisService.isExist(rk):
+        logging.warning("从缓存中获取{}的轨迹".format(date))
+        return Response(RedisService.get(rk), mimetype='application/json')
+    logging.warning("从数据库中获取{}的轨迹".format(date))
+    trackResult = TravelTrackService.getTrackByDate(date)
+    if len(trackResult) == 0:
+        result["errorMsg"] = "不存在该日期的地点"
+        return Response(json.dumps(result), mimetype='application/json')
+    trackResult = json.loads(trackResult[0][0])
+    dataCount = 0
+    datas = []
+    lastHour = ""
+    startTime = ""
+    endTime = ""
+    if "points" in trackResult:
+        points = trackResult["points"]
+        for point in points:
+            if point["radius"] > 100:
+                print(point["radius"])
+                continue
+            d = {}
+            d["b"] = point["latitude"]
+            d["l"] = point["longitude"]
+            currentHour = point["create_time"][point["create_time"].find(" "):point["create_time"].find(":")]
+            if currentHour != lastHour:
+                d["t"] = point["create_time"]
+                d["h"] = int(currentHour)
+            lastHour = currentHour
+            if "" == startTime:
+                startTime = point["create_time"]
+            endTime = point["create_time"]
+            datas.append(d)
+            dataCount += 1
+    result["errorMsg"] = ""
+    result["data"] = datas
+    result["count"] = dataCount
+    result["startTime"] = startTime
+    result["endTime"] = endTime
+    result = json.dumps(result)
+    RedisService.set(rk,result)
     return Response(result, mimetype='application/json')

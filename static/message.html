@@ -18,16 +18,6 @@
 <script type="text/javascript" src="/static/js/jquery.prettyPhoto.js"></script>
 <script type="text/javascript" src="/static/js/lightbox.js"></script>
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="/static/js/scrolltopcontrol.js"></script>
-<style>
-    .inner, .container{
-        width: 100% !important;
-    }
-    body {
-        padding-right:0px;
-        padding-left:0px
-    }
-</style>
 </head>
 	<body>
 
@@ -45,7 +35,7 @@
                 <div class="first-name resize">
                 	<h1>刘文斌</h1>
                 </div>
-                <img src="/static/images/heart3.png" style="margin-left: 10px;width:21%"/>
+                <img src="/static/images/heart3.png" style="margin-left: 10px"/>
                 <div class="last-name resize">
                     <h1>陈晓静</h1>
                 </div>
@@ -86,36 +76,55 @@
                 	<div class="banner-pettern"></div>
                 </div>
                 <div class="clearfix"></div>
-            <div class="inner padding14px resize">
+                <!--banners end-->
+                <div class="top-borderline relative">
+                	<div class="top-left-corner"><img src="/static/images/top-left-corner.png" alt=""></div>
+                    <div class="top-right-corner"><img src="/static/images/top-right-corner.png" alt=""></div>
+                </div>
+            <div class="inner padding14px content-borders resize">
                 <div id="content"></div>
+                <div class="register" style="padding:4px 0;text-align: center" id="totalPage"></div>
                 <div class="clearfix"></div>
             </div>
             <!--content end-->
         </div>
+     <!--FOOTER START-->
+    <div class="footer relative">
+        <div class="footer-leftside"></div>
+        <div class="followus resize">
+            <p>相爱是一种很完美的感觉，与你相识相知相爱成就了这种完美，我深爱你和感谢你！愿与你携手一生，相恋相伴相守一辈子！</p>
+            <div class="clearfix"></div>
+        </div>
+    <div class="footer-rightside"></div>
+    </div>
+    <!--FOOTER START-->
     </div>
     <div class="clearfix"></div>
 </div>
 <script>
+
     $.ajax({
-        url:"/getAllSpecialDay",
+        url:"/getAllMessage",
         type:"POST",
         success:function(data){
             var html = "";
-            var festivalColor='f2c8c2';
+            var user = "";
+            var clazz = "";
+            var float = "";
+            var space="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             $.each(data,function(i,n){
-                if(n.festival != ""){
-                    html += "<div class='panel panel-default' style='border-color:#"+festivalColor+"'>";
-                    html += "<div class='panel-heading' style='background-color:#"+festivalColor+";border-color:#"+festivalColor+"'>";
-                    html += "<h3 class='panel-title'>"+n.time+"&nbsp;&nbsp;【"+n.festival+"】</h3>";
+                if(n.source == 1){
+                    user = "刘文斌";
+                    clazz = "alert-blue";
+                    float = "float:left;margin-left:15px";
                 }else{
-                    html += "<div class='panel panel-default'>";
-                    html += "<div class='panel-heading'>";
-                    html += "<h3 class='panel-title'>"+n.time+"</h3>";
+                    user = "陈晓静";
+                    clazz = "alert-pink";
+                    float = "float:right;margin-right:15px";
                 }
+                html += "<div class=\"alert "+clazz+"\" role=\"alert\" style='margin-top:6px;margin-bottom:6px;width:84%;padding:8px 16px 8px 16px;"+float+"'>";
+                html += "<b>"+user+"在"+n.dateTime+" 留言: </b><br/>"+space+n.message+"</span>";
                 html += "</div>";
-                html += "<div class='panel-body'>";
-                html += n.word;
-                html += "</div></div>"
             });
             $("#content").html(html);
         }

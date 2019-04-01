@@ -49,25 +49,11 @@
             <form id="addInfoTableForm">
                 <table id="addInfoTable" class="table table-bordered" style="width: 100%">
                     <tr>
-                        <td style="width: 80px">时间</td>
-                        <td colspan="2"><input class="form-control time" name="time" type="text"/></td>
-                    </tr>
-                    <tr>
                         <td style="width: 80px">
                             内容
                         </td>
                         <td colspan="2">
-                            <textarea name="word" class="form-control word" rows="10" style="width: 100%"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 80px">主题色</td>
-                        <td colspan="2"><input class="form-control themeColor" name="themeColor" type="text" value="#b65555"/></td>
-                    </tr>
-                    <tr>
-                        <td style="width: 80px">节日</td>
-                        <td colspan="2">
-                            <input class="form-control festival" name="festival" type="text" placeholder="2019年除夕"/>
+                            <textarea id="message" class="form-control word" rows="10" style="width: 100%"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -84,7 +70,7 @@
         <div class="panel-heading" role="tab" id="headingTwo">
           <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              编辑情话信息
+              设置节日
             </a>
           </h4>
         </div>
@@ -130,24 +116,11 @@
 <script src="/static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
 <script>
-    var date = new Date();
-    year = date.getYear() + 1900;
-    month = date.getMonth() + 1;
-    if(month < 10){
-        month = "0" + month
-    }
-    day = date.getDate();
-    if(day < 10){
-        day = "0" + day;
-    }
-    $(".time").val(year + "年" + month + "月" + day + "日");
-
     $("#saveBtn").click(function(){
-        var data = $("#addInfoTableForm").serialize();
         $.ajax({
-            url:"/admin/addSpecialDay",
+            url:"/admin/addMessage",
             type: "POST",
-            data: data,
+            data: "msg="+$("#message").val(),
             success:function (returndata) {
                 alert(returndata)
             }

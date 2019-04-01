@@ -3,8 +3,8 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService,QuestionService
-from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil,ImgUtil
+from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService,QuestionService,MessageService
+from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil,ImgUtil,SmsUtil
 import datetime
 import logging
 from util.RedisKey import redisKey
@@ -488,6 +488,21 @@ def compressGallery():
         except Exception as e:
             print("ERROR:{}".format(e))
     return "压缩成功"
+
+@adminRoute.route('/admin/addMessage',methods=["POST"])
+def adminAddMessage():
+    message = request.form.get("msg")
+    now = datetime.datetime.now()
+    dateTime = datetime.datetime.strftime(now,"%Y-%m-%d %H:%M:%S")
+    # 添加短信通知
+    SmsUtil.sendSmsBytempId(gloVar.notifyMobile,146624)
+    MessageService.insert(message,dateTime,1)
+    # 清理redis
+    dateStr = datetime.datetime.strftime(now, "%Y-%m-%d")
+    redisKey = "special_{}".format(dateStr)
+    if RedisService.isExist(redisKey):
+        RedisService.delete(redisKey)
+    return "留言成功"
 
 @adminRoute.before_request
 def print_request_info():

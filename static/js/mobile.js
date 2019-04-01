@@ -38,12 +38,12 @@ $(function(){
                 document.getElementsByTagName("head")[0].appendChild(link);
                 $(".label-warning,.banner h4").css("backgroundColor",data["themeColor"]);
                 if(location.href.indexOf("index.html") != -1){
-                    var html = "<a href='/static/special.html'><marquee bgcolor='"+data["themeColor"]+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>【"+data["festival"]+"】"+data["word"]+"</marquee></a>";
+                    var html = "<a href='/static/message.html'><marquee bgcolor='"+data["themeColor"]+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>【"+data["festival"]+"】"+data["word"]+"</marquee></a>";
                     $("#myCarousel .active").prepend(html)
                 }
             }else{
                 if(location.href.indexOf("index.html") != -1){
-                    var html = "<a href='/static/special.html'><marquee bgcolor='#f1a693' style='font-size:16px;color:#fff;padding-top: 5px;padding-bottom: 5px'>"+data["word"]+"</marquee></a>";
+                    var html = "<a href='/static/message.html'><marquee bgcolor='#f1a693' style='font-size:16px;color:#fff;padding-top: 5px;padding-bottom: 5px'>"+data["word"]+"</marquee></a>";
                     $("#myCarousel .active").prepend(html)
                 }
             }

@@ -284,14 +284,24 @@
     });
     function initMessage(){
         $.ajax({
-            url:"/getNew3Message",
+            url:"/getNewMessage",
             type:"POST",
+            data:"count=3",
             success:function(data){
                 var html = "";
+                var user = "";
+                var clazz = "";
                 var space="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                 $.each(data,function(i,n){
-                    html += "<div class=\"alert alert-pink\" role=\"alert\" style='margin-bottom:5px'>";
-                    html += "<b>"+n.dateTime+" 留言: </b><br/>"+space+n.message+"</span>";
+                    if(n.source == 1){
+                        user = "刘文斌";
+                        clazz = "alert-blue";
+                    }else{
+                        user = "陈晓静";
+                        clazz = "alert-pink";
+                    }
+                    html += "<div class=\"alert "+clazz+"\" role=\"alert\" style='margin-bottom:5px;padding:8px 16px 8px 16px'>";
+                    html += "<b>"+user+"在"+n.dateTime+" 留言: </b><br/>"+space+n.message+"</span>";
                     html += "</div>";
                 });
                 $("#lastestMessage").html(html);

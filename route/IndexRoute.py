@@ -3,7 +3,7 @@ import json,os,datetime
 from util.Global import gloVar
 from util import TimeUtil,PushUtil
 from random import choice
-from service import MessageService
+from service import MessageService,RedisService
 
 indexRoute = Blueprint('indexRoute', __name__)
 
@@ -25,15 +25,22 @@ def getRandomIndexImg():
     return Response(json.dumps(imgDict), mimetype='application/json')
 
 
-@indexRoute.route('/getNew3Message',methods=["POST"])
-def getNew3Message():
-    return Response(MessageService.getNew3(), mimetype='application/json')
+@indexRoute.route('/getNewMessage',methods=["POST"])
+def getNewMessage():
+    count = request.form.get("count")
+    return Response(MessageService.getNewMessage(count), mimetype='application/json')
 
 
 @indexRoute.route('/addMessage',methods=["POST"])
 def addMessage():
     message = request.form.get("msg")
-    dateTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
-    PushUtil.pushToSingle("有新的留言",message,"")
-    MessageService.insert(message,dateTime)
+    now = datetime.datetime.now()
+    dateTime = datetime.datetime.strftime(now, "%Y-%m-%d %H:%M:%S")
+    PushUtil.pushToSingle("有新的留言", message, "")
+    MessageService.insert(message, dateTime, 0)
+    # 清理redis
+    dateStr = datetime.datetime.strftime(now, "%Y-%m-%d")
+    redisKey = "special_{}".format(dateStr)
+    if RedisService.isExist(redisKey):
+        RedisService.delete(redisKey)
     return "OK"

@@ -166,7 +166,7 @@
                 </div>
 
                 <div class="gallery relative">
-                	<h3 style="cursor:pointer">留言板</h3>
+                	<h3>留言板</h3>
                     <div id="myCarousel2" class="carousel slide">
                     <!-- Carousel items -->
                         <div class="carousel-inner" style="text-align: left">
@@ -273,14 +273,27 @@
     });
     function initMessage(){
         $.ajax({
-            url:"/getNew3Message",
+            url:"/getNewMessage",
+            data:"count=5",
             type:"POST",
             success:function(data){
                 var html = "";
+                var user = "";
+                var clazz = "";
+                var float = "";
                 var space="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                 $.each(data,function(i,n){
-                    html += "<div class=\"alert alert-pink\" role=\"alert\" style='margin-bottom:5px'>";
-                    html += "<b>"+n.dateTime+" 留言: </b><br/>"+space+n.message+"</span>";
+                    if(n.source == 1){
+                        user = "刘文斌";
+                        clazz = "alert-blue";
+                        float = "float:left";
+                    }else{
+                        user = "陈晓静";
+                        clazz = "alert-pink";
+                        float = "float:right";
+                    }
+                    html += "<div class=\"alert "+clazz+"\" role=\"alert\" style='margin-bottom:10px;width:88%;padding:8px 16px 8px 16px;"+float+"'>";
+                    html += "<b>"+user+"在"+n.dateTime+" 留言: </b><br/>"+space+n.message+"</span>";
                     html += "</div>";
                 });
                 $("#lastestMessage").html(html);

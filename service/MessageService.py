@@ -3,7 +3,7 @@ import logging
 import mysql.connector
 from util.Global import gloVar
 
-def getNew3():
+def getNewMessage(count):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -11,7 +11,7 @@ def getNew3():
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "SELECT * FROM message order by dateTime desc limit 0,3"
+    sql = "SELECT * FROM message order by dateTime desc limit 0,{}".format(count)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -37,7 +37,7 @@ def getAll():
     db.close()
     return changeToJsonStr(fields, data)
 
-def insert(message,dateTime):
+def insert(message,dateTime,source):
     db = mysql.connector.connect(
         host=gloVar.dbHost,
         user=gloVar.dbUser,
@@ -45,8 +45,8 @@ def insert(message,dateTime):
         database=gloVar.dbName
     )
     cursor = db.cursor()
-    sql = "insert into message(message,dateTime) VALUES ('{}','{}')"\
-        .format(message,dateTime)
+    sql = "insert into message(message,dateTime,source) VALUES ('{}','{}',{})"\
+        .format(message,dateTime,source)
     logging.warning("[sql]:{}".format(sql))
     cursor.execute(sql)
     db.commit()

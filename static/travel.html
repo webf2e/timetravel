@@ -96,6 +96,12 @@
                 <div class="events pretty-photos">
                 	<!--LEFT BAR START-->
                     <div class="leftbar" >
+                        <div>
+                            <select id="searchSelect" class="form-control" style="width: 25%;margin-top: 8px"></select>
+                            <input id="searchInput" type="text" class="form-control" type="text" placeholder="请输入内容搜索" style="width: 55%;margin-top: 8px"/>
+                            <button id="searchBtn" class="btn btn-primary" style="width: 13%">搜索</button>
+                        </div>
+                        <div id="searchResult"></div>
                         <div id="travelTongji" class="alert alert-info" role="alert"></div>
                         <div id="contentDiv"></div>
                     </div>
@@ -189,11 +195,14 @@
                 url:"/getTravelTimeGroup",
                 type:"POST",
                 success:function(data){
-                    var html = ""
+                    var html = "";
+                    var searchSelectOption = "";
                     $.each(data,function(i,n){
                         html += "<li><a href=\"javascript:;\" onclick='getByDate(\""+n.ym+"\")'><h5>"+n.ym+"</h5></a></li>";
+                        searchSelectOption += "<option value='"+n.ym.replace("年","").replace("月","")+"'>"+n.ym+"</option>";
                     });
                     $("#dateul").html(html);
+                    $("#searchSelect").html(searchSelectOption);
                 }
             });
     }
@@ -403,6 +412,30 @@
         }
         return content;
     }
+    $("#searchBtn").click(function(){
+        var date = $("#searchSelect").val();
+        var keyWord = $("#searchInput").val();
+        if(keyWord == ""){
+            $("#searchResult").html("请填写需要搜索的内容哦");
+            return false;
+        }
+        $.ajax({
+            url:"/getByKeyWord",
+            dataType: 'json',
+            type:"POST",
+            data:"date="+date+"&keyWord="+keyWord,
+            beforeSend:function(){
+                $("#searchResult").html("");
+            },
+            success:function(data){
+                var html = "";
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                });
+                $("#contentDiv").html(html);
+            }
+        });
+    });
 </script>
 <script>
 var _hmt = _hmt || [];

@@ -407,14 +407,22 @@
         var keyWord = $("#searchInput").val();
         if(keyWord == ""){
             $("#searchResult").html("请填写需要搜索的内容哦");
+            return false;
         }
         $.ajax({
             url:"/getByKeyWord",
             dataType: 'json',
             type:"POST",
             data:"date="+date+"&keyWord="+keyWord,
+            beforeSend:function(){
+                $("#searchResult").html("");
+            },
             success:function(data){
-                console.log(data)
+                var html = "";
+                $.each(data,function(i,n){
+                    html += getTravelContent(n);
+                });
+                $("#contentDiv").html(html);
             }
         });
     });

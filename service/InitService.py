@@ -30,7 +30,7 @@ def init():
     gloVar.isSendPageVisitMsg = conf.get('commonConfig', 'isSendPageVisitMsg')
 
     #更新最XX的位置信息
-    TravelService.updateMostDirection()
+    #TravelService.updateMostDirection()
     #初始化围栏数据
     fencePoints = conf.get('fenceConfig', 'fencePoints')
     gloVar.notifyMobile = conf.get('fenceConfig', 'notifyMobile')
@@ -58,9 +58,9 @@ def init():
     serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
     RedisService.set(redisKey.serverStartTime, serverStartTime)
     #更新travel表中的movieType类型
-    TravelService.updateMovieType()
-    TongjiUtil.getTravelTongji()
-    TravelService.updateCountryToDistrict()
+    #TravelService.updateMovieType()
+    #TongjiUtil.getTravelTongji()
+    #TravelService.updateCountryToDistrict()
     #服务启动时发送邮件
     try:
         #EmailUtil.sendEmail("服务启动通知", "服务在{}启动".format(serverStartTime))

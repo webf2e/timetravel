@@ -500,7 +500,7 @@ def getByKeyWord(yearMonth,keyWord):
     )
     cursor = db.cursor()
     sql = "SELECT * FROM travel t left join travelWeather tw on t.id = tw.travelId" \
-          " where DATE_FORMAT(travelTime,'%Y-%m')='{}' and " \
+          " where DATE_FORMAT(travelTime,'%Y%m')='{}' and " \
           "(travelName like '%{}%' or type like '%{}%' or " \
           "movieName like '%{}%' or movieType like '%{}%' or " \
           "foodType like '%{}%' or content like '%{}%' or " \

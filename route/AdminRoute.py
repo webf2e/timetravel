@@ -144,6 +144,7 @@ def addTravelInfo():
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()
+    TravelService.updateTrack(travelTime.split(" ")[0])
     return "添加成功"
 
 
@@ -168,6 +169,7 @@ def editTravelInfo():
     TravelService.updateMostDirection()
     TongjiUtil.getTravelTongji()
     TravelService.updateCountryToDistrict()
+    TravelService.updateTrack(travelTime.split(" ")[0])
     return "修改成功"
 
 @adminRoute.route('/admin/tongji/getChatImageCount',methods=["POST"])

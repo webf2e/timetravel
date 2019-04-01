@@ -2,7 +2,7 @@ import json,logging
 import os,datetime
 import mysql.connector
 from util.Global import gloVar
-from util import NetInfoUtil,LocationUtil,TimeUtil
+from util import NetInfoUtil,LocationUtil,TimeUtil,YingYanUtil
 
 def getAllPoint():
     db = mysql.connector.connect(
@@ -407,6 +407,49 @@ def updateHoliday():
         cursor.execute(updateSql)
     db.commit()
     db.close()
+
+def updateTrack(date):
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    #更新单个
+    st = int(datetime.datetime.strptime(date, "%Y-%m-%d").timestamp())
+    et = st + 86399
+    trackResult = json.dumps(YingYanUtil.getTrack(st, et, 1, 5000))
+    #添加或更新track
+    sql = "select trackId from travelTrack where DATE_FORMAT(travelTime,'%Y-%m-%d') = '{}'".format(date)
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    if len(data) == 0:
+        #新增
+        sql = "insert into travelTrack(track,travelTime) values('{}','{}')".format(trackResult,date)
+    else:
+        #更新
+        sql = "update travelTrack set track = '{}' where trackId = {}".format(trackResult, data[0][0])
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def updateAllTrack():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT DATE_FORMAT(travelTime,'%Y-%m-%d') FROM travel GROUP by DATE_FORMAT(travelTime,'%Y-%m-%d') asc"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    for d in data:
+        updateTrack(d[0])
 
 
 def getTravelTotalCount():

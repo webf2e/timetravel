@@ -189,6 +189,8 @@ def makeSpecialDayJob():
     dailycolorFile = open(dailycolorFilePath,"w+")
     dailycolorFile.write(cssContent)
     dailycolorFile.close()
+    if specialHead != "":
+        PushUtil.pushToSingle("特殊节日通知","今天是{}".format(specialHead),"")
     logging.warning("生成首页滚动字幕和dailycolor.css文件结束")
 
 def dealSpecialDaysFromDB(specialDays, now):

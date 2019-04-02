@@ -6,6 +6,7 @@ util/
 static/
 static/admin/
 static/css/
+static/css/temp/
 static/fonts/
 static/images/
 static/images/emoji/

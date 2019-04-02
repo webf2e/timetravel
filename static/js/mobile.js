@@ -17,6 +17,12 @@ if(location.href.indexOf("static") != -1){
         }
     }
 }
+//加载每日颜色
+var link = document.createElement("link");
+link.rel = "stylesheet";
+link.type = "text/css";
+link.href = "/static/css/dailycolor.css?v=" + Date.now();
+document.getElementsByTagName("head")[0].appendChild(link);
 $(function(){
     //随机数判断
     if(Math.floor(Math.random()*10+1) % 2 == 0){
@@ -31,11 +37,6 @@ $(function(){
         type:"POST",
         success:function(data){
             if(data["festival"] != ''){
-                var link = document.createElement("link");
-                link.rel = "stylesheet";
-                link.type = "text/css";
-                link.href = "/static/css/specialday.css";
-                document.getElementsByTagName("head")[0].appendChild(link);
                 $(".label-warning,.banner h4").css("backgroundColor",data["themeColor"]);
                 if(location.href.indexOf("index.html") != -1){
                     var html = "<a href='/static/message.html'><marquee bgcolor='"+data["themeColor"]+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>【"+data["festival"]+"】"+data["word"]+"</marquee></a>";

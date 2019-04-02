@@ -1,6 +1,4 @@
-
-/*light pink text color*/
-.couple-name h1, 
+.couple-name h1,
 .place h2, 
 .gallery h3, 
 .get-in-touch h3, 
@@ -21,21 +19,17 @@
 .gallery-pagination ul li a:hover, 
 .navigation ul ul li a:hover, 
 .navigation ul ul li:hover > a{
-	color:#f1a693;
+	color:[color];
 }
-/*light pink background color*/
-
-.navigation, 
+.navigation,
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover,
 .nav-tabs > .active > a:focus{
-	background-color:#f1a693;
+	background-color:[color];
 }
-/*light pink border color*/
-
-.form input[type="text"]:focus, 
+.form input[type="text"]:focus,
 .form textarea:focus, 
 .guest-book input[type="text"]:focus, .form textarea:focus, 
 .guest-book textarea:focus{
-	border-color:#f1a693;
+	border-color:[color];
 }

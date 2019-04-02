@@ -19,23 +19,23 @@
 .gallery-pagination ul li a:hover,
 .navigation ul ul li a:hover,
 .navigation ul ul li:hover > a{
-color:#b65555;
+color:#f1a693;
 }
 .navigation,
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover,
 .nav-tabs > .active > a:focus{
-background-color:#b65555;
+background-color:#f1a693;
 }
 .form input[type="text"]:focus,
 .form textarea:focus,
 .guest-book input[type="text"]:focus, .form textarea:focus,
 .guest-book textarea:focus{
-border-color:#b65555;
+border-color:#f1a693;
 }
 .label-warning{
-background-color: #b65555;
+background-color: #f1a693;
 }
 .banner h4{
-background-color:#b65555;
+background-color:#f1a693;
 }

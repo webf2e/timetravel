@@ -203,4 +203,3 @@ def dealSpecialDaysFromDB(specialDays, now):
         delay = str(now.year - int(sd[3]))
         specialHead = "【{}】".format(sd[2].replace("X", delay))
     return (specialHead,color)
-makeSpecialDayJob()

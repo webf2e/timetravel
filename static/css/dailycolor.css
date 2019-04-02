@@ -40,3 +40,9 @@
 .guest-book textarea:focus{
 	border-color:#f1a693;
 }
+.label-warning{
+    background-color: #f1a693;
+}
+.banner h4{
+	background-color:#f19a83;
+}

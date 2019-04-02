@@ -37,7 +37,6 @@ $(function(){
         type:"POST",
         success:function(data){
             if(data["festival"] != ''){
-                $(".label-warning,.banner h4").css("backgroundColor",data["themeColor"]);
                 if(location.href.indexOf("index.html") != -1){
                     var html = "<a href='/static/message.html'><marquee bgcolor='"+data["themeColor"]+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>【"+data["festival"]+"】"+data["word"]+"</marquee></a>";
                     $("#myCarousel .active").prepend(html)

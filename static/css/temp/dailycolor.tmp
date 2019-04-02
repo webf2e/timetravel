@@ -33,3 +33,9 @@
 .guest-book textarea:focus{
 	border-color:[color];
 }
+.label-warning{
+    background-color: [color];
+}
+.banner h4{
+	background-color:[color];
+}

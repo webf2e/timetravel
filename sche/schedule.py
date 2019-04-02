@@ -149,3 +149,8 @@ def delOtherLogJob():
             f = open(os.path.join(logDir,file), "w+")
             f.truncate()
             f.close()
+
+def makeSpecialDayJob():
+    logging.warning("开始生成首页滚动字幕和specialday.css文件")
+
+    logging.warning("生成首页滚动字幕和specialday.css文件结束")

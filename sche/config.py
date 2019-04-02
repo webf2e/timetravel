@@ -84,6 +84,18 @@ class Config(object):
                 'minute':'10',
                 'second': '0'
             }
+        },
+        {
+            'id': 'makeSpecialDayJob',
+            'func': 'sche.schedule:makeSpecialDayJob',
+            'args': None,
+            'trigger': {
+                'type': 'cron',
+                'day_of_week':"mon-sun",
+                'hour':'23',
+                'minute':'59',
+                'second': '30'
+            }
         }
     ]
 

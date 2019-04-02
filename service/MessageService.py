@@ -37,6 +37,22 @@ def getAll():
     db.close()
     return changeToJsonStr(fields, data)
 
+def getLastestMessage():
+    db = mysql.connector.connect(
+        host=gloVar.dbHost,
+        user=gloVar.dbUser,
+        passwd=gloVar.dbPwd,
+        database=gloVar.dbName
+    )
+    cursor = db.cursor()
+    sql = "SELECT * FROM message order by dateTime desc limit 0,1"
+    logging.warning("[sql]:{}".format(sql))
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    db.commit()
+    db.close()
+    return data
+
 def insert(message,dateTime,source):
     db = mysql.connector.connect(
         host=gloVar.dbHost,

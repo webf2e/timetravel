@@ -3,7 +3,7 @@ from flask import abort,request,Response
 import os,oss2
 from util.Global import gloVar
 import json
-from service import TravelService,ChatService,RedisService,SpecialWordService,AnniversaryService,TravelWeatherService,QuestionService,MessageService
+from service import TravelService,ChatService,RedisService,SpecialDayService,AnniversaryService,TravelWeatherService,QuestionService,MessageService
 from util import FileUtil,NetInfoUtil,TongjiUtil,TimeUtil,ImgUtil,SmsUtil
 import datetime
 import logging
@@ -385,48 +385,6 @@ def getServerStartTime():
 def getWeatherList():
     return Response(gloVar.weatherNames,mimetype='application/json')
 
-
-@adminRoute.route('/admin/addSpecialDay',methods=["POST"])
-def addSpecialDay():
-    time = request.form.get("time")
-    word = request.form.get("word")
-    themeColor = request.form.get("themeColor")
-    festival = request.form.get("festival")
-    dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
-    SpecialWordService.insert(time,word,themeColor,festival,dateTime)
-    #清理redis
-    now = datetime.datetime.now()
-    dateStr = datetime.datetime.strftime(now, "%Y年%m月%d日")
-    redisKey = "special_{}".format(dateStr)
-    if RedisService.isExist(redisKey):
-        RedisService.delete(redisKey)
-    return "添加成功"
-
-@adminRoute.route('/admin/editSpecialDay',methods=["POST"])
-def editSpecialDay():
-    time = request.form.get("time")
-    word = request.form.get("word")
-    themeColor = request.form.get("themeColor")
-    festival = request.form.get("festival")
-    dateTime = time.replace("年","-").replace("月","-").replace("日"," ") + "00:00:00"
-    SpecialWordService.updateByTime(time,word,themeColor,festival,dateTime)
-    # 清理redis
-    now = datetime.datetime.now()
-    dateStr = datetime.datetime.strftime(now, "%Y年%m月%d日")
-    redisKey = "special_{}".format(dateStr)
-    if RedisService.isExist(redisKey):
-        RedisService.delete(redisKey)
-    return "修改成功"
-
-@adminRoute.route('/admin/getAllSpecialDayTime',methods=["POST"])
-def getAllSpecialDayTime():
-    return Response(SpecialWordService.getAllSpecialDayTime(), mimetype='application/json')
-
-@adminRoute.route('/admin/getSpecialDayByTime',methods=["POST"])
-def getSpecialDayByTime():
-    time = request.form.get("time")
-    return Response(SpecialWordService.getByDate(time), mimetype='application/json')
-
 @adminRoute.route('/admin/addAnniversaryDay',methods=["POST"])
 def addAnniversaryDay():
     time = request.form.get("time")
@@ -497,11 +455,6 @@ def adminAddMessage():
     # 添加短信通知
     SmsUtil.sendSmsBytempId(gloVar.notifyMobile,146624)
     MessageService.insert(message,dateTime,1)
-    # 清理redis
-    dateStr = datetime.datetime.strftime(now, "%Y-%m-%d")
-    redisKey = "special_{}".format(dateStr)
-    if RedisService.isExist(redisKey):
-        RedisService.delete(redisKey)
     return "留言成功"
 
 @adminRoute.before_request

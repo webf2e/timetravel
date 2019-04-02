@@ -38,9 +38,4 @@ def addMessage():
     dateTime = datetime.datetime.strftime(now, "%Y-%m-%d %H:%M:%S")
     PushUtil.pushToSingle("有新的留言", message, "")
     MessageService.insert(message, dateTime, 0)
-    # 清理redis
-    dateStr = datetime.datetime.strftime(now, "%Y-%m-%d")
-    redisKey = "special_{}".format(dateStr)
-    if RedisService.isExist(redisKey):
-        RedisService.delete(redisKey)
     return "OK"

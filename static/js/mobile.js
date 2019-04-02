@@ -36,14 +36,11 @@ $(function(){
         url:"/getSpecialDay",
         type:"POST",
         success:function(data){
-            if(data["festival"] != ''){
+            if("None" != data){
+                var color = data.split("|")[1];
+                var message = data.split("|")[0];
                 if(location.href.indexOf("index.html") != -1){
-                    var html = "<a href='/static/message.html'><marquee bgcolor='"+data["themeColor"]+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>【"+data["festival"]+"】"+data["word"]+"</marquee></a>";
-                    $("#myCarousel .active").prepend(html)
-                }
-            }else{
-                if(location.href.indexOf("index.html") != -1){
-                    var html = "<a href='/static/message.html'><marquee bgcolor='#f1a693' style='font-size:16px;color:#fff;padding-top: 5px;padding-bottom: 5px'>"+data["word"]+"</marquee></a>";
+                    var html = "<a href='/static/message.html'><marquee bgcolor='"+color+"' style='font-size:16px;color:#fff8ac;padding-top: 5px;padding-bottom: 5px'>"+message+"</marquee></a>";
                     $("#myCarousel .active").prepend(html)
                 }
             }

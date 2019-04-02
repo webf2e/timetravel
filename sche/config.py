@@ -92,9 +92,9 @@ class Config(object):
             'trigger': {
                 'type': 'cron',
                 'day_of_week':"mon-sun",
-                'hour':'23',
-                'minute':'59',
-                'second': '30'
+                'hour':'0',
+                'minute':'0',
+                'second': '1'
             }
         }
     ]

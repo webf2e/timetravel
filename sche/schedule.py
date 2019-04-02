@@ -1,7 +1,7 @@
-from util import FileUtil,OcrUtil,SmsUtil,PushUtil,TongjiUtil
+from util import FileUtil,OcrUtil,SmsUtil,PushUtil,TongjiUtil,TimeUtil
 from util.Global import gloVar
 from util.RedisKey import redisKey
-from service import ChatService,RedisService,TravelService
+from service import ChatService,RedisService,TravelService,SpecialDayService,MessageService
 import psutil
 import datetime
 import time
@@ -151,6 +151,54 @@ def delOtherLogJob():
             f.close()
 
 def makeSpecialDayJob():
-    logging.warning("开始生成首页滚动字幕和specialday.css文件")
+    logging.warning("开始生成首页滚动字幕和dailycolor.css文件")
+    color = "f1a693"
+    specialHead = ""
+    now = datetime.datetime.now()
+    ymd = datetime.datetime.strftime(now, "%Y-%m-%d")
+    message = MessageService.getLastestMessage()[0][1]
+    redisKey = "special_{}".format(ymd)
+    monthDay = datetime.datetime.strftime(now, "%m%d")
+    specialDays = SpecialDayService.selectByMonthDay(monthDay)
+    if len(specialDays) == 0:
+        data = TimeUtil.getJuHeCalendar(ymd)
+        if None != data:
+            lunar = data["lunar"]
+            specialDays = SpecialDayService.selectByMonthDay(lunar)
+            if len(specialDays) == 0:
+                logging.warning("{}不是特殊节日".format(ymd))
+            else:
+                (specialHead, color) = dealSpecialDaysFromDB(specialDays, now)
+    else:
+        (specialHead, color) = dealSpecialDaysFromDB(specialDays, now)
+    word = "{} {}|{}".format(specialHead, message, color)
+    RedisService.setWithTtl(redisKey, word, 60 * 60 * 25)
+    #将文件写入dailycolor.css
+    tempFilePath = os.path.join(gloVar.staticPath,"css/temp/dailycolor.tmp")
+    cssContent = ""
+    lines = open(tempFilePath, "r+")
+    for line in lines:
+        line = line.strip()
+        if line == "":
+            continue
+        if line.find("[color]") != -1:
+            line = line.replace("[color]",color)
+        cssContent += line + "\n"
+    lines.close()
+    dailycolorFilePath = os.path.join(gloVar.staticPath,"css/dailycolor.css")
+    dailycolorFile = open(dailycolorFilePath,"w+")
+    dailycolorFile.write(cssContent)
+    dailycolorFile.close()
+    logging.warning("生成首页滚动字幕和dailycolor.css文件结束")
 
-    logging.warning("生成首页滚动字幕和specialday.css文件结束")
+def dealSpecialDaysFromDB(specialDays, now):
+    sd = specialDays[0]
+    color = sd[1]
+    if sd[3] == None or "" == sd[3]:
+        # 没有年
+        specialHead = "【{}】".format(sd[2])
+    else:
+        delay = str(now.year - int(sd[3]))
+        specialHead = "【{}】".format(sd[2].replace("X", delay))
+    return (specialHead,color)
+makeSpecialDayJob()

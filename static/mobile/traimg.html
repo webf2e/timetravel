@@ -166,6 +166,7 @@
             type:"POST",
             data:"id="+id+"&page="+page,
             success:function(data){
+                $(".fenlei").html("");
                 var totalImgCount = data.totalImgCount;
                 var totalPageNum = data.totalPageNum;
                 var currentPageNum = data.currentPageNum;

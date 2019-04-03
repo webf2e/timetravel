@@ -19,7 +19,6 @@ from flask_apscheduler import APScheduler
 from sche.config import Config
 from util import Log
 import logging
-from flask_prometheus import monitor
 
 app = Flask(__name__)
 
@@ -70,6 +69,5 @@ scheduler.start()
 Log.init()
 logging.warning("timeTravel服务启动")
 if __name__ == '__main__':
-    monitor(app, port=8000)
     app.run(host="0.0.0.0",port=8010)
 

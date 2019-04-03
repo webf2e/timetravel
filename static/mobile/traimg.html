@@ -167,6 +167,7 @@
             data:"id="+id+"&page="+page,
             success:function(data){
                 $(".fenlei").html("");
+                $(".fenlei").hide();
                 var totalImgCount = data.totalImgCount;
                 var totalPageNum = data.totalPageNum;
                 var currentPageNum = data.currentPageNum;

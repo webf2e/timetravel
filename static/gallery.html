@@ -221,6 +221,7 @@
             success:function(data){
                 $("#errorMsg").html("");
                 $(".fenlei").html("");
+                $(".fenlei").hide();
                 if(data.totalImgCount == undefined){
                     $("#errorMsg").html("该月暂无照片，等待完善哦");
                     $("#gal-container1 li").hide();

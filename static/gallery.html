@@ -292,7 +292,7 @@
                     html += "地点："+data.address+"<br/>";
                     html += "图片名称："+data.imgName+"<br/>";
                     html += "缩略图："+data.smallImgSize+"K&nbsp;&nbsp;";
-                    html += "原始图："+data.originImgSize+"K<br/>";
+                    html += "原始图："+data.originImgSize+"K<br/><hr style='margin:8px 0'/>";
                     html += "<button class='btn btn-primary' onclick='downloadOriginImg("+data.travelId+",\""+data.imgName+"\")'>下载原图</button>";
                     html += "<button class='btn btn-primary' onclick='gotoTravel("+data.travelId+")'>跳转到旅程</button>";
                     div.html(html);

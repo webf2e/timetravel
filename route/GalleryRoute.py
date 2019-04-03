@@ -86,6 +86,8 @@ def getImageInfo():
     result["travelName"] = travel["travelName"]
     result["address"] = "{}{}{}{}".format(travel["country"],travel["province"],travel["city"],travel["district"])
     result["imgName"] = imgName
+    result["travelTime"] = travel["travelTime"]
+    result["travelId"] = travel["id"]
     result["originImgSize"] = int(os.path.getsize(originImgPath) / 1024)
     result["smallImgSize"] = int(os.path.getsize(smallImgPath) / 1024)
     return Response(json.dumps(result), mimetype='application/json')

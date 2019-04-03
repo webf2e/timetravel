@@ -99,50 +99,38 @@
                     <ul class="cs_gal_2_column pretty-photos clearfix">
                         <li>
                             <div class="gallery_img relative">
-                                <a href="" rel="prettyPhoto[gallery1]">
                                 <img alt="" src="">
-                                <div class="gallery_hover"></div>
-                                </a>
+                                <div class='fenlei alert alert-info' style='display:none;margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'></div>
                             </div>
                         </li>
                         <li>
                             <div class="gallery_img relative">
-                                <a href="" rel="prettyPhoto[gallery1]">
                                 <img alt="" src="">
-                                <div class="gallery_hover"></div>
-                                </a>
+                                <div class='fenlei alert alert-info' style='display:none;margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'></div>
                             </div>
                         </li>
                         <li>
                             <div class="gallery_img relative">
-                                <a href="" rel="prettyPhoto[gallery1]">
                                 <img alt="" src="">
-                                <div class="gallery_hover"></div>
-                                </a>
+                                <div class='fenlei alert alert-info' style='display:none;margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'></div>
                             </div>
                         </li>
                         <li>
                             <div class="gallery_img relative">
-                                <a href="" rel="prettyPhoto[gallery1]">
                                 <img alt="" src="">
-                                <div class="gallery_hover"></div>
-                                </a>
+                                <div class='fenlei alert alert-info' style='display:none;margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'></div>
                             </div>
                         </li>
                         <li>
                             <div class="gallery_img relative">
-                                <a href="" rel="prettyPhoto[gallery1]">
                                 <img alt="" src="">
-                                <div class="gallery_hover"></div>
-                                </a>
+                                <div class='fenlei alert alert-info' style='display:none;margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'></div>
                             </div>
                         </li>
                         <li>
                             <div class="gallery_img relative">
-                                <a href="" rel="prettyPhoto[gallery1]">
                                 <img alt="" src="">
-                                <div class="gallery_hover"></div>
-                                </a>
+                                <div class='fenlei alert alert-info' style='display:none;margin-top:10px;margin-bottom:10px;background-color:#f2f6f7;border-color:#fff'></div>
                             </div>
                         </li>
                     </ul>
@@ -230,7 +218,6 @@
                 if(data.totalImgCount == undefined){
                     $("#errorMsg").html("该月暂无照片，等待完善哦");
                     $("#gal-container1 li").hide();
-                    $("#gal-container1 a").attr("href","");
                     $("#gal-container1 img").attr("src","");
                     $("#totalPage").html("");
                     $("#pages").html("");
@@ -250,12 +237,10 @@
                 $("#pages li:contains("+currentPageNum+")").html("<a href=\"javascript:;\"><font color='#f1a693'><b>"+currentPageNum+"</b></font></a>");
 
                 $("#gal-container1 li").hide();
-                $("#gal-container1 a").attr("href","");
                 $("#gal-container1 img").attr("src","");
                 $("#gal-container1").find("li").each(function (i,n) {
                     if(data.imgList[i] != undefined){
                         $(n).show();
-                        $(n).find("a").attr("href",data.imgList[i]);
                         $(n).find("img").attr("src",data.imgList[i]);
                     }
                 });
@@ -287,6 +272,36 @@
                 return indexs2;  //如果当前页是倒数后3页，就截取不到6个页标，那么直接最后截取6个页标即可
             }
         }
+    }
+    $(".gallery_img img").click(function(){
+        var div = $(this).next()
+        if(div.html() == ""){
+            $.ajax({
+                url:"/getImageInfo",
+                dataType: 'json',
+                type:"POST",
+                data:"imgPath="+$(this).attr("src"),
+                success:function(data){
+                    var html = "地点名称："+data.travelName+"<br/>";
+                    html += "旅行时间："+data.travelTime+"<br/>";
+                    html += "地点："+data.address+"<br/>";
+                    html += "图片名称："+data.imgName+"<br/>";
+                    html += "缩略图："+data.smallImgSize+"K&nbsp;&nbsp;";
+                    html += "原始图："+data.originImgSize+"K<br/><hr style='margin:8px 0'/>";
+                    html += "<button class='btn btn-primary' onclick='downloadOriginImg("+data.travelId+",\""+data.imgName+"\")'>下载原图</button>";
+                    html += "<button class='btn btn-primary' onclick='gotoTravel("+data.travelId+")'>跳转到旅程</button>";
+                    div.html(html);
+                }
+            });
+        }
+        $(".fenlei").hide();
+        div.show();
+    });
+    function downloadOriginImg(id,imgName){
+        window.open("/download/GalleryImg?in="+imgName+"&id="+id);
+    }
+    function gotoTravel(id){
+        location.href = "/static/mobile/travel.html?id="+id;
     }
 </script>
 <script>

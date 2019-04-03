@@ -134,6 +134,8 @@ def locationTongji():
                 heatPointData["lat"] = heatMapLat
                 heatPointData["count"] = 1
             heatMapPoint[key] = heatPointData
+    if "" == lastAddr:
+        return
     delay = maxTimestramp - addrLastTimeMap[lastAddr]
     if lastAddr in addrDelayMap:
         addrDelayMap[lastAddr] = addrDelayMap[lastAddr] + delay

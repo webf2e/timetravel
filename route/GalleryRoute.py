@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint,send_from_directory
 from flask import abort,request,Response
 import math
 from util.Global import gloVar
@@ -71,3 +71,30 @@ def getImageByMonthPage():
     else:
         resultMap["imgList"] = imgs[(page - 1) * countInOnePage:page * countInOnePage]
     return Response(json.dumps(resultMap, ensure_ascii=False), mimetype='application/json')
+
+
+@galleryRoute.route('/getImageInfo',methods=["POST"])
+def getImageInfo():
+    imgPath = request.form.get("imgPath")
+    imgPath = imgPath.replace("/static/gallery/","")
+    originImgPath = os.path.join(gloVar.galleryOriginImgPath, imgPath)
+    smallImgPath = os.path.join(gloVar.galleryImgPath, imgPath)
+    id = imgPath[0:imgPath.find("/")]
+    imgName = imgPath[imgPath.rfind("/") + 1:]
+    travel = json.loads(TravelService.getTravelInfoById(id))[0]
+    result = {}
+    result["travelName"] = travel["travelName"]
+    result["address"] = "{}{}{}{}".format(travel["country"],travel["province"],travel["city"],travel["district"])
+    result["imgName"] = imgName
+    result["originImgSize"] = int(os.path.getsize(originImgPath) / 1024)
+    result["smallImgSize"] = int(os.path.getsize(smallImgPath) / 1024)
+    return Response(json.dumps(result), mimetype='application/json')
+
+
+@galleryRoute.route("/download/GalleryImg", methods=['GET'])
+def downloadGalleryImg():
+    imgName = request.args.get("in")
+    id = request.args.get("id")
+    originImgPath = os.path.join(gloVar.galleryOriginImgPath, id)
+    print(originImgPath)
+    return send_from_directory(originImgPath, imgName, as_attachment=True)

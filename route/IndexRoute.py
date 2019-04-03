@@ -38,4 +38,10 @@ def addMessage():
     dateTime = datetime.datetime.strftime(now, "%Y-%m-%d %H:%M:%S")
     PushUtil.pushToSingle("有新的留言", message, "")
     MessageService.insert(message, dateTime, 0)
+    #修改redis中保存的值
+    redisKey = "special_{}".format(datetime.datetime.strftime(now, "%Y-%m-%d"))
+    specialStr = RedisService.get(redisKey)
+    result = json.loads(specialStr)
+    result["message"] = message
+    RedisService.setWithTtl(redisKey, json.dumps(result), 60 * 60 * 25)
     return "OK"

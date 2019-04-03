@@ -455,6 +455,12 @@ def adminAddMessage():
     # 添加短信通知
     SmsUtil.sendSmsBytempId(gloVar.notifyMobile,146624)
     MessageService.insert(message,dateTime,1)
+    #修改redis中保存的值
+    redisKey = "special_{}".format(datetime.datetime.strftime(now, "%Y-%m-%d"))
+    specialStr = RedisService.get(redisKey)
+    result = json.loads(specialStr)
+    result["message"] = message
+    RedisService.setWithTtl(redisKey, json.dumps(result), 60 * 60 * 25)
     return "留言成功"
 
 @adminRoute.before_request

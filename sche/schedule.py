@@ -171,8 +171,11 @@ def makeSpecialDayJob():
                 (specialHead, color) = dealSpecialDaysFromDB(specialDays, now)
     else:
         (specialHead, color) = dealSpecialDaysFromDB(specialDays, now)
-    word = "{} {}|{}".format(specialHead, message, color)
-    RedisService.setWithTtl(redisKey, word, 60 * 60 * 25)
+    result = {}
+    result["specialHead"] = specialHead
+    result["message"] = message
+    result["color"] = color
+    RedisService.setWithTtl(redisKey, json.dumps(result), 60 * 60 * 25)
     #将文件写入dailycolor.css
     tempFilePath = os.path.join(gloVar.staticPath,"css/temp/dailycolor.tmp")
     cssContent = ""
@@ -203,3 +206,5 @@ def dealSpecialDaysFromDB(specialDays, now):
         delay = str(now.year - int(sd[3]))
         specialHead = "【{}】".format(sd[2].replace("X", delay))
     return (specialHead,color)
+
+makeSpecialDayJob()

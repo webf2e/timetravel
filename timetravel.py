@@ -18,6 +18,7 @@ from datetime import timedelta
 from flask_apscheduler import APScheduler
 from sche.config import Config
 from util import Log
+from util.Global import gloVar
 import logging
 
 app = Flask(__name__)
@@ -72,16 +73,17 @@ logging.warning("timeTravel服务启动")
 #防盗链
 @app.before_request
 def before_request():
-    url = request.url
-    url = url.lower()
-    if (url.endswith(".jpg") or url.endswith(".png") or
-        url.endswith(".gif") or url.endswith(".jpeg") or
-        url.endswith(".css") or url.endswith(".js") or
-        url.endswith(".ico")):
+    if gloVar.isCheckRefer == "1":
+        url = request.url
+        url = url.lower()
+        if (url.endswith(".jpg") or url.endswith(".png") or
+            url.endswith(".gif") or url.endswith(".jpeg") or
+            url.endswith(".css") or url.endswith(".js") or
+            url.endswith(".ico")):
 
-        referer = str(request.headers.get("Referer"))
-        if referer.find("lovexj.pro") == -1:
-            abort(403)
+            referer = str(request.headers.get("Referer"))
+            if referer.find("lovexj.pro") == -1:
+                abort(403)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=8010)

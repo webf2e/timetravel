@@ -16,6 +16,7 @@ class gloVar():
     notifyMobile = ""
     loggingFilePath = ""
     isSendPageVisitMsg = ""
+    isCheckRefer = ""
     weatherNames = """
     {
         "big_rainstorm": "大暴雨",

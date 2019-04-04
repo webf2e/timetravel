@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask,request,abort
 from route.QuestionRoute import questionRoute
 from route.PasswordRoute import passwordRoute
 from route.IndexRoute import indexRoute
@@ -68,6 +68,24 @@ scheduler.init_app(app)
 scheduler.start()
 Log.init()
 logging.warning("timeTravel服务启动")
+
+#防盗链
+@app.before_request
+def before_request():
+    try:
+        url = request.url
+        referer = request.headers.get("Referer")
+        print("before_request,url:{}".format(url))
+        print("before_request,referer:{}".format(referer))
+        # if not (url in [
+        #     "/static/upload/cdn/jetbrains/jetbrains-license-server-activating.png",
+        #     "/static/upload/cdn/jetbrains/jetbrains-license-server-activated.png"
+        # ] and referer == "http://jetbrains.license.laucyun.com/"):
+        #     raise Exception("forbidden")
+    except Exception as e:
+        if str(e) == "forbidden":
+            abort(403)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=8010)
 

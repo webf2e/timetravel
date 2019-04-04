@@ -84,6 +84,23 @@
             <td colspan="3" id="autoDeployResult"></td>
         </tr>
     </table>
+
+    <table id="firewallTable" style="width: 100%;" class="table table-bordered">
+        <tr>
+            <td colspan="3">防火墙状态（点击下面文字可以关闭/打开防火墙）</td>
+        </tr>
+        <tr>
+            <td colspan="3" id="firewallStatus"></td>
+        </tr>
+        <tr>
+            <td><input type="text" id="portInput" class="form-control"/></td>
+            <td><button class="btn btn-primary" id="addPortBtn">添加端口</button></td>
+            <td><button class="btn btn-danger" id="delPortBtn">关闭端口</button></td>
+        </tr>
+        <tr>
+            <td colspan="3" id="portlist"></td>
+        </tr>
+    </table>
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
@@ -403,6 +420,98 @@
             },
             error:function(){
                 $("#autoDeployResult").html("请求服务器失败");
+            }
+        });
+    });
+    function getFirewallStatus(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/firewall/status",
+            type:"POST",
+            success:function(data){
+                if(data.indexOf("inactive") != -1){
+                    $("#firewallStatus").html("<span class=\"label label-danger\">"+data+"</span>");
+                }else{
+                    data = data.replace("since ","");
+                    data = data.replace(" CST","");
+                    $("#firewallStatus").html("<span class=\"label label-success\">"+data+"</span>");
+                }
+            },
+            error:function(){
+                $("#firewallStatus").html("获取防火墙状态失败");
+            }
+        });
+    }
+    getFirewallStatus();
+    $("#firewallStatus").click(function(){
+        var url = "";
+        if($(this).html().indexOf("inactive") != -1){
+            //open
+            url = "http://47.90.32.49:8011/firewall/open";
+        }else{
+            //close
+            url = "http://47.90.32.49:8011/firewall/close";
+            var isClose = confirm("确定关闭防火墙?");
+            if(!isClose){
+                return false;
+            }
+        }
+        $.ajax({
+            url:url,
+            type:"POST",
+            success:function(data){
+                getFirewallStatus();
+            }
+        });
+    });
+
+    function firewallPorts(){
+        $.ajax({
+            url:"http://47.90.32.49:8011/firewall/portlist",
+            type:"POST",
+            success:function(data){
+                var html = "";
+                $.each(data,function(i,n){
+                    port = n.split("/")[0];
+                    html += "<span class=\"label label-info\" onclick='fillInput("+port+")'>"+n+"</span>&nbsp;&nbsp;";
+                });
+                $("#portlist").html(html);
+            },
+            error:function(){
+                $("#firewallStatus").html("获取防火墙状态失败");
+            }
+        });
+    }
+    function fillInput(port){
+        $("#portInput").val(port);
+    }
+    firewallPorts();
+
+    $("#addPortBtn").click(function(){
+        var port = $("#portInput").val();
+        if("" == port){
+            return false;
+        }
+        $.ajax({
+            url:"http://47.90.32.49:8011/firewall/addport",
+            type:"POST",
+            data:"port="+port,
+            success:function(data){
+                firewallPorts();
+            }
+        });
+    });
+
+    $("#delPortBtn").click(function(){
+        var port = $("#portInput").val();
+        if("" == port){
+            return false;
+        }
+        $.ajax({
+            url:"http://47.90.32.49:8011/firewall/delport",
+            type:"POST",
+            data:"port="+port,
+            success:function(data){
+                firewallPorts();
             }
         });
     });

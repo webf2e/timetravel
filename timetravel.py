@@ -74,9 +74,15 @@ logging.warning("timeTravel服务启动")
 def before_request():
     try:
         url = request.url
-        referer = request.headers.get("Referer")
-        print("before_request,url:{}".format(url))
-        print("before_request,referer:{}".format(referer))
+        url = url.lower()
+        if (url.endswith(".jpg") or url.endswith(".png") or
+            url.endswith(".gif") or url.endswith(".jpeg") or
+            url.endswith(".css") or url.endswith(".js") or
+            url.endswith(".ico")):
+
+            referer = request.headers.get("Referer")
+            print("before_request,url:{}".format(url))
+            print("before_request,referer:{}".format(referer))
         # if not (url in [
         #     "/static/upload/cdn/jetbrains/jetbrains-license-server-activating.png",
         #     "/static/upload/cdn/jetbrains/jetbrains-license-server-activated.png"

@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask,request,abort
 from route.QuestionRoute import questionRoute
 from route.PasswordRoute import passwordRoute
 from route.IndexRoute import indexRoute
@@ -18,6 +18,7 @@ from datetime import timedelta
 from flask_apscheduler import APScheduler
 from sche.config import Config
 from util import Log
+from util.Global import gloVar
 import logging
 
 app = Flask(__name__)
@@ -68,6 +69,22 @@ scheduler.init_app(app)
 scheduler.start()
 Log.init()
 logging.warning("timeTravel服务启动")
+
+#防盗链
+@app.before_request
+def before_request():
+    if gloVar.isCheckRefer == "1":
+        url = request.url
+        url = url.lower()
+        if (url.endswith(".jpg") or url.endswith(".png") or
+            url.endswith(".gif") or url.endswith(".jpeg") or
+            url.endswith(".css") or url.endswith(".js") or
+            url.endswith(".ico")):
+
+            referer = str(request.headers.get("Referer"))
+            if referer.find("lovexj.pro") == -1:
+                abort(403)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=8010)
 

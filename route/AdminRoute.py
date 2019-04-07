@@ -280,6 +280,13 @@ def upGalleryImg():
     TongjiUtil.getTravelTongji()
     return os.path.join("/static/gallery",id,gallery.filename)
 
+@adminRoute.route('/admin/upGalleryImgTar',methods=["POST"])
+def upGalleryImgTar():
+    file = request.files["file"]
+    originImgPath = os.path.join("/root", file.filename)
+    file.save(originImgPath)
+    return "OK"
+
 @adminRoute.route('/admin/deleteChatImg',methods=["POST"])
 def deleteChatImg():
     path = str(request.form.get("path"))
@@ -466,7 +473,7 @@ def adminAddMessage():
 @adminRoute.before_request
 def print_request_info():
     urlPath = str(request.path)
-    if(urlPath.find("admin") != -1):
+    if(urlPath.find("admin") != -1 and urlPath.find("upGalleryImgTar") == -1):
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
         if(agent.find("MI 9 Transparent Edition") == -1):

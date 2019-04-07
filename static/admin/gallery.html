@@ -146,6 +146,36 @@
           </div>
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              上传压缩包
+            </a>
+          </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+          <div class="panel-body">
+
+            <table id="compressImgTable" class="table table-bordered" style="width: 100%">
+                <tr>
+                    <td style="width: 80px">压缩包</td>
+                    <td colspan="2"><form id="uploadGalleryTarForm" enctype="multipart/form-data" ><input class="form-control" type="file" name="file" value=""/></form></td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center" id="upTarResult">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                        <button id="upCompressTarBtn" style="width: 100%" class="btn btn-primary">上传压缩包</button>
+                    </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -286,6 +316,30 @@
             },
         　　 error: function (returndata) {
                 alert("压缩失败！");
+            }
+        });
+    });
+
+    $("#upCompressTarBtn").click(function(){
+        $.ajax({
+            url:"/admin/upGalleryImgTar",
+            type: "POST",
+            data: new FormData($('#uploadGalleryTarForm')[0]),
+            async: true,
+            cashe: false,
+            contentType:false,
+            processData:false,
+            beforeSend:function(){
+                $("#upTarResult").html("正在上传...");
+            },
+            success:function (returndata) {
+                $("#upTarResult").html("上传成功");
+                alert("上传成功")
+            },
+        　　 error: function (returndata) {
+                alert(returndata);
+                $("#upTarResult").html("上传失败");
+                alert("上传失败！")
             }
         });
     });

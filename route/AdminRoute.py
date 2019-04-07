@@ -284,7 +284,7 @@ def upGalleryImg():
 def upGalleryImgTar():
     file = request.files["file"]
     originImgPath = os.path.join("/root", file.filename)
-    print("originImgPath:"+originImgPath)
+    logging.warning("originImgPath:"+originImgPath)
     file.save(originImgPath)
     return "OK"
 

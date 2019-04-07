@@ -329,12 +329,23 @@
             cashe: false,
             contentType:false,
             processData:false,
+            xhr:function(){
+                myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){ // check if upload property exists
+                    myXhr.upload.addEventListener('progress',function(e){
+                        var loaded = e.loaded;                  //已经上传大小情况
+                        var total = e.total;                      //附件总大小
+                        var percent = Math.floor(100*loaded/total)+"%";     //已经上传的百分比
+                        $("#upTarResult").html("已经上传了"+percent);
+                    }, false); // for handling the progress of the upload
+                }
+                return myXhr;
+            },
             beforeSend:function(){
-                $("#upTarResult").html("正在上传...");
+                $("#upTarResult").html("");
             },
             success:function (returndata) {
-                $("#upTarResult").html("上传成功");
-                alert("上传成功")
+                $("#upTarResult").html($("#upTarResult").html()+"，上传完成");
             },
         　　 error: function (returndata) {
                 alert(returndata);

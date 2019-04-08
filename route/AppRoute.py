@@ -30,8 +30,10 @@ def uploatLocationData():
             #系数
             c = 1.2
             if "speeds" in jsonData:
+                logging.warning("在")
                 speedLimit = c * (sum(jsonData["speeds"]) / len(jsonData["speeds"]))
             else:
+                logging.warning("不在")
                 speedLimit = 111
                 jsonData["speeds"] = []
 

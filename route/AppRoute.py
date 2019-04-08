@@ -28,7 +28,7 @@ def uploatLocationData():
             speed = int((distance / timeDelay))
             #最大400km/h
             #系数
-            c = 1.2
+            c = 1.5
             if "speeds" in l:
                 speedLimit = c * (sum(l["speeds"]) / len(l["speeds"]))
                 jsonData["speeds"] = l["speeds"]

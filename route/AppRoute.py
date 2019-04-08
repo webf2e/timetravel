@@ -29,13 +29,11 @@ def uploatLocationData():
             #最大400km/h
             #系数
             c = 1.2
-            jsonData["speeds"] = []
             if "speeds" in l:
-                logging.warning("在")
                 speedLimit = c * (sum(l["speeds"]) / len(l["speeds"]))
             else:
-                logging.warning("不在")
                 speedLimit = 111
+                jsonData["speeds"] = []
 
             jsonData["speeds"].append(speed)
             if len(jsonData["speeds"]) > 30:
@@ -54,7 +52,6 @@ def uploatLocationData():
         locFile.write(str(jsonData)+"\n")
         locFile.close()
         #保存末次位置到redis中
-        logging.warning("str(jsonData):{}".format(str(jsonData)))
         RedisService.set(redisKey.lastLocation,str(jsonData))
         #发送到鹰眼
         try:

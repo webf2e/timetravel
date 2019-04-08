@@ -43,6 +43,7 @@ def uploatLocationData():
             while len(speedList) > listLimit:
                 speedList.remove(speedList[0])
 
+            RedisService.set(redisKey.uploadLocSpeeds, json.dumps(speedList))
             logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒，限速：{}米/秒，速度队列大小：{}".format(timeDelay, distance, speed, speedLimit,len(speedList)))
 
             if speed > speedLimit:

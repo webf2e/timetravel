@@ -47,3 +47,5 @@ class redisKey():
     serverStartTime = "serverStartTime"
     # webssh监控信息
     websshCheckData = "websshCheckData"
+    # speeds信息
+    uploadLocSpeeds = "uploadLocSpeeds"

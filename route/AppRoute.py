@@ -54,6 +54,7 @@ def uploatLocationData():
         locFile.write(str(jsonData)+"\n")
         locFile.close()
         #保存末次位置到redis中
+        logging.warning("str(jsonData):{}".format(str(jsonData)))
         RedisService.set(redisKey.lastLocation,str(jsonData))
         #发送到鹰眼
         try:

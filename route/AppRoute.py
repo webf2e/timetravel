@@ -26,10 +26,25 @@ def uploatLocationData():
             if timeDelay <= 0:
                 return "{} {} {}".format(l["time"], "时间差小于等于0丢弃", RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
             speed = int((distance / timeDelay))
-            logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒".format(timeDelay, distance, speed))
             #最大400km/h
-            if speed > 111:
-                return "{} {} {}".format(l["time"], "速度过大，丢弃",RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
+            #系数
+            c = 1.2
+            if "speeds" in jsonData:
+                speedLimit = c * (sum(jsonData["speeds"]) / len(jsonData["speeds"]))
+            else:
+                speedLimit = 111
+                jsonData["speeds"] = {}
+
+            jsonData["speeds"].append(speed)
+            if len(jsonData["speeds"]) > 30:
+                jsonData["speeds"].remove(jsonData["speeds"][0])
+
+            logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒，限速：{}米/秒，速度队列大小：{}".format(timeDelay, distance, speed, speedLimit,len(jsonData["speeds"])))
+
+            if speed > speedLimit:
+                speedToHigh = "{} {} {}".format(l["time"], "速度过大，丢弃",RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
+                logging.warning("{}，限速为：{}，当前速度为：{}".format(speedToHigh, speedLimit, speed))
+                return speedToHigh
         #保存到文件
         fileName = jsonData["time"]
         fileName = fileName[:fileName.find(":")].replace(" ","-")+".txt"

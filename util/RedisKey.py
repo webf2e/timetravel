@@ -11,7 +11,10 @@ class redisKey():
     isNeedAutoRestartForApp = "isNeedAutoRestartForApp"
     # app的客户端ID（个推）
     cid = "cid"
-
+    # 速度限制系数
+    speedLimitC = "speedLimitC"
+    # 速度限制数组长度
+    speedLimitListSize = "speedLimitListSize"
 
     #有ttl的
 

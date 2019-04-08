@@ -26,18 +26,20 @@ def uploatLocationData():
             if timeDelay <= 0:
                 return "{} {} {}".format(l["time"], "时间差小于等于0丢弃", RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
             speed = int((distance / timeDelay))
-            #最大400km/h
             #系数
-            c = 1.5
+            c = float(RedisService.getSetting(redisKey.speedLimitC))
             if "speeds" in l:
-                speedLimit = c * (sum(l["speeds"]) / len(l["speeds"]))
+                print("sum(l[\"speeds\"]):{}".format(sum(l["speeds"])))
+                print("len(l[\"speeds\"]):{}".format(len(l["speeds"])))
+                speedLimit = c * (sum(l["speeds"]) / len(l["speeds"]) + 1)
                 jsonData["speeds"] = l["speeds"]
             else:
                 speedLimit = 111
                 jsonData["speeds"] = []
 
             jsonData["speeds"].append(speed)
-            if len(jsonData["speeds"]) > 30:
+            listLimit = int(RedisService.getSetting(redisKey.speedLimitListSize))
+            while len(jsonData["speeds"]) > listLimit:
                 jsonData["speeds"].remove(jsonData["speeds"][0])
 
             logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒，限速：{}米/秒，速度队列大小：{}".format(timeDelay, distance, speed, speedLimit,len(jsonData["speeds"])))

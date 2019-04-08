@@ -35,7 +35,7 @@ def uploatLocationData():
                 speedLimit = 111
                 jsonData["speeds"] = {}
 
-            jsonData["speeds"].append(speed)
+            list(jsonData["speeds"]).append(speed)
             if len(jsonData["speeds"]) > 30:
                 jsonData["speeds"].remove(jsonData["speeds"][0])
 

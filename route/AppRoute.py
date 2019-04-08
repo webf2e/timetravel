@@ -31,6 +31,7 @@ def uploatLocationData():
             c = 1.2
             if "speeds" in l:
                 speedLimit = c * (sum(l["speeds"]) / len(l["speeds"]))
+                jsonData["speeds"] = l["speeds"]
             else:
                 speedLimit = 111
                 jsonData["speeds"] = []

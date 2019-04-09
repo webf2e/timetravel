@@ -29,6 +29,7 @@ def init():
     gloVar.loggingFilePath = conf.get('loggingConfig', 'loggingFilePath')
     gloVar.isSendPageVisitMsg = conf.get('commonConfig', 'isSendPageVisitMsg')
     gloVar.isCheckRefer = conf.get('commonConfig', 'isCheckRefer')
+    gloVar.isCheck400 = conf.get('commonConfig', 'isCheck400')
     #更新最XX的位置信息
     #TravelService.updateMostDirection()
     #初始化围栏数据

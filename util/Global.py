@@ -17,6 +17,7 @@ class gloVar():
     loggingFilePath = ""
     isSendPageVisitMsg = ""
     isCheckRefer = ""
+    isCheck400 = ""
     weatherNames = """
     {
         "big_rainstorm": "大暴雨",

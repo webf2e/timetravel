@@ -86,8 +86,8 @@ def uploatLocationData():
                     RedisService.set(redisKey.lastFenceState, state)
                     jsonMsg = CommonUtil.getTempIdAndContent(compareState)
                     if (int(RedisService.getSetting(redisKey.isNeedFenceInOutNotify)) == 1 and not RedisService.isExist(redisKey.fenceNotifySlience)):
-                        PushUtil.pushToSingle("围栏有变更", jsonMsg["content"], "")
                         SmsUtil.sendSmsBytempId(gloVar.notifyMobile, jsonMsg["tempId"])
+                        PushUtil.pushToSingle("围栏有变更", jsonMsg["content"], "")
                     else:
                         PushUtil.pushToSingle("围栏有变更，亲爱的收不到", jsonMsg["content"], "")
                     #保存到数据库

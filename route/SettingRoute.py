@@ -3,6 +3,7 @@ from flask import abort,request,Response
 import json
 from service import SettingService,RedisService
 import logging
+from util.Global import gloVar
 
 settingRoute = Blueprint('settingRoute', __name__)
 
@@ -33,5 +34,5 @@ def print_request_info():
         agent = str(request.headers.get("User-agent"))
         logging.warning("访问admin的agent：{}".format(agent))
         if(agent.find("MI 9 Transparent Edition") == -1):
-            abort(400)
-            pass
+            if gloVar.isCheck400 == "1":
+                abort(400)

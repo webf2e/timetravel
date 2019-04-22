@@ -26,21 +26,25 @@ def uploatLocationData():
             if timeDelay <= 0:
                 return "{} {} {}".format(l["time"], "时间差小于等于0丢弃", RedisService.getSetting(redisKey.isNeedAutoRestartForApp))
             speed = int((distance / timeDelay))
-            #最大400km/h
             #系数
-            c = 1.5
-            if "speeds" in l:
-                speedLimit = c * (sum(l["speeds"]) / len(l["speeds"]))
-                jsonData["speeds"] = l["speeds"]
+            c = float(RedisService.getSetting(redisKey.speedLimitC))
+            speedList = RedisService.get(redisKey.uploadLocSpeeds)
+            if None != speedList:
+                speedList = json.loads(speedList)
+                print("sum speedList:{}".format(sum(speedList)))
+                print("len speedList:{}".format(len(speedList)))
+                speedLimit = c * (sum(speedList) / len(speedList) + 1)
             else:
+                speedList = []
                 speedLimit = 111
-                jsonData["speeds"] = []
 
-            jsonData["speeds"].append(speed)
-            if len(jsonData["speeds"]) > 30:
-                jsonData["speeds"].remove(jsonData["speeds"][0])
+            speedList.append(speed)
+            listLimit = int(RedisService.getSetting(redisKey.speedLimitListSize))
+            while len(speedList) > listLimit:
+                speedList.remove(speedList[0])
 
-            logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒，限速：{}米/秒，速度队列大小：{}".format(timeDelay, distance, speed, speedLimit,len(jsonData["speeds"])))
+            RedisService.set(redisKey.uploadLocSpeeds, json.dumps(speedList))
+            logging.warning("时间差：{}秒，距离：{}米，速度：{}米/秒，限速：{}米/秒，速度队列大小：{}".format(timeDelay, distance, speed, speedLimit,len(speedList)))
 
             if speed > speedLimit:
                 speedToHigh = "{} {} {}".format(l["time"], "速度过大，丢弃", RedisService.getSetting(redisKey.isNeedAutoRestartForApp))

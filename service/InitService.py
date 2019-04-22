@@ -29,6 +29,7 @@ def init():
     gloVar.loggingFilePath = conf.get('loggingConfig', 'loggingFilePath')
     gloVar.isSendPageVisitMsg = conf.get('commonConfig', 'isSendPageVisitMsg')
     gloVar.isCheckRefer = conf.get('commonConfig', 'isCheckRefer')
+    gloVar.isCheck400 = conf.get('commonConfig', 'isCheck400')
     #更新最XX的位置信息
     #TravelService.updateMostDirection()
     #初始化围栏数据
@@ -54,6 +55,10 @@ def init():
         RedisService.setSetting(redisKey.isNeedLocationNotUpdateForAppNotify, "1")
     if not RedisService.isSettingExist(redisKey.isNeedAutoRestartForApp):
         RedisService.setSetting(redisKey.isNeedAutoRestartForApp, "1")
+    if not RedisService.isSettingExist(redisKey.speedLimitC):
+        RedisService.setSetting(redisKey.speedLimitC, 2)
+    if not RedisService.isSettingExist(redisKey.speedLimitListSize):
+        RedisService.setSetting(redisKey.speedLimitListSize, 30)
     #记录服务启动时间到redis中
     serverStartTime = datetime.datetime.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
     RedisService.set(redisKey.serverStartTime, serverStartTime)

@@ -4,6 +4,7 @@ import configparser
 import os,logging
 from service import TravelService,RedisService,TravelWeatherService
 import datetime,json
+from sche import schedule
 from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil
 
 def init():
@@ -75,6 +76,7 @@ def init():
         #TravelService.updateWeekDay()
         #更新travel表中所有holiday字段为null的记录
         #TravelService.updateHoliday()
+        schedule.makeSpecialDayJob()
         pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

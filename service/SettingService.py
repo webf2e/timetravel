@@ -46,6 +46,7 @@ def changeToJsonStr(fields,data):
 def getServiceStatus(isCheckSendMsg):
     #-1，服务器异常 0，业务异常 1，正常
     result = {}
+    result["checkTime"] = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")
     #mysql
     try:
         list = TravelService.getTravelInfoById(1)

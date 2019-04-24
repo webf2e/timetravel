@@ -78,7 +78,7 @@
         </tr>
         <tr>
             <td colspan="2"><button id="autoDeployBtn" class="btn btn-warning" style="width: 100%">一键部署</button></td>
-            <td><div class='switch'><input id='isRestartCheckbox' type='checkbox'/></div></td>
+            <td><div class='switch'>重启：<input id='isRestartCheckbox' type='checkbox'/></div></td>
         </tr>
         <tr>
             <td colspan="3" id="autoDeployResult"></td>
@@ -99,6 +99,24 @@
         </tr>
         <tr>
             <td colspan="3" id="portlist"></td>
+        </tr>
+    </table>
+
+    <table id="serviceCheckTable" style="width: 100%;" class="table table-bordered">
+        <tr>
+            <td colspan="3">服务检测</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width: 185px">
+                <button class="btn btn-info" onclick="getCheckStatus()">检测报告</button>
+                <button class="btn btn-primary" onclick="checkService()">手动检测</button>
+            </td>
+            <td>
+                <div class='switch'>测通知：<input id='isCheckSendMsg' type='checkbox'/></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" id="serviceCheckResult"></td>
         </tr>
     </table>
 </body>
@@ -346,6 +364,15 @@
             isRestartInAutoDeploy = "False";
         }
     });
+    var isCheckSendMsg = "0";
+    $("#isCheckSendMsg").bootstrapSwitch('state', false, false);
+    $("#isCheckSendMsg").on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            isCheckSendMsg = "1";
+        }else{
+            isCheckSendMsg = "0";
+        }
+    });
     $("#getGitLogBtn").click(function(){
         $.ajax({
             url:"http://47.90.32.49:8011/git/log",
@@ -520,5 +547,37 @@
             }
         });
     });
+
+    function checkService(){
+        $.ajax({
+            url:"/setting/serviceCheck",
+            type:"POST",
+            data:"isCheckSendMsg="+isCheckSendMsg,
+            success:function(data){
+                getCheckStatus();
+            }
+        });
+    }
+
+    function getCheckStatus(){
+        $.ajax({
+            url:"/setting/getServiceStatus",
+            type:"POST",
+            success:function(data){
+                var checkTime = "";
+                var html = "<table class='table table-bordered' style='width: 100%'>";
+                $.each(data,function(i,n){
+                    if(i == "checkTime"){
+                        checkTime = n;
+                    }else{
+                        html += "<tr><td>检测"+i+"</td><td><img src='/static/images/"+n+".png'/></td></tr>"
+                    }
+                });
+                html += "</table>";
+                html = "检测时间："+checkTime + html;
+                $("#serviceCheckResult").html(html);
+            }
+        });
+    }
 </script>
 </html>

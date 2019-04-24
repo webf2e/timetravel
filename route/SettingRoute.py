@@ -4,6 +4,7 @@ import json
 from service import SettingService,RedisService
 import logging
 from util.Global import gloVar
+from util.RedisKey import redisKey
 
 settingRoute = Blueprint('settingRoute', __name__)
 
@@ -28,10 +29,15 @@ def setSetting():
 
 @settingRoute.route('/setting/getServiceStatus',methods=["POST"])
 def getServiceStatus():
-    name = request.form.get("name")
-    value = request.form.get("value")
-    if RedisService.isSettingExist(name):
-        RedisService.setSetting(name,value)
+    return Response(RedisService.get(redisKey.serviceCheck), mimetype='application/json')
+
+@settingRoute.route('/setting/serviceCheck',methods=["POST"])
+def serviceCheck():
+    isCheckSendMsg = request.form.get("isCheckSendMsg")
+    if "1" == isCheckSendMsg:
+        SettingService.getServiceStatus(True)
+    else:
+        SettingService.getServiceStatus(False)
     return "OK"
 
 

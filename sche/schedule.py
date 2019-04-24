@@ -208,4 +208,14 @@ def dealSpecialDaysFromDB(specialDays, now):
     return (specialHead,color)
 
 def serviceCheckJob():
-    SettingService.getServiceStatus(False)
+    r = SettingService.getServiceStatus(False)
+    errorItem = ""
+    for item,status in r.items():
+        if item == "checkTime":
+            continue
+        if status != 1:
+            errorItem += item+","
+    errorItem = errorItem[:-1]
+    if errorItem != "":
+        PushUtil.pushToSingle("服务有异常",errorItem,"")
+

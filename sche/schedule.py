@@ -1,7 +1,7 @@
 from util import FileUtil,OcrUtil,SmsUtil,PushUtil,TongjiUtil,TimeUtil
 from util.Global import gloVar
 from util.RedisKey import redisKey
-from service import ChatService,RedisService,TravelService,SpecialDayService,MessageService
+from service import ChatService,RedisService,TravelService,SpecialDayService,MessageService,SettingService
 import psutil
 import datetime
 import time
@@ -206,3 +206,6 @@ def dealSpecialDaysFromDB(specialDays, now):
         delay = str(now.year - int(sd[3]))
         specialHead = "【{}】".format(sd[2].replace("X", delay))
     return (specialHead,color)
+
+def serviceCheckJob():
+    SettingService.getServiceStatus(False)

@@ -12,7 +12,7 @@ class Config(object):
             'func': 'sche.schedule:makeBigHeartJob',
             'args': None,
             'trigger': 'interval',
-            'seconds': 60 * 60 * 6
+            'seconds': 60 * 60 * 3
         },
         {
             'id': 'systemTongjiJob',
@@ -96,6 +96,13 @@ class Config(object):
                 'minute':'0',
                 'second': '1'
             }
+        },
+        {
+            'id': 'serviceCheckJob',
+            'func': 'sche.schedule:serviceCheckJob',
+            'args': None,
+            'trigger': 'interval',
+            'seconds': 60 * 60
         }
     ]
 

@@ -58,7 +58,9 @@ def pushToSingle(title,content,touchuan,clientId=RedisService.getSetting(redisKe
         pushUrl = "https://restapi.getui.com/v1/{}/push_single".format(appId)
         r = requests.post(url=pushUrl, data=data, headers=headers)
         logging.warning("推送的相应结果：{}".format(r.text))
+        return r.text
     except Exception as e:
+        return "ERROR"
         print(e)
 
 

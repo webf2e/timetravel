@@ -26,6 +26,14 @@ def setSetting():
         RedisService.setSetting(name,value)
     return "OK"
 
+@settingRoute.route('/setting/getServiceStatus',methods=["POST"])
+def getServiceStatus():
+    name = request.form.get("name")
+    value = request.form.get("value")
+    if RedisService.isSettingExist(name):
+        RedisService.setSetting(name,value)
+    return "OK"
+
 
 @settingRoute.before_request
 def print_request_info():

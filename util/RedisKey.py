@@ -49,3 +49,5 @@ class redisKey():
     websshCheckData = "websshCheckData"
     # speeds信息
     uploadLocSpeeds = "uploadLocSpeeds"
+    # 服务监控
+    serviceCheck = "serviceCheck"

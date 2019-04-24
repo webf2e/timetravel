@@ -2,7 +2,7 @@ from util.Global import gloVar
 from util.RedisKey import redisKey
 import configparser
 import os,logging
-from service import TravelService,RedisService,TravelWeatherService
+from service import TravelService,RedisService,TravelWeatherService,SettingService
 import datetime,json
 from sche import schedule
 from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil
@@ -31,6 +31,7 @@ def init():
     gloVar.isSendPageVisitMsg = conf.get('commonConfig', 'isSendPageVisitMsg')
     gloVar.isCheckRefer = conf.get('commonConfig', 'isCheckRefer')
     gloVar.isCheck400 = conf.get('commonConfig', 'isCheck400')
+    gloVar.gitFilePath = conf.get('gitConfig', 'gitFilePath')
     #更新最XX的位置信息
     #TravelService.updateMostDirection()
     #初始化围栏数据
@@ -77,6 +78,8 @@ def init():
         #更新travel表中所有holiday字段为null的记录
         #TravelService.updateHoliday()
         schedule.makeSpecialDayJob()
+        #测试监控类
+        #SettingService.getServiceStatus(True)
         pass
     except Exception as e:
         logging.warning("发送邮件失败",e)

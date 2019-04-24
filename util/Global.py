@@ -18,6 +18,7 @@ class gloVar():
     isSendPageVisitMsg = ""
     isCheckRefer = ""
     isCheck400 = ""
+    gitFilePath = ""
     weatherNames = """
     {
         "big_rainstorm": "大暴雨",

@@ -29,9 +29,12 @@ def sendSmsBytempId(mobile, tpl_id):
             # 发送成功
             smsid = result['result']['sid']
             logging.warning("sendsms success,smsid: %s" % (smsid))
+            return "OK"
         else:
             # 发送失败
             logging.warning("sendsms error :(%s) %s" % (error_code, result['reason']))
+            return "ERROR"
     else:
         # 请求失败
         logging.warning("request sendsms error")
+        return "ERROR"

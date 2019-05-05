@@ -178,10 +178,14 @@ def getNewVideo(videoPath):
 
 
 parentVideoPath = "/home/liuwenbin/Videos"
-videoDirs = os.listdir(parentVideoPath)
-for videoDir in videoDirs:
-    try:
-        getNewVideo(os.path.join(parentVideoPath, videoDir))
-        pass
-    except Exception as e:
-        print(e)
+def getAllNewVideo():
+    videoDirs = os.listdir(parentVideoPath)
+    for videoDir in videoDirs:
+        try:
+            getNewVideo(os.path.join(parentVideoPath, videoDir))
+            pass
+        except Exception as e:
+            print(e)
+
+def moveVideo():
+    pass

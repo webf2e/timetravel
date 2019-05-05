@@ -95,8 +95,8 @@ def makeBegin(index, text, maxHeight, maxWidth, path):
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype("/home/liuwenbin/PycharmProjects/timetravel/static/fonts/YaHei.Consolas.1.12.ttf",
                               20, encoding="utf-8")  # 参数1：字体文件路径，参数2：字体大小
-    textWidth = 24 * len(text)
-    draw.text(((image.size[0] - textWidth) // 2, (image.size[1] - 30) // 2), text, (255, 255, 255), font=font)
+    draw.text(((image.size[0] - 24 * len(text)) // 2, (image.size[1] - 30) // 2), text, (255, 255, 255), font=font)
+    draw.text(((image.size[0] - 11 * 13) // 2, (image.size[1] - 30) // 2 + 30), "@CherryCoding", (255, 255, 255), font=font)
     image.save(os.path.join(path, "0_{}.png".format(imgName)))
 
 #change all video to imgs
@@ -182,5 +182,6 @@ videoDirs = os.listdir(parentVideoPath)
 for videoDir in videoDirs:
     try:
         getNewVideo(os.path.join(parentVideoPath, videoDir))
+        pass
     except Exception as e:
         print(e)

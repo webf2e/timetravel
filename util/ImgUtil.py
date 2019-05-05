@@ -122,6 +122,10 @@ def getWHPercent(imgPath):
     image = Image.open(imgPath)
     return round(image.size[0] / image.size[1], 2)
 
+def getImgWidthAndHeight(imgPath):
+    image = Image.open(imgPath)
+    return (image.size[0], image.size[1])
+
 '''
 压缩图片质量
 '''

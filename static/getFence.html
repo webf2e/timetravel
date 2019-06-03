@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>获取围栏</title>
+<script type="text/javascript" src="http://www.htmleaf.com/js/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0LSHte0xuZrXWUrnkEDIIMfwlOnYfiTA"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+<style>
+    img{
+        max-width: none;
+    }
+</style>
+</head>
+	<body>
+    <div id="map" style="width: 100%;height:600px"></div>
+    请选择点：<br>
+    <div id="pointRadios"></div><br>
+    最终的坐标为：<span id="lastPos"></span>
+<script>
+    var points = "116.365682,40.079916;116.368144,40.080154;116.36835,40.079326;116.365835,40.079053";
+    var ps = points.split(";");
+    var map = new BMap.Map("map");    // 创建Map实例
+	map.centerAndZoom(new BMap.Point(ps[0].split(",")[0] * 1, ps[0].split(",")[1] * 1), 15);
+	map.enableScrollWheelZoom(true);
+	map.addControl(new BMap.NavigationControl());
+	map.addControl(new BMap.MapTypeControl({
+		mapTypes:[
+            BMAP_NORMAL_MAP,
+            BMAP_SATELLITE_MAP,
+            BMAP_HYBRID_MAP
+        ]})
+    );
+	var currentPointIndex = 0;
+	draw();
+	var isClickPoint = false;
+	function draw() {
+	    map.clearOverlays();
+        var bPoints = [];
+        var pointRadiosHtml = "";
+        for(var i = 0;i < ps.length;i ++){
+            var lon = ps[i].split(",")[0] * 1;
+            var lat = ps[i].split(",")[1] * 1;
+            bPoints[i] = new BMap.Point(lon, lat);
+
+            var marker = new BMap.Marker(bPoints[i]);
+            var label = new BMap.Label(i+"",{offset:new BMap.Size(20,-10)});
+            marker.setLabel(label);
+            map.addOverlay(marker);
+
+            pointRadiosHtml += "<input type='radio' value='"+i+"' name='pointIndex' id='pointIndex"+i+"'>";
+            pointRadiosHtml += "<label for='pointIndex"+i+"'>第"+i+"号点("+lon+","+lat+")</label><br/>";
+        }
+        $("#pointRadios").html(pointRadiosHtml);
+        $("#pointIndex"+currentPointIndex).attr("checked","checked");
+        $("input[type='radio']").change(function(){
+            currentPointIndex = $("input[type='radio']:checked").val();
+        });
+
+        var view = map.getViewport(eval(bPoints));
+        var mapZoom = view.zoom;
+        var centerPoint = view.center;
+        map.centerAndZoom(centerPoint,mapZoom);
+
+        var fence = new BMap.Polygon(bPoints, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
+        map.addOverlay(fence);
+    }
+
+
+    map.addEventListener("click",function(e){
+        if(!isClickPoint){
+            ps[currentPointIndex] = e.point.lng + "," + e.point.lat;
+		    draw();
+		    var lastPos = "";
+		    for(var i = 0;i < ps.length;i++){
+		        lastPos += ps[i]+";";
+            }
+            lastPos = lastPos.substr(0,lastPos.length -1);
+            $("#lastPos").html(lastPos);
+        }else{
+           isClickPoint = false;
+        }
+	});
+</script>
+</body>
+</html>

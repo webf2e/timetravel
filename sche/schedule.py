@@ -195,7 +195,7 @@ def makeSpecialDayJob():
     dailycolorFile.write(cssContent)
     dailycolorFile.close()
     #
-    specialDaysRemain = SpecialDayService.getRemainDaysFoSpecialDay(3)
+    specialDaysRemain = SpecialDayService.getRemainDaysFoSpecialDay(5)
     if len(specialDaysRemain) > 0:
         for specialDayRemain in specialDaysRemain:
             if specialDayRemain[3] == None or "" == specialDayRemain[3]:

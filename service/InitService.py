@@ -2,10 +2,10 @@ from util.Global import gloVar
 from util.RedisKey import redisKey
 import configparser
 import os,logging
-from service import TravelService,RedisService,TravelWeatherService,SettingService
+from service import TravelService,RedisService,TravelWeatherService,SettingService,SpecialDayService
 import datetime,json
 from sche import schedule
-from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil
+from util import EmailUtil,PDFUtil,TongjiUtil,WeatherUtil,PushUtil
 
 def init():
     configFilePath = os.path.join(os.getcwd(), "config/application.config")
@@ -77,7 +77,7 @@ def init():
         #TravelService.updateWeekDay()
         #更新travel表中所有holiday字段为null的记录
         #TravelService.updateHoliday()
-        schedule.makeSpecialDayJob()
+        # schedule.makeSpecialDayJob()
         #测试监控类
         #SettingService.getServiceStatus(True)
         pass

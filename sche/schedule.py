@@ -168,8 +168,10 @@ def makeSpecialDayJob():
             if len(specialDays) == 0:
                 logging.warning("{}不是特殊节日".format(ymd))
             else:
+                # 农历判断
                 (specialHead, color) = dealSpecialDaysFromDB(specialDays, now)
     else:
+        # 阳历判断
         (specialHead, color) = dealSpecialDaysFromDB(specialDays, now)
     result = {}
     result["specialHead"] = specialHead
@@ -192,8 +194,21 @@ def makeSpecialDayJob():
     dailycolorFile = open(dailycolorFilePath,"w+")
     dailycolorFile.write(cssContent)
     dailycolorFile.close()
-    if specialHead != "":
-        PushUtil.pushToSingle("特殊节日通知","今天是{}".format(specialHead),"")
+    #
+    specialDaysRemain = SpecialDayService.getRemainDaysFoSpecialDay(3)
+    if len(specialDaysRemain) > 0:
+        for specialDayRemain in specialDaysRemain:
+            if specialDayRemain[3] == None or "" == specialDayRemain[3]:
+                # 没有年
+                specialInfo = "{}".format(specialDayRemain[2])
+            else:
+                delay = str(now.year - int(specialDayRemain[3]))
+                specialInfo = "{}".format(specialDayRemain[2].replace("X", delay))
+
+            if specialDayRemain[4] == 0:
+                PushUtil.pushToSingle("特殊节日通知","今天是{}".format(specialInfo),"")
+            else:
+                PushUtil.pushToSingle("特殊节日通知", "距离{}还有{}天".format(specialInfo,specialDayRemain[4]), "")
     logging.warning("生成首页滚动字幕和dailycolor.css文件结束")
 
 def dealSpecialDaysFromDB(specialDays, now):

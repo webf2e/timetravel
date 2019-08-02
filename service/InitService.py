@@ -77,7 +77,7 @@ def init():
         #TravelService.updateWeekDay()
         #更新travel表中所有holiday字段为null的记录
         #TravelService.updateHoliday()
-        # schedule.makeSpecialDayJob()
+        schedule.makeSpecialDayJob()
         #测试监控类
         #SettingService.getServiceStatus(True)
         pass

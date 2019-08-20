@@ -19,6 +19,8 @@ def upChatImg():
         if(os.path.isfile(os.path.join(gloVar.chatDirPath, f))):
             return "稍等一下，暂时有文件没有转移"
     print("上传聊天图片：{}".format(len(request.files)))
+    for f in request.files:
+        print("上传聊天图片：{}".format(f))
     files = str(request.files)
     print("上传聊天图片：{}".format(files))
     date = str(request.form.get("date"))

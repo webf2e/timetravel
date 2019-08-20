@@ -194,9 +194,10 @@ def makeSpecialDayJob():
     dailycolorFile = open(dailycolorFilePath,"w+")
     dailycolorFile.write(cssContent)
     dailycolorFile.close()
-    #
+    #获取到纪念日还有几天，推送通知
     specialDaysRemain = SpecialDayService.getRemainDaysFoSpecialDay(5)
     if len(specialDaysRemain) > 0:
+        #阳历
         for specialDayRemain in specialDaysRemain:
             if specialDayRemain[3] == None or "" == specialDayRemain[3]:
                 # 没有年
@@ -209,6 +210,11 @@ def makeSpecialDayJob():
                 PushUtil.pushToSingle("特殊节日通知","今天是{}".format(specialInfo),"")
             else:
                 PushUtil.pushToSingle("特殊节日通知", "距离{}还有{}天".format(specialInfo,specialDayRemain[4]), "")
+    elif specialHead != '':
+        #阳历没有，查询阴历
+        print("今天是{}".format(specialHead))
+        PushUtil.pushToSingle("特殊节日通知", "今天是{}".format(specialHead), "")
+
     logging.warning("生成首页滚动字幕和dailycolor.css文件结束")
 
 def dealSpecialDaysFromDB(specialDays, now):

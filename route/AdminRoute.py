@@ -34,6 +34,7 @@ def upChatImg():
     count = 0
     for i in range(0,2):
         typeName = "file{}".format(i)
+        print("上传聊天图片：{}".format(typeName))
         if files.rfind("'{}'".format(typeName)) == -1:
             print("上传聊天图片：{}，continue".format(typeName))
             continue

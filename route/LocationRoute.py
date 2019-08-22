@@ -35,6 +35,7 @@ def getLastLocation():
             fenceCenterDistance[fenceCenter[0]] = (res["lon"], res["lat"], 0)
         else:
             distance = LocationUtil.getDistance(fenceCenter[1][0], fenceCenter[1][1], res["lon"], res["lat"])
+            distance = '%.2f' % (distance)
             fenceCenterDistance[fenceCenter[0]] = (fenceCenter[1][0], fenceCenter[1][1], distance)
     res["distance"] = fenceCenterDistance
     return Response(json.dumps(eval(str(res))), mimetype='application/json')

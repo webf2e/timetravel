@@ -162,6 +162,8 @@
     map.addOverlay(heatmapOverlay);
 	getPoints();
 	var currentPoint = null;
+	var lineToHome = null;
+	var lineToCompany = null;
 	function getPoints(){
 	    $.ajax({
             url:"/getLastLocation",
@@ -169,6 +171,12 @@
             success:function(data){
                 if(null != currentPoint){
                     map.removeOverlay(currentPoint);
+                }
+                if(null != lineToHome){
+                    map.removeOverlay(lineToHome);
+                }
+                if(null != lineToCompany){
+                    map.removeOverlay(lineToCompany);
                 }
                 var lon = data.lon;
                 var lat = data.lat;
@@ -190,14 +198,34 @@
                 }
                 //聚合使用
                 map.addOverlay(currentPoint);
+                //添加折线
+                lineToHome = new BMap.Polyline([
+                    new BMap.Point(lon, lat),
+                    new BMap.Point(data.distance["小可爱的家"][0], data.distance["小可爱的家"][1])
+                ], {strokeColor:"green", strokeWeight:4, strokeOpacity:0.1});
+                lineToCompany = new BMap.Polyline([
+                    new BMap.Point(lon, lat),
+                    new BMap.Point(data.distance["小可爱的公司"][0], data.distance["小可爱的公司"][1])
+                ], {strokeColor:"blue", strokeWeight:4, strokeOpacity:0.1});
+                map.addOverlay(lineToHome);
+                map.addOverlay(lineToCompany);
                 currentPoint.addEventListener("click",function(){
                     var locationState = "";
                     if(radius * 1 >= 80){
                         locationState = "<p style='margin:0;line-height:1.5;font-size:13px;'>当前定位可能不太准确哦</p>";
                     }
+                    var distance = "";
+                    if(data.distance["小可爱的家"][2] > 0){
+                        distance += "<p style='margin:0;line-height:1.5;font-size:13px;'>到家直线距离"+data.distance["小可爱的家"][2]+"米</p>";
+                    }
+                    if(data.distance["小可爱的公司"][2] > 0){
+                        distance += "<p style='margin:0;line-height:1.5;font-size:13px;'>到公司直线距离"+data.distance["小可爱的公司"][2]+"米</p>";
+                    }
                     var html = "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+desc+"</h4>" +
                     "<p style='margin:0;line-height:1.5;font-size:13px;'>位置地点："+addr+"</p>" +
-                    "<p style='margin:0;line-height:1.5;font-size:13px;'>更新时间："+time+"</p>" + locationState +
+                    "<p style='margin:0;line-height:1.5;font-size:13px;'>更新时间："+time+"</p>" +
+                        distance +
+                        locationState +
                     "</div>";
                     var infoWindow = new BMap.InfoWindow(html,{width:500,offset:new BMap.Size(0, -10)});
                     currentPoint.openInfoWindow(infoWindow);

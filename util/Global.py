@@ -13,6 +13,7 @@ class gloVar():
     systemTongjiPath = ""
     locationPath = ""
     fences = {}
+    fencesCenter = {}
     notifyMobile = ""
     loggingFilePath = ""
     isSendPageVisitMsg = ""

@@ -19,15 +19,25 @@ def getLastLocation():
         #如果百度的数据是60秒内的，就用百度的数据，如果不是用本地数据
         logging.warning("百度定位和本地时间的时间差：{}".format(int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"]))
         if int(datetime.datetime.now().timestamp()) - data["latest_point"]["timestramp"] < 60:
-            return Response(json.dumps(eval(str(data["latest_point"]))), mimetype='application/json')
+            res = str(data["latest_point"])
         else:
             #清理redisKey
             RedisService.delete(redisKey.lastLocationFromBaidu)
-            return Response(json.dumps(eval(str(RedisService.get(redisKey.lastLocation)))), mimetype='application/json')
+            res = str(RedisService.get(redisKey.lastLocation))
     except Exception as e:
         logging.warning(e)
         logging.warning("报错，使用redis定位数据")
-        return Response(json.dumps(eval(str(RedisService.get(redisKey.lastLocation)))), mimetype='application/json')
+        res = str(RedisService.get(redisKey.lastLocation))
+    res = json.loads(json.dumps(eval(str(res))))
+    fenceCenterDistance = {}
+    for fenceCenter in gloVar.fencesCenter.items():
+        if LocationUtil.isInPoly(res["lon"], res["lat"], gloVar.fences[fenceCenter[0]]):
+            fenceCenterDistance[fenceCenter[0]] = (res["lon"], res["lat"], 0)
+        else:
+            distance = LocationUtil.getDistance(fenceCenter[1][0], fenceCenter[1][1], res["lon"], res["lat"])
+            fenceCenterDistance[fenceCenter[0]] = (fenceCenter[1][0], fenceCenter[1][1], distance)
+    res["distance"] = fenceCenterDistance
+    return Response(json.dumps(eval(str(res))), mimetype='application/json')
 
 
 @locationRoute.route('/visitLocationPageNotify',methods=["POST"])

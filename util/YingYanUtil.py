@@ -60,8 +60,9 @@ def getLatestPoint():
         logging.warning("从缓存中获取")
         return json.loads(json.dumps(eval(str(data))))
     url = "http://yingyan.baidu.com/api/v3/track/getlatestpoint?service_id={}&entity_name={}&coord_type_output=bd09ll&" \
-          "process_option=need_denoise=1,radius_threshold=80,need_mapmatch=0,transport_mode=auto&ak={}"\
+          "ak={}"\
         .format(service_id,entity_name,ak)
+    print(url)
     results = requests.get(url).text
     results = results.replace("latitude","lat")\
         .replace("longitude","lon")\

@@ -39,6 +39,8 @@ def init():
     gloVar.notifyMobile = conf.get('fenceConfig', 'notifyMobile')
     fences = fencePoints.split("|")
     for fence in fences:
+        centerLon = 0
+        centerLat = 0
         name = fence[:fence.find(":")]
         points = fence[fence.find(":") + 1:].split(";")
         data = []
@@ -46,8 +48,12 @@ def init():
         for point in points:
             lonlat = point.split(",")
             lonlat = (float(lonlat[0]),float(lonlat[1]))
+            centerLon += lonlat[0]
+            centerLat += lonlat[1]
             data.append(lonlat)
         gloVar.fences[name] = data
+        gloVar.fencesCenter[name] = (centerLon / len(points), centerLat / len(points))
+    print(gloVar.fencesCenter)
     #初始化setting
     if not RedisService.isSettingExist(redisKey.isNeedFenceInOutNotify):
         RedisService.setSetting(redisKey.isNeedFenceInOutNotify, "1")
